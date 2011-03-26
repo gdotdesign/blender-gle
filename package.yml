@@ -1,0 +1,19 @@
+name: "Blender GLE"
+
+exports: "blender-gle.coffee"
+
+web: ""
+
+description: ""
+
+license: ""
+
+copyright: ""
+
+authors: ""
+
+sources:
+  - "Source/Layout.coffee"
+  - "Source/Corner.coffee"
+  - "Source/Toolbar.coffee"
+  - "Source/View.coffee"

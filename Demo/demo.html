@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>GDotUI.Demo</title>
+    <script type="text/javascript" src="../gdotui/mootools/mootools-core-1.3.1-full-compat-yc.js"></script>
+    <script type="text/javascript" src="../gdotui/mootools/mootools-more-1.3.1.1.js"></script>
+    <script type="text/javascript" src="../gdotui/Themes/Chrome/theme.js"></script>
+    <link type="text/css" rel="stylesheet" href="../gdotui/Themes/Blank/reset.css"/>
+    <link type="text/css" rel="stylesheet" href="../gdotui/Themes/Blender/theme.css"/>
+    <script type="text/javascript" src="../Builds/blender-gle-latest.js"></script>
+    <script>
+        asd = new Class({
+          Extends: Core.Abstract,
+          create: function(){
+            this.base.setStyles({
+              'background-image':'url(/Themes/Chrome/images/grid5.png)',
+              'width':'100%',
+              'height':'100%'
+            })
+          }
+        });
+        asd1 = new Class({
+          Extends: Core.Abstract,
+          create: function(){
+            this.base.setStyles({
+              'background-color':'#ffffff',
+              'width':'100%',
+              'height':'100%'
+            })
+          }
+        });
+        window.addEvent('domready', function(){
+          slider = new Blender();
+          slider.addToStack('node editor',asd)
+          slider.addToStack('preview',asd1)
+          slider.addToStack('info',Core.Abstract)
+          document.body.grab(slider);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
