@@ -941,6 +941,34 @@ Blender = new Class({
   Attributes: {
     "class": {
       value: 'blender-layout'
+    },
+    active: {
+      value: null
+    }
+  },
+  toggleFullScreen: function(view) {
+    if (!view.fullscreen) {
+      this.emptyNeigbours();
+      view.lastPosition = {
+        top: view.get('top'),
+        bottom: view.get('bottom'),
+        left: view.get('left'),
+        right: view.get('right')
+      };
+      view.set('top', 0);
+      view.set('bottom', '100%');
+      view.set('left', 0);
+      view.set('right', '100%');
+      view.fullscreen = true;
+      return view.base.setStyle('z-index', 100);
+    } else {
+      view.fullscreen = false;
+      view.base.setStyle('z-index', 1);
+      view.set('top', view.lastPosition.top);
+      view.set('bottom', view.lastPosition.bottom);
+      view.set('left', view.lastPosition.left);
+      view.set('right', view.lastPosition.right);
+      return this.calculateNeigbours();
     }
   },
   splitView: function(view, mode) {
@@ -1026,6 +1054,11 @@ Blender = new Class({
     this.stack = {};
     this.hooks = [];
     this.views = [];
+    window.addEvent('keydown', (function(e) {
+      if (e.key === 'up' && e.control) {
+        return this.toggleFullScreen(this.get('active'));
+      }
+    }).bind(this));
     window.addEvent('resize', this.update.bind(this));
     this.addView(new Blender.View({
       top: 0,
@@ -1063,6 +1096,9 @@ Blender = new Class({
   },
   addView: function(view) {
     this.addChild(view);
+    view.base.addEvent('click', (function() {
+      return this.set('active', view);
+    }).bind(this));
     view.addEvent('split', this.splitView.bind(this));
     return view.addEvent('content-change', (function(e) {
       var content;

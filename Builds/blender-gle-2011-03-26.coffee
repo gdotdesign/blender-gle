@@ -831,7 +831,33 @@ Blender = new Class {
     class: {
       value: 'blender-layout'
     }
+    active: {
+      value: null
+    }
   }
+  toggleFullScreen: (view) ->
+    if !view.fullscreen 
+      @emptyNeigbours()
+      view.lastPosition = {
+        top: view.get 'top'
+        bottom: view.get 'bottom'
+        left: view.get 'left'
+        right: view.get 'right'
+      }
+      view.set 'top', 0
+      view.set 'bottom', '100%'
+      view.set 'left', 0
+      view.set 'right', '100%'
+      view.fullscreen = true
+      view.base.setStyle 'z-index',100
+    else
+      view.fullscreen = false
+      view.base.setStyle 'z-index',1
+      view.set 'top', view.lastPosition.top
+      view.set 'bottom', view.lastPosition.bottom
+      view.set 'left', view.lastPosition.left
+      view.set 'right', view.lastPosition.right
+      @calculateNeigbours()
   splitView: (view,mode)->
     @emptyNeigbours()
     view2 = new Blender.View()
@@ -898,6 +924,10 @@ Blender = new Class {
     @stack = {}
     @hooks = []
     @views = []
+    window.addEvent 'keydown', ((e)->
+      if e.key is 'up' and e.control
+        @toggleFullScreen @get 'active'
+    ).bind @
     window.addEvent 'resize', @update.bind @
     @addView new Blender.View({top:0,left:0,right:"100%",bottom:"100%"
       ,restrains: {top:yes,left:yes,right:yes,bottom:yes}
@@ -922,6 +952,9 @@ Blender = new Class {
     @removeChild view
   addView: (view) ->
     @addChild view
+    view.base.addEvent 'click',( ->
+      @set 'active', view
+    ).bind @
     view.addEvent 'split', @splitView.bind @
     view.addEvent 'content-change', ((e)->
       if e?
