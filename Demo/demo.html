@@ -18,23 +18,53 @@
               'width':'100%',
               'height':'100%'
             })
+            
           }
         });
         asd1 = new Class({
           Extends: Core.Abstract,
+          Implements: Interfaces.Children,
           create: function(){
-            this.base.setStyles({
-              'background-color':'#ffffff',
-              'width':'100%',
-              'height':'100%'
-            })
+            pushButton = new Core.Push({label:'Push Button!'});
+            button = new Core.Button({label:"Default Button!"});
+            horizontalSlider = new Core.Slider();
+            toggler = new Core.Toggler();
+            texta = new Data.Text();
+            number = new Data.Number();
+            number.addEvent('change',function(e){
+              button.set('size',e);
+              pushButton.set('size',e);
+              horizontalSlider.set('size',e);
+              toggler.set('size',e);
+              group.set('size',e);
+              select.set('size',e);
+              unit.set('size',e);
+              texta.set('size',e);
+            });
+            
+            group = new Core.PushGroup();
+            for(i=0;i<5;i++){
+              group.addItem(new Core.Push({label:i}));  
+            }
+            
+            
+            
+            unit = new Data.Unit();
+            
+            select = new Data.Select({'default':'background-break'});
+            list = [' bounding-box','each-box','continuous','border-box','padding-box','content-box','no-clip']
+            list.each(function(item){
+              select.addItem(new Iterable.ListItem({label:item,removeable:false,draggable:false}))
+            });
+            this.addChild(select)
+            //this.adoptChildren( button,pushButton, select);
           }
         });
         window.addEvent('domready', function(){
           slider = new Blender();
           slider.addToStack('node editor',asd)
           slider.addToStack('preview',asd1)
-          slider.addToStack('info',Core.Abstract)
+          slider.addToStack('info',Data.Color)
           document.body.grab(slider);
         });
     </script>

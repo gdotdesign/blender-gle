@@ -141,13 +141,13 @@ Blender.View = new Class {
         if (dir is 'bottom' or dir is 'top')
           @fireEvent 'split',[@,'vertical']
       else
-        if (dir is 'bottom' or dir is 'top') and !@restrains.top
+        if (dir is 'bottom' or dir is 'top') and @get('top') isnt 0
           @drag.startpos = {y:Number.from(@base.getStyle('top'))}
           @drag.options.modifiers = {x:null,y:'top'}
           @drag.options.invert = true
           @drag.start(e)
         
-        if (dir is 'left' or dir is 'right') and !@restrains.right
+        if (dir is 'left' or dir is 'right') and @get('right') isnt window.getSize().x
           @drag.startpos = {x:Number.from(@get('right'))}
           @drag.options.modifiers = {x:'right',y:null}
           @drag.options.invert = true
@@ -155,12 +155,12 @@ Blender.View = new Class {
     ).bind @
     @bottomRightCorner = new Blender.Corner({class:'bottomleft'})
     @bottomRightCorner.addEvent 'directionChange',((dir,e) ->
-      if (dir is 'bottom' or dir is 'top') and !@restrains.bottom
+      if (dir is 'bottom' or dir is 'top') and  @get('bottom') isnt window.getSize().y
         @drag.startpos = {y:Number.from(@get('bottom'))}
         @drag.options.modifiers = {x:null,y:'bottom'}
         @drag.options.invert = true
         @drag.start(e)
-      if (dir is 'left' or dir is 'right') and !@restrains.left
+      if (dir is 'left' or dir is 'right') and  @get('left') isnt 0
         @drag.startpos = {x:Number.from(@base.getStyle('left'))}
         @drag.options.modifiers = {x:'left',y:null}
         @drag.options.invert = true
