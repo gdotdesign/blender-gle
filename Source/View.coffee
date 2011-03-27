@@ -124,6 +124,8 @@ Blender.View = new Class {
             item.set 'right', o.newVal
     @hooks = {}
     @slider = new Core.Slider({steps:100,mode:'vertical'})
+    @slider.minSize = 0
+    @slider.base.setStyle 'min-height', 0
     @toolbar = new Blender.Toolbar()
     @toolbar.select.addEvent 'change', ((e)->
       @fireEvent 'content-change', e

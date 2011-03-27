@@ -102,7 +102,6 @@ Element.Properties.checked = {
       
       
       ofa = {x:0,y:0}
-      console.log options.position             
       switch options.position.x
         when 'center'
           if options.position.y isnt 'center'
@@ -120,7 +119,6 @@ Element.Properties.checked = {
         when 'bottom'
           ofa.y = options.offset
        options.offset = ofa
-       console.log ofa
        @oldPosition.attempt options, @
     removeTransition: ->
       @store 'transition', @getStyle( '-webkit-transition-duration' )
@@ -300,6 +298,17 @@ GDotUI.Config ={
     floatZindex: 0
     cookieDuration: 7*1000
 }
+GDotUI.selectors = ( ->
+  selectors = {}
+  Array.from(document.styleSheets).each (stylesheet) ->
+    try 
+      if stylesheet.cssRules?
+        Array.from(stylesheet.cssRules).each (rule) ->
+          selectors[rule.selectorText] = {}
+          Array.from(rule.style).each (style) ->
+            selectors[rule.selectorText][style] = rule.style.getPropertyValue(style)
+  selectors
+)()
 
 
 ###
@@ -349,23 +358,6 @@ provides: Core.Abstract
 
 #INK save nodedata to html file in a comment.
 # move this somewhere else
-getCSS = (selector, property) ->
-  #selector = "/\\.#{@get('class')}$/"
-  ret = null
-  checkStyleSheet = (stylesheet) ->
-    try
-      if stylesheet.cssRules?
-        $A(stylesheet.cssRules).each (rule) ->
-          if rule.styleSheet?
-            checkStyleSheet(rule.styleSheet)
-          if rule.selectorText?
-            if rule.selectorText.test(eval(selector))
-              ret = rule.style.getPropertyValue(property)
-    catch error
-      #console.log error
-  $A(document.styleSheets).each (stylesheet) ->
-    checkStyleSheet(stylesheet)
-  ret
 
 Core.Abstract = new Class {
   Implements:[Events
@@ -868,12 +860,12 @@ Core.Slider = new Class {
         @base.setStyle 'position', 'relative'
         switch value
           when 'horizontal'
-            @minSize = Number.from getCSS("/\\.#{@get('class')}.horizontal$/",'min-width')
+            @minSize = Number.from GDotUI.selectors[".#{@get('class')}.horizontal"]['min-width']
             @modifier = 'width'
             @drag.options.modifiers = {x: 'width',y:''}
             @drag.options.invert = false
             if not @size?
-              size = Number.from getCSS("/\\.#{@get('class')}.horizontal$/",'width')
+              size = Number.from GDotUI.selectors[".#{@get('class')}.horizontal"]['width']
             @set 'size', size
             @progress.set 'style', ''
             @progress.setStyles {
@@ -883,12 +875,12 @@ Core.Slider = new Class {
               left: 0
             } 
           when 'vertical'
-            @minSize = Number.from getCSS("/\\.#{@get('class')}.vertical$/",'min-hieght')
+            @minSize = Number.from GDotUI.selectors[".#{@get('class')}.vertical"]['min-height']
             @modifier = 'height'
             @drag.options.modifiers = {x: '',y: 'height'}
             @drag.options.invert = true
             if not @size?
-              size = Number.from getCSS("/\\.#{@class}.vertical$/",'height')
+              size = Number.from GDotUI.selectors[".#{@get('class')}.vertical"]['height']
             @set 'size', size
             @progress.set 'style', ''
             @progress.setStyles {
@@ -919,7 +911,6 @@ Core.Slider = new Class {
     }
     size: {
       setter: (value, old) ->
-        console.log @minSize
         if !value?
           value = old
         if @minSize > value
@@ -1005,8 +996,8 @@ requires: [GDotUI]
 ###
 Interfaces.Size = new Class {
   _$Size: ->
-    @size = Number.from getCSS("/\\.#{@get('class')}$/",'width')
-    @minSize = Number.from(getCSS("/\\.#{@get('class')}$/",'min-width')) or 0
+    @size = Number.from GDotUI.selectors[".#{@get('class')}"]['width']
+    @minSize = Number.from(GDotUI.selectors[".#{@get('class')}"]['min-width']) or 0
     @addAttribute 'minSize', {
       value: null
       setter: (value,old) ->
@@ -3126,7 +3117,6 @@ Data.Unit = new Class {
           match = value.match(/(-?\d*)(.*)/)
           value = match[1]
           unit = match[2]
-          console.log unit, value
           @sel.set 'value', unit
           @number.set 'value', value
       getter: ->

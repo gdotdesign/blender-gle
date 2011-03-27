@@ -10,7 +10,7 @@ license: MIT-style license.
 provides: Element.Extras
 
 ...
-*/var Blender, Core, Data, Dialog, Forms, GDotUI, Interfaces, Iterable, Layout, Pickers, UnitList, checkForKey, getCSS;
+*/var Blender, Core, Data, Dialog, Forms, GDotUI, Interfaces, Iterable, Layout, Pickers, UnitList, checkForKey;
 Element.Properties.checked = {
   get: function() {
     if (this.getChecked != null) {
@@ -133,7 +133,6 @@ Element.Properties.checked = {
         x: 0,
         y: 0
       };
-      console.log(options.position);
       switch (options.position.x) {
         case 'center':
           if (options.position.y !== 'center') {
@@ -159,7 +158,6 @@ Element.Properties.checked = {
           ofa.y = options.offset;
       }
       options.offset = ofa;
-      console.log(ofa);
       return this.oldPosition.attempt(options, this);
     },
     removeTransition: function() {
@@ -368,6 +366,23 @@ GDotUI.Config = {
   floatZindex: 0,
   cookieDuration: 7 * 1000
 };
+GDotUI.selectors = (function() {
+  var selectors;
+  selectors = {};
+  Array.from(document.styleSheets).each(function(stylesheet) {
+    try {
+      if (stylesheet.cssRules != null) {
+        return Array.from(stylesheet.cssRules).each(function(rule) {
+          selectors[rule.selectorText] = {};
+          return Array.from(rule.style).each(function(style) {
+            return selectors[rule.selectorText][style] = rule.style.getPropertyValue(style);
+          });
+        });
+      }
+    } catch (_e) {}
+  });
+  return selectors;
+})();
 /*
 ---
 
@@ -412,32 +427,6 @@ provides: Core.Abstract
 
 ...
 */
-getCSS = function(selector, property) {
-  var checkStyleSheet, ret;
-  ret = null;
-  checkStyleSheet = function(stylesheet) {
-    try {
-      if (stylesheet.cssRules != null) {
-        return $A(stylesheet.cssRules).each(function(rule) {
-          if (rule.styleSheet != null) {
-            checkStyleSheet(rule.styleSheet);
-          }
-          if (rule.selectorText != null) {
-            if (rule.selectorText.test(eval(selector))) {
-              return ret = rule.style.getPropertyValue(property);
-            }
-          }
-        });
-      }
-    } catch (error) {
-      return console.log(error);
-    }
-  };
-  $A(document.styleSheets).each(function(stylesheet) {
-    return checkStyleSheet(stylesheet);
-  });
-  return ret;
-};
 Core.Abstract = new Class({
   Implements: [Events, Interfaces.Mux],
   Attributes: {
@@ -1057,7 +1046,7 @@ Core.Slider = new Class({
         this.base.setStyle('position', 'relative');
         switch (value) {
           case 'horizontal':
-            this.minSize = Number.from(getCSS("/\\." + (this.get('class')) + ".horizontal$/", 'min-width'));
+            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['min-width']);
             this.modifier = 'width';
             this.drag.options.modifiers = {
               x: 'width',
@@ -1065,7 +1054,7 @@ Core.Slider = new Class({
             };
             this.drag.options.invert = false;
             if (!(this.size != null)) {
-              size = Number.from(getCSS("/\\." + (this.get('class')) + ".horizontal$/", 'width'));
+              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['width']);
             }
             this.set('size', size);
             this.progress.set('style', '');
@@ -1077,7 +1066,7 @@ Core.Slider = new Class({
             });
             break;
           case 'vertical':
-            this.minSize = Number.from(getCSS("/\\." + (this.get('class')) + ".vertical$/", 'min-hieght'));
+            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['min-height']);
             this.modifier = 'height';
             this.drag.options.modifiers = {
               x: '',
@@ -1085,7 +1074,7 @@ Core.Slider = new Class({
             };
             this.drag.options.invert = true;
             if (!(this.size != null)) {
-              size = Number.from(getCSS("/\\." + this["class"] + ".vertical$/", 'height'));
+              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['height']);
             }
             this.set('size', size);
             this.progress.set('style', '');
@@ -1222,8 +1211,8 @@ requires: [GDotUI]
 */
 Interfaces.Size = new Class({
   _$Size: function() {
-    this.size = Number.from(getCSS("/\\." + (this.get('class')) + "$/", 'width'));
-    this.minSize = Number.from(getCSS("/\\." + (this.get('class')) + "$/", 'min-width')) || 0;
+    this.size = Number.from(GDotUI.selectors["." + (this.get('class'))]['width']);
+    this.minSize = Number.from(GDotUI.selectors["." + (this.get('class'))]['min-width']) || 0;
     this.addAttribute('minSize', {
       value: null,
       setter: function(value, old) {
@@ -3647,7 +3636,6 @@ Data.Unit = new Class({
           match = value.match(/(-?\d*)(.*)/);
           value = match[1];
           unit = match[2];
-          console.log(unit, value);
           this.sel.set('value', unit);
           return this.number.set('value', value);
         }
@@ -4596,6 +4584,8 @@ Blender.View = new Class({
       steps: 100,
       mode: 'vertical'
     });
+    this.slider.minSize = 0;
+    this.slider.base.setStyle('min-height', 0);
     this.toolbar = new Blender.Toolbar();
     this.toolbar.select.addEvent('change', (function(e) {
       return this.fireEvent('content-change', e);
