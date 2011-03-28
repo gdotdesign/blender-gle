@@ -31,7 +31,7 @@ Element.Properties.checked = {
 (function() {
   return Color.implement({
     type: 'hex',
-    alpha: '',
+    alpha: 100,
     setType: function(type) {
       return this.type = type;
     },
@@ -1211,8 +1211,16 @@ requires: [GDotUI]
 */
 Interfaces.Size = new Class({
   _$Size: function() {
-    this.size = Number.from(GDotUI.selectors["." + (this.get('class'))]['width']);
-    this.minSize = Number.from(GDotUI.selectors["." + (this.get('class'))]['min-width']) || 0;
+    if (GDotUI.selectors["." + (this.get('class'))]) {
+      this.size = Number.from(GDotUI.selectors["." + (this.get('class'))]['width']);
+    } else {
+      this.size = 0;
+    }
+    if (GDotUI.selectors["." + (this.get('class'))]) {
+      this.minSize = Number.from(GDotUI.selectors["." + (this.get('class'))]['min-width']);
+    } else {
+      this.minSize = 0;
+    }
     this.addAttribute('minSize', {
       value: null,
       setter: function(value, old) {
@@ -2552,14 +2560,18 @@ Data.Color = new Class({
       }
     },
     value: {
+      value: new Color(GDotUI.selectors['.color']['color']),
       setter: function(value) {
-        this.set('hue', value.color.hsb[0]);
-        this.set('saturation', value.color.hsb[1]);
-        this.set('lightness', value.color.hsb[2]);
+        this.set('hue', value.hsb[0]);
+        this.set('saturation', value.hsb[1]);
+        this.set('lightness', value.hsb[2]);
         this.set('type', value.type);
         return this.set('alpha', value.alpha);
       }
     }
+  },
+  ready: function() {
+    return this.update();
   },
   update: function() {
     var alpha, hue, lightness, ret, saturation, type;
@@ -4119,6 +4131,13 @@ provides: Blender
 
 ...
 */
+Math.inRange = function(n, n1, range) {
+  if ((n1 - range < n && n < n1 + range)) {
+    return true;
+  } else {
+    return false;
+  }
+};
 Blender = new Class({
   Extends: Core.Abstract,
   Implements: Interfaces.Children,
@@ -4127,7 +4146,16 @@ Blender = new Class({
       value: 'blender-layout'
     },
     active: {
-      value: null
+      value: null,
+      setter: function(newv, oldv) {
+        if (oldv != null) {
+          oldv.base.removeClass('bv-selected');
+          oldv.base.setStyle('border', '');
+        }
+        newv.base.addClass('bv-selected');
+        newv.base.setStyle('border', '1px solid #888');
+        return newv;
+      }
     }
   },
   toggleFullScreen: function(view) {
@@ -4171,6 +4199,10 @@ Blender = new Class({
       view2.set('left', view.get('left'));
       view2.set('right', view.get('right'));
       view.set('bottom', Math.floor(top + ((bottom - top) / 2)));
+      view.collapseInto = view2;
+      view.collapseDirection = 'bottom';
+      view2.collapseDirection = 'top';
+      view2.collapseInto = view;
     }
     if (mode === 'horizontal') {
       if (view.restrains.right) {
@@ -4184,10 +4216,83 @@ Blender = new Class({
       view2.set('left', Math.floor(left + ((right - left) / 2)));
       view2.set('right', right);
       view.set('right', Math.floor(left + ((right - left) / 2)));
+      view.collapseInto = view2;
+      view.collapseDirection = 'right';
+      view2.collapseDirection = 'left';
+      view2.collapseInto = view;
     }
     this.addView(view2);
     this.calculateNeigbours();
     return this.updateToolBars();
+  },
+  deleteView: function(view) {
+    var n;
+    this.emptyNeigbours();
+    n = this.getFullNeigbour(view);
+    if (n != null) {
+      n.view.set(n.side, view.get(n.side));
+      this.removeChild(this.active);
+      this.set('active', n.view);
+    }
+    return this.calculateNeigbours();
+  },
+  getFullNeigbour: function(view) {
+    var ret;
+    ret = {
+      side: null,
+      view: null
+    };
+    if (ret.view = this.getNeigbour(view, 'left')) {
+      ret.side = 'right';
+      return ret;
+    }
+    if (ret.view = this.getNeigbour(view, 'right')) {
+      ret.side = 'left';
+      return ret;
+    }
+    if (ret.view = this.getNeigbour(view, 'top')) {
+      ret.side = 'bottom';
+      return ret;
+    }
+    if (ret.view = this.getNeigbour(view, 'bottom')) {
+      ret.side = 'top';
+      return ret;
+    }
+  },
+  getNeigbour: function(view, prop) {
+    var mod, opp, ret, third, val, val1;
+    mod = prop;
+    switch (mod) {
+      case 'right':
+        opp = 'left';
+        third = 'height';
+        break;
+      case 'left':
+        third = 'height';
+        opp = 'right';
+        break;
+      case 'top':
+        third = 'width';
+        opp = 'bottom';
+        break;
+      case 'bottom':
+        third = 'width';
+        opp = 'top';
+    }
+    ret = null;
+    val = view.get(mod);
+    val1 = view.get(third);
+    this.children.each(function(it) {
+      var v, w;
+      if (it !== view) {
+        w = it.get(third);
+        v = it.get(opp);
+        if (Math.inRange(v, val, 3) && Math.inRange(w, val1, 3)) {
+          return ret = it;
+        }
+      }
+    });
+    return ret;
   },
   getSimilar: function(item, prop) {
     var mod, opp, ret, val;
@@ -4240,7 +4345,10 @@ Blender = new Class({
     this.views = [];
     window.addEvent('keydown', (function(e) {
       if (e.key === 'up' && e.control) {
-        return this.toggleFullScreen(this.get('active'));
+        this.toggleFullScreen(this.get('active'));
+      }
+      if (e.key === 'delete') {
+        return this.deleteView(this.active);
       }
     }).bind(this));
     window.addEvent('resize', this.update.bind(this));
@@ -4438,6 +4546,16 @@ Blender.View = new Class({
       setter: function(value) {
         this.base.setStyle('top', value + 1);
         return value;
+      }
+    },
+    width: {
+      getter: function() {
+        return this.get('right') - this.get('left');
+      }
+    },
+    height: {
+      getter: function() {
+        return this.get('bottom') - this.get('top');
       }
     },
     left: {

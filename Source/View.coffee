@@ -30,6 +30,14 @@ Blender.View = new Class {
         @base.setStyle 'top', value+1
         value
     }
+    width: {
+      getter: ->
+        @get('right')-@get('left')
+    }
+    height: {
+      getter: ->
+        @get('bottom')-@get('top')
+    }
     left: {
       setter: (value) ->
         if String.from(value).test(/%$/)

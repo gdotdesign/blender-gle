@@ -51,6 +51,5 @@ slider = new Blender();
 slider.addToStack('node editor',asd)
 slider.addToStack('preview',asd1)
 slider.addToStack('info',Core.Abstract)
-slider.addToStack('color',Data.Color)
 document.body.grab(slider);
 });

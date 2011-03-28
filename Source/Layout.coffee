@@ -17,6 +17,11 @@ provides: Blender
 
 ...
 ###
+Math.inRange = (n,n1,range) ->
+  if n1-range < n < n1+range
+    true
+  else
+    false
 Blender = new Class {
   Extends: Core.Abstract
   Implements: Interfaces.Children
@@ -26,6 +31,13 @@ Blender = new Class {
     }
     active: {
       value: null
+      setter: (newv,oldv)->
+        if oldv?
+          oldv.base.removeClass 'bv-selected'
+          oldv.base.setStyle 'border', ''
+        newv.base.addClass 'bv-selected'
+        newv.base.setStyle 'border', '1px solid #888'
+        newv
     }
   }
   toggleFullScreen: (view) ->
@@ -65,6 +77,10 @@ Blender = new Class {
       view2.set 'left', view.get('left')
       view2.set 'right', view.get('right')
       view.set 'bottom', Math.floor(top+((bottom-top)/2))
+      view.collapseInto = view2
+      view.collapseDirection = 'bottom'
+      view2.collapseDirection = 'top'
+      view2.collapseInto = view
       
     if mode is 'horizontal'
       if view.restrains.right
@@ -77,10 +93,64 @@ Blender = new Class {
       view2.set 'left', Math.floor(left+((right-left)/2))
       view2.set 'right', right
       view.set 'right', Math.floor(left+((right-left)/2))
-    
+      view.collapseInto = view2
+      view.collapseDirection = 'right'
+      view2.collapseDirection = 'left'
+      view2.collapseInto = view
     @addView view2
     @calculateNeigbours()
     @updateToolBars()
+    
+  deleteView: (view)->
+    @emptyNeigbours()
+    n = @getFullNeigbour(view)
+    if n?
+      n.view.set n.side, view.get n.side
+      @removeChild @active
+      @set 'active', n.view
+    @calculateNeigbours()
+  getFullNeigbour: (view) ->
+    ret = {
+      side: null
+      view: null
+    }
+    if ret.view = @getNeigbour(view,'left')
+      ret.side = 'right'
+      return ret
+    if ret.view = @getNeigbour(view,'right')
+      ret.side = 'left'
+      return ret
+    if ret.view = @getNeigbour(view,'top')
+      ret.side = 'bottom'
+      return ret
+    if ret.view = @getNeigbour(view,'bottom')
+      ret.side = 'top'
+      return ret  
+  getNeigbour: (view,prop) ->
+    mod = prop
+    switch mod
+      when 'right'
+        opp = 'left'
+        third = 'height'
+      when 'left'
+        third = 'height'
+        opp = 'right'
+      when 'top'
+        third = 'width'
+        opp = 'bottom'
+      when 'bottom'
+        third = 'width'
+        opp = 'top'
+    ret = null
+    val = view.get mod
+    val1 = view.get third
+    @children.each (it) ->
+      if it isnt view
+        w = it.get third
+        v = it.get opp
+        if Math.inRange(v,val,3) and Math.inRange(w,val1,3)
+          ret = it
+    ret 
   getSimilar: (item,prop)->  
     mod = prop
     switch mod
@@ -120,6 +190,8 @@ Blender = new Class {
     window.addEvent 'keydown', ((e)->
       if e.key is 'up' and e.control
         @toggleFullScreen @get 'active'
+      if e.key is 'delete'
+        @deleteView @active
     ).bind @
     window.addEvent 'resize', @update.bind @
     @addView new Blender.View({top:0,left:0,right:"100%",bottom:"100%"
