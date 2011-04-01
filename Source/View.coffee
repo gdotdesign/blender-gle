@@ -66,8 +66,13 @@ Blender.View = new Class {
     content: {
       value: null
       setter: (newVal,oldVal)->
-        @removeChild oldVal
+        if oldVal
+          @removeChild oldVal
+          if oldVal.toolbar?
+            @toolbar.removeChild oldVal.toolbar
         @addChild newVal, 'top'
+        if newVal.toolbar?
+          @toolbar.addChild newVal.toolbar
         newVal
     }
   }

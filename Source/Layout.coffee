@@ -41,8 +41,8 @@ Blender = new Class {
     }
   }
   toggleFullScreen: (view) ->
+    @emptyNeigbours()
     if !view.fullscreen 
-      @emptyNeigbours()
       view.lastPosition = {
         top: view.get 'top'
         bottom: view.get 'bottom'
@@ -62,7 +62,7 @@ Blender = new Class {
       view.set 'bottom', view.lastPosition.bottom
       view.set 'left', view.lastPosition.left
       view.set 'right', view.lastPosition.right
-      @calculateNeigbours()
+    @calculateNeigbours()
   splitView: (view,mode)->
     @emptyNeigbours()
     view2 = new Blender.View()
@@ -77,10 +77,6 @@ Blender = new Class {
       view2.set 'left', view.get('left')
       view2.set 'right', view.get('right')
       view.set 'bottom', Math.floor(top+((bottom-top)/2))
-      view.collapseInto = view2
-      view.collapseDirection = 'bottom'
-      view2.collapseDirection = 'top'
-      view2.collapseInto = view
       
     if mode is 'horizontal'
       if view.restrains.right
@@ -93,10 +89,6 @@ Blender = new Class {
       view2.set 'left', Math.floor(left+((right-left)/2))
       view2.set 'right', right
       view.set 'right', Math.floor(left+((right-left)/2))
-      view.collapseInto = view2
-      view.collapseDirection = 'right'
-      view2.collapseDirection = 'left'
-      view2.collapseInto = view
     @addView view2
     @calculateNeigbours()
     @updateToolBars()
@@ -170,10 +162,10 @@ Blender = new Class {
     @children.each (it) ->
       if it isnt item
         v = it.get opp
-        if val-5 < v and v < val+5
+        if Math.inRange(v,val,5)
           ret.opp.push it
         v = it.get mod
-        if val-5 < v and v < val+5
+        if Math.inRange(v,val,5)
           ret.mod.push it
     ret 
   update: (e) ->
@@ -190,7 +182,7 @@ Blender = new Class {
     window.addEvent 'keydown', ((e)->
       if e.key is 'up' and e.control
         @toggleFullScreen @get 'active'
-      if e.key is 'delete'
+      if e.key is 'delete' and e.control
         @deleteView @active
     ).bind @
     window.addEvent 'resize', @update.bind @

@@ -4199,10 +4199,6 @@ Blender = new Class({
       view2.set('left', view.get('left'));
       view2.set('right', view.get('right'));
       view.set('bottom', Math.floor(top + ((bottom - top) / 2)));
-      view.collapseInto = view2;
-      view.collapseDirection = 'bottom';
-      view2.collapseDirection = 'top';
-      view2.collapseInto = view;
     }
     if (mode === 'horizontal') {
       if (view.restrains.right) {
@@ -4216,10 +4212,6 @@ Blender = new Class({
       view2.set('left', Math.floor(left + ((right - left) / 2)));
       view2.set('right', right);
       view.set('right', Math.floor(left + ((right - left) / 2)));
-      view.collapseInto = view2;
-      view.collapseDirection = 'right';
-      view2.collapseDirection = 'left';
-      view2.collapseInto = view;
     }
     this.addView(view2);
     this.calculateNeigbours();
@@ -4319,11 +4311,11 @@ Blender = new Class({
       var v;
       if (it !== item) {
         v = it.get(opp);
-        if (val - 5 < v && v < val + 5) {
+        if (Math.range(v, val, 5)) {
           ret.opp.push(it);
         }
         v = it.get(mod);
-        if (val - 5 < v && v < val + 5) {
+        if (Math.range(v, val, 5)) {
           return ret.mod.push(it);
         }
       }
