@@ -27,6 +27,7 @@ Blender.View = new Class {
     }
     top: {
       setter: (value) ->
+        value = Number.eval value, window.getSize().y
         @base.setStyle 'top', value+1
         value
     }
@@ -40,16 +41,13 @@ Blender.View = new Class {
     }
     left: {
       setter: (value) ->
-        if String.from(value).test(/%$/)
-          value = window.getSize().x*Number.from(value)/100
+        value = Number.eval value, window.getSize().x
         @base.setStyle 'left', value
         value
     }
     right: {
       setter: (value) ->
-        winsize = window.getSize()
-        if String.from(value).test(/%$/)
-          value = winsize.x*Number.from(value)/100
+        value = Number.eval value, window.getSize().x
         @base.setStyle 'right',  window.getSize().x-value+1
         value
     }
@@ -58,8 +56,7 @@ Blender.View = new Class {
     }
     bottom: {
       setter: (value) ->
-        if String.from(value).test(/%$/)
-          value = window.getSize().y*Number.from(value)/100
+        value = Number.eval value, window.getSize().y
         @base.setStyle 'bottom', window.getSize().y-value
         value
     }
@@ -74,6 +71,11 @@ Blender.View = new Class {
         if newVal.toolbar?
           @toolbar.addChild newVal.toolbar
         newVal
+    }
+    stack: {
+      setter: (value) ->
+        @fireEvent 'content-change', value
+        value
     }
   }
   resize: ->

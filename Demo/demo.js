@@ -48,8 +48,15 @@ create: function(){
 });
 window.addEvent('domready', function(){
 slider = new Blender();
+document.body.grab(slider);
 slider.addToStack('node editor',asd)
 slider.addToStack('preview',asd1)
 slider.addToStack('info',Core.Abstract)
-document.body.grab(slider);
+slider.fromObj([
+{top: "0", left: "0",right: "100%-300",bottom:"32",stack:'info'},
+{top: "32", left: "0",right: "100%-300",bottom:"100%-150",stack:'node editor'},
+{top: "100%-150", left: "0",right: "100%-300",bottom:"100%"},
+{top: "0", left: "100%-300" ,right: "100%",bottom:"200",stack:'preview'},
+{top: 200, left: "100%-300" ,right: "100%",bottom:"100%",stack:'preview'}
+]);
 });

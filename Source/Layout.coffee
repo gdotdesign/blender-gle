@@ -17,11 +17,6 @@ provides: Blender
 
 ...
 ###
-Math.inRange = (n,n1,range) ->
-  if n1-range < n < n1+range
-    true
-  else
-    false
 Blender = new Class {
   Extends: Core.Abstract
   Implements: Interfaces.Children
@@ -140,7 +135,7 @@ Blender = new Class {
       if it isnt view
         w = it.get third
         v = it.get opp
-        if Math.inRange(v,val,3) and Math.inRange(w,val1,3)
+        if v.inRange(val,3) and w.inRange(val1,3)
           ret = it
     ret 
   getSimilar: (item,prop)->  
@@ -162,10 +157,10 @@ Blender = new Class {
     @children.each (it) ->
       if it isnt item
         v = it.get opp
-        if Math.inRange(v,val,5)
+        if v.inRange(val,5)
           ret.opp.push it
         v = it.get mod
-        if Math.inRange(v,val,5)
+        if v.inRange(val,5)
           ret.mod.push it
     ret 
   update: (e) ->
@@ -173,6 +168,11 @@ Blender = new Class {
     @children.each (child)->
       child.resize()
       child.update()
+    @calculateNeigbours()
+  fromObj: (obj) ->
+    @emptyNeigbours()
+    for view in obj
+      @addView new Blender.View(view)
     @calculateNeigbours()
   create: ->
     @i = 0
@@ -186,9 +186,9 @@ Blender = new Class {
         @deleteView @active
     ).bind @
     window.addEvent 'resize', @update.bind @
-    @addView new Blender.View({top:0,left:0,right:"100%",bottom:"100%"
-      ,restrains: {top:yes,left:yes,right:yes,bottom:yes}
-    })
+    #@addView new Blender.View({top:0,left:0,right:"100%",bottom:"100%"
+    #  ,restrains: {top:yes,left:yes,right:yes,bottom:yes}
+    #})
     console.log 'Blender Layout engine!'
   emptyNeigbours: ->
     @children.each ((child)->
@@ -213,6 +213,9 @@ Blender = new Class {
       @set 'active', view
     ).bind @
     view.addEvent 'split', @splitView.bind @
+    if view.stack?
+      content = new @stack[view.stack]()
+      view.set 'content', content
     view.addEvent 'content-change', ((e)->
       if e?
         content = new @stack[e]()

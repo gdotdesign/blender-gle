@@ -29,6 +29,22 @@ Element.Properties.checked = {
   }
 };
 (function() {
+  Number.implement({
+    inRange: function(center, range) {
+      if ((center - range < this && this < center + range)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  });
+  return Number.eval = function(string, size) {
+    return Number.from(eval(String.from(string).replace(/(\d*)\%/g, function(match, str) {
+      return (Number.from(str) / 100) * size;
+    })));
+  };
+})();
+(function() {
   return Color.implement({
     type: 'hex',
     alpha: 100,
@@ -61,10 +77,10 @@ Element.Properties.checked = {
           return String.from("rgba(" + this.rgb[0] + ", " + this.rgb[1] + ", " + this.rgb[2] + ", " + (this.alpha / 100) + ")");
         case "hsl":
           this.hsl = this.hsvToHsl();
-          return String.from("hsl(" + this.hsl[0] + ", " + this.hsl[1] + "%, " + this.hsl[2] + "%)");
+          return String.from("hsl(" + this.hsl[0] + ", " + (Math.round(this.hsl[1])) + "%, " + (Math.round(this.hsl[2])) + "%)");
         case "hsla":
           this.hsl = this.hsvToHsl();
-          return String.from("hsla(" + this.hsl[0] + ", " + this.hsl[1] + "%, " + this.hsl[2] + "%, " + (this.alpha / 100) + ")");
+          return String.from("hsla(" + this.hsl[0] + ", " + (Math.round(this.hsl[1])) + "%, " + (Math.round(this.hsl[2])) + "%, " + (this.alpha / 100) + ")");
         case "hex":
           return String.from(this.hex);
       }
@@ -628,8 +644,9 @@ Interfaces.Children = new Class({
   adoptChildren: function() {
     var children;
     children = Array.from(arguments);
-    this.children.append(children);
-    return this.base.adopt(arguments);
+    return children.each(function(child) {
+      return this.addChild(child);
+    }, this);
   },
   addChild: function(el, where) {
     this.children.push(el);
@@ -643,9 +660,10 @@ Interfaces.Children = new Class({
     }
   },
   empty: function() {
-    return this.children.each(function(child) {
-      return this.removeChild(child);
-    }, this);
+    this.children.each(function(child) {
+      return document.id(child).dispose();
+    });
+    return this.children.empty();
   }
 });
 /*
@@ -1740,7 +1758,7 @@ Core.Toggler = new Class({
     checked: {
       value: true,
       setter: function(value) {
-        this.base.fireEvent('change', value);
+        this.fireEvent('change', value);
         return value;
       }
     }
@@ -2054,6 +2072,13 @@ Core.PushGroup = new Class({
       this.set('active', button);
       return this.fireEvent('change', button);
     }
+  },
+  emptyItems: function() {
+    this.children.each(function(child) {
+      console.log(child);
+      return child.removeEvents('invoked');
+    }, this);
+    return this.empty();
   },
   removeItem: function(item) {
     if (this.hasChild(item)) {
@@ -2560,8 +2585,9 @@ Data.Color = new Class({
       }
     },
     value: {
-      value: new Color(GDotUI.selectors['.color']['color']),
+      value: new Color('#fff'),
       setter: function(value) {
+        console.log(value.hsb[0], value.hsb[1], value.hsb[2]);
         this.set('hue', value.hsb[0]);
         this.set('saturation', value.hsb[1]);
         this.set('lightness', value.hsb[2]);
@@ -2894,7 +2920,7 @@ Interfaces.Draggable = new Class({
           remove: this.options.removeClasses,
           droppables: this.options.droppables,
           precalculate: true,
-          pos: true
+          pos: false
         });
       } else {
         this.drag = new Drag.Float(this.base, {
@@ -2926,7 +2952,7 @@ requires: [GDotUI, Interfaces.Draggable]
 */
 Iterable.ListItem = new Class({
   Extends: Core.Abstract,
-  Implements: [Interfaces.Draggable, Interfaces.Enabled],
+  Implements: [Interfaces.Draggable, Interfaces.Enabled, Options],
   Attributes: {
     label: {
       value: '',
@@ -2957,6 +2983,7 @@ Iterable.ListItem = new Class({
     dropppables: ''
   },
   initialize: function(options) {
+    this.setOptions(options);
     return this.parent(options);
   },
   create: function() {
@@ -3959,7 +3986,10 @@ Forms.Fieldset = new Class({
     });
     this.base.grab(this.legend);
     this.options.inputs.each((function(item) {
-      return this.base.grab(new Forms.Field(item));
+      var input;
+      input = new Forms.Field(item);
+      this.inputs.push(input);
+      return this.base.grab(input);
     }).bind(this));
     return this;
   },
@@ -4083,8 +4113,8 @@ provides: [Pickers.Base, Pickers.Color, Pickers.Number, Pickers.Text, Pickers.Ti
 */
 Pickers.Base = new Class({
   Delegates: {
-    picker: ['attach', 'detach', 'attachAndShow'],
-    data: ['setValue', 'getValue', 'disable', 'enable']
+    picker: ['attach', 'detach', 'show'],
+    data: ['set']
   },
   Attributes: {
     type: {
@@ -4100,18 +4130,36 @@ Pickers.Base = new Class({
     return this;
   }
 });
-/*
-Pickers.Color = new Pickers.Base {type:'Color'}
-Pickers.Number = new Pickers.Base {type:'Number'}
-Pickers.Time = new Pickers.Base {type:'Time'}
-Pickers.Text = new Pickers.Base {type:'Text'}
-Pickers.Date = new Pickers.Base {type:'Date'}
-Pickers.DateTime = new Pickers.Base {type:'DateTime'}
-Pickers.Table = new Pickers.Base {type:'Table'}
-Pickers.Unit = new Pickers.Base {type:'Unit'}
-Pickers.Select = new Pickers.Base {type:'Select'}
-Pickers.List = new Pickers.Base {type:'List'}
-*/
+Pickers.Color = new Pickers.Base({
+  type: 'ColorWheel'
+});
+Pickers.Number = new Pickers.Base({
+  type: 'Number'
+});
+Pickers.Time = new Pickers.Base({
+  type: 'Time'
+});
+Pickers.Text = new Pickers.Base({
+  type: 'Text'
+});
+Pickers.Date = new Pickers.Base({
+  type: 'Date'
+});
+Pickers.DateTime = new Pickers.Base({
+  type: 'DateTime'
+});
+Pickers.Table = new Pickers.Base({
+  type: 'Table'
+});
+Pickers.Unit = new Pickers.Base({
+  type: 'Unit'
+});
+Pickers.Select = new Pickers.Base({
+  type: 'Select'
+});
+Pickers.List = new Pickers.Base({
+  type: 'List'
+});
 /*
 ---
 
@@ -4131,13 +4179,6 @@ provides: Blender
 
 ...
 */
-Math.inRange = function(n, n1, range) {
-  if ((n1 - range < n && n < n1 + range)) {
-    return true;
-  } else {
-    return false;
-  }
-};
 Blender = new Class({
   Extends: Core.Abstract,
   Implements: Interfaces.Children,
@@ -4159,8 +4200,8 @@ Blender = new Class({
     }
   },
   toggleFullScreen: function(view) {
+    this.emptyNeigbours();
     if (!view.fullscreen) {
-      this.emptyNeigbours();
       view.lastPosition = {
         top: view.get('top'),
         bottom: view.get('bottom'),
@@ -4172,7 +4213,7 @@ Blender = new Class({
       view.set('left', 0);
       view.set('right', '100%');
       view.fullscreen = true;
-      return view.base.setStyle('z-index', 100);
+      view.base.setStyle('z-index', 100);
     } else {
       view.fullscreen = false;
       view.base.setStyle('z-index', 1);
@@ -4180,8 +4221,8 @@ Blender = new Class({
       view.set('bottom', view.lastPosition.bottom);
       view.set('left', view.lastPosition.left);
       view.set('right', view.lastPosition.right);
-      return this.calculateNeigbours();
     }
+    return this.calculateNeigbours();
   },
   splitView: function(view, mode) {
     var bottom, left, right, top, view2;
@@ -4279,7 +4320,7 @@ Blender = new Class({
       if (it !== view) {
         w = it.get(third);
         v = it.get(opp);
-        if (Math.inRange(v, val, 3) && Math.inRange(w, val1, 3)) {
+        if (v.inRange(val, 3) && w.inRange(val1, 3)) {
           return ret = it;
         }
       }
@@ -4311,11 +4352,11 @@ Blender = new Class({
       var v;
       if (it !== item) {
         v = it.get(opp);
-        if (Math.range(v, val, 5)) {
+        if (v.inRange(val, 5)) {
           ret.opp.push(it);
         }
         v = it.get(mod);
-        if (Math.range(v, val, 5)) {
+        if (v.inRange(val, 5)) {
           return ret.mod.push(it);
         }
       }
@@ -4330,6 +4371,15 @@ Blender = new Class({
     });
     return this.calculateNeigbours();
   },
+  fromObj: function(obj) {
+    var view, _i, _len;
+    this.emptyNeigbours();
+    for (_i = 0, _len = obj.length; _i < _len; _i++) {
+      view = obj[_i];
+      this.addView(new Blender.View(view));
+    }
+    return this.calculateNeigbours();
+  },
   create: function() {
     this.i = 0;
     this.stack = {};
@@ -4339,23 +4389,11 @@ Blender = new Class({
       if (e.key === 'up' && e.control) {
         this.toggleFullScreen(this.get('active'));
       }
-      if (e.key === 'delete') {
+      if (e.key === 'delete' && e.control) {
         return this.deleteView(this.active);
       }
     }).bind(this));
     window.addEvent('resize', this.update.bind(this));
-    this.addView(new Blender.View({
-      top: 0,
-      left: 0,
-      right: "100%",
-      bottom: "100%",
-      restrains: {
-        top: true,
-        left: true,
-        right: true,
-        bottom: true
-      }
-    }));
     return console.log('Blender Layout engine!');
   },
   emptyNeigbours: function() {
@@ -4379,13 +4417,17 @@ Blender = new Class({
     return this.removeChild(view);
   },
   addView: function(view) {
+    var content;
     this.addChild(view);
     view.base.addEvent('click', (function() {
       return this.set('active', view);
     }).bind(this));
     view.addEvent('split', this.splitView.bind(this));
+    if (view.stack != null) {
+      content = new this.stack[view.stack]();
+      view.set('content', content);
+    }
     return view.addEvent('content-change', (function(e) {
-      var content;
       if (e != null) {
         content = new this.stack[e]();
         return view.set('content', content);
@@ -4491,12 +4533,28 @@ provides: Blender.Toolbar
 
 ...
 */
+Interfaces.HorizontalChildren = new Class({
+  Extends: Interfaces.Children,
+  addChild: function(el, where) {
+    this.children.push(el);
+    document.id(el).setStyle('float', 'left');
+    return this.base.grab(el, where);
+  }
+});
 Blender.Toolbar = new Class({
   Extends: Core.Abstract,
-  Implements: Interfaces.Children,
+  Implements: Interfaces.HorizontalChildren,
   Attributes: {
     "class": {
       value: 'blender-toolbar'
+    },
+    content: {
+      value: null,
+      setter: function(newVal, oldVal) {
+        this.removeChild(oldVal);
+        this.addChild(newVal, 'top');
+        return newVal;
+      }
     }
   },
   create: function() {
@@ -4536,6 +4594,7 @@ Blender.View = new Class({
     },
     top: {
       setter: function(value) {
+        value = Number.eval(value, window.getSize().y);
         this.base.setStyle('top', value + 1);
         return value;
       }
@@ -4552,20 +4611,14 @@ Blender.View = new Class({
     },
     left: {
       setter: function(value) {
-        if (String.from(value).test(/%$/)) {
-          value = window.getSize().x * Number.from(value) / 100;
-        }
+        value = Number.eval(value, window.getSize().x);
         this.base.setStyle('left', value);
         return value;
       }
     },
     right: {
       setter: function(value) {
-        var winsize;
-        winsize = window.getSize();
-        if (String.from(value).test(/%$/)) {
-          value = winsize.x * Number.from(value) / 100;
-        }
+        value = Number.eval(value, window.getSize().x);
         this.base.setStyle('right', window.getSize().x - value + 1);
         return value;
       }
@@ -4580,9 +4633,7 @@ Blender.View = new Class({
     },
     bottom: {
       setter: function(value) {
-        if (String.from(value).test(/%$/)) {
-          value = window.getSize().y * Number.from(value) / 100;
-        }
+        value = Number.eval(value, window.getSize().y);
         this.base.setStyle('bottom', window.getSize().y - value);
         return value;
       }
@@ -4590,9 +4641,23 @@ Blender.View = new Class({
     content: {
       value: null,
       setter: function(newVal, oldVal) {
-        this.removeChild(oldVal);
+        if (oldVal) {
+          this.removeChild(oldVal);
+          if (oldVal.toolbar != null) {
+            this.toolbar.removeChild(oldVal.toolbar);
+          }
+        }
         this.addChild(newVal, 'top');
+        if (newVal.toolbar != null) {
+          this.toolbar.addChild(newVal.toolbar);
+        }
         return newVal;
+      }
+    },
+    stack: {
+      setter: function(value) {
+        this.fireEvent('content-change', value);
+        return value;
       }
     }
   },
