@@ -1143,6 +1143,7 @@ Core.Slider = new Class({
       value: 0,
       setter: function(value) {
         var percent;
+        value = Number.from(value);
         if (!this.reset) {
           percent = Math.round((value / this.steps) * 100);
           if (value < 0) {
@@ -1158,6 +1159,13 @@ Core.Slider = new Class({
           }
         }
         return value;
+      },
+      getter: function() {
+        if (this.reset) {
+          return this.value;
+        } else {
+          return Number.from(this.progress.getStyle(this.modifier)) / this.size * this.steps;
+        }
       }
     }
   },
@@ -1464,13 +1472,11 @@ Iterable.List = new Class({
         }).bind(this))[0];
       },
       setter: function(value, old) {
+        if (old) {
+          old.base.removeClass(this.options.selected);
+        }
         if (value != null) {
-          if (old !== value) {
-            if (old) {
-              old.base.removeClass(this.options.selected);
-            }
-            value.base.addClass(this.options.selected);
-          }
+          value.base.addClass(this.options.selected);
         }
         return value;
       }
@@ -2375,8 +2381,12 @@ Data.Select = new Class({
     this.list.addEvent('selectedChange', (function() {
       var item;
       item = this.list.selected;
-      this.text.set('text', item.label);
-      this.fireEvent('change', item.label);
+      if (item != null) {
+        this.text.set('text', item.label);
+        this.fireEvent('change', item.label);
+      } else {
+        this.text.set('text', '');
+      }
       return this.picker.hide(null, true);
     }).bind(this));
     return this.update();
@@ -2807,7 +2817,9 @@ Data.ColorWheel = new Class({
     this.background.set('width', this.size);
     this.background.set('height', this.size);
     this.wrapper.setStyle('height', this.size);
-    this.drawHSLACone(this.size);
+    if (this.size > 0) {
+      this.drawHSLACone(this.size);
+    }
     this.colorData.set('size', this.size);
     this.knobSize = this.knob.getSize();
     this.halfWidth = this.size / 2;
@@ -4417,37 +4429,61 @@ Blender = new Class({
     return this.removeChild(view);
   },
   addView: function(view) {
-    var content;
     this.addChild(view);
+    this.updateToolBar(view);
     view.base.addEvent('click', (function() {
       return this.set('active', view);
     }).bind(this));
     view.addEvent('split', this.splitView.bind(this));
-    if (view.stack != null) {
-      content = new this.stack[view.stack]();
-      view.set('content', content);
-    }
-    return view.addEvent('content-change', (function(e) {
+    view.addEvent('content-change', (function(e) {
       if (e != null) {
-        content = new this.stack[e]();
-        return view.set('content', content);
+        return this.setViewContent(e, view);
       }
     }).bind(this));
+    if (view.stack != null) {
+      return view.toolbar.select.list.items.each(function(item) {
+        if (item.label === view.stack) {
+          return this.set('selected', item);
+        }
+      }, view.toolbar.select.list);
+    }
   },
-  addToStack: function(name, cls) {
-    this.stack[name] = cls;
+  setViewContent: function(viewContent, view) {
+    var content;
+    if (!this.stack[viewContent].unique) {
+      content = new this.stack[viewContent]["class"]();
+    } else {
+      if (this.stack[viewContent].content != null) {
+        content = this.stack[viewContent].content;
+        this.stack[viewContent].owner.set('content', null);
+        this.stack[viewContent].owner.toolbar.select.list.set('selected', null);
+      } else {
+        content = this.stack[viewContent].content = new this.stack[viewContent]["class"]();
+      }
+      this.stack[viewContent].owner = view;
+    }
+    return view.set('content', content);
+  },
+  addToStack: function(name, viewContent, unique) {
+    this.stack[name] = {
+      "class": viewContent,
+      unique: unique
+    };
     return this.updateToolBars();
+  },
+  updateToolBar: function(view) {
+    view.toolbar.select.list.removeAll();
+    return Object.each(this.stack, function(value, key) {
+      return this.addItem(new Iterable.ListItem({
+        label: key,
+        removeable: false,
+        draggable: false
+      }));
+    }, view.toolbar.select);
   },
   updateToolBars: function() {
     return this.children.each(function(child) {
-      child.toolbar.select.list.removeAll();
-      return Object.each(this.stack, function(value, key) {
-        return this.addItem(new Iterable.ListItem({
-          label: key,
-          removeable: false,
-          draggable: false
-        }));
-      }, child.toolbar.select);
+      return this.updateToolBar(child);
     }, this);
   }
 });
@@ -4647,9 +4683,14 @@ Blender.View = new Class({
             this.toolbar.removeChild(oldVal.toolbar);
           }
         }
-        this.addChild(newVal, 'top');
-        if (newVal.toolbar != null) {
-          this.toolbar.addChild(newVal.toolbar);
+        if (newVal != null) {
+          if (newVal.base != null) {
+            newVal.base.setStyle('position', 'relative');
+          }
+          this.addChild(newVal, 'top');
+          if (newVal.toolbar != null) {
+            this.toolbar.addChild(newVal.toolbar);
+          }
         }
         return newVal;
       }
@@ -4687,6 +4728,10 @@ Blender.View = new Class({
     } else {
       return this.slider.hide();
     }
+  },
+  updateScrollTop: function() {
+    console.log(this.slider.get('value'));
+    return this.content.base.setStyle('top', ((this.base.getSize().y - this.content.base.getSize().y - 30) / 100) * this.slider.get('value'));
   },
   create: function() {
     this.windowSize = window.getSize();
@@ -4761,6 +4806,7 @@ Blender.View = new Class({
     });
     this.slider.minSize = 0;
     this.slider.base.setStyle('min-height', 0);
+    this.slider.addEvent('step', this.updateScrollTop.bind(this));
     this.toolbar = new Blender.Toolbar();
     this.toolbar.select.addEvent('change', (function(e) {
       return this.fireEvent('content-change', e);

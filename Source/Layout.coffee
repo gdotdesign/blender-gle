@@ -209,26 +209,42 @@ Blender = new Class {
     @removeChild view
   addView: (view) ->
     @addChild view
+    @updateToolBar view
     view.base.addEvent 'click',( ->
       @set 'active', view
     ).bind @
     view.addEvent 'split', @splitView.bind @
-    if view.stack?
-      content = new @stack[view.stack]()
-      view.set 'content', content
     view.addEvent 'content-change', ((e)->
       if e?
-        content = new @stack[e]()
-        view.set 'content', content
+        @setViewContent e, view
     ).bind @
-  addToStack: (name,cls) ->
-    @stack[name] = cls
+    if view.stack?
+      view.toolbar.select.list.items.each (item) ->
+        if item.label is view.stack
+          @set 'selected', item
+      , view.toolbar.select.list
+  setViewContent: (viewContent,view) ->
+    if not @stack[viewContent].unique
+      content = new @stack[viewContent].class()
+    else
+      if @stack[viewContent].content?
+        content = @stack[viewContent].content
+        @stack[viewContent].owner.set 'content', null
+        @stack[viewContent].owner.toolbar.select.list.set 'selected', null
+      else
+        content = @stack[viewContent].content = new @stack[viewContent].class()
+      @stack[viewContent].owner = view
+    view.set 'content', content
+  addToStack: (name,viewContent, unique) ->
+    @stack[name] = {class: viewContent, unique: unique}
     @updateToolBars()
+  updateToolBar: (view) ->
+    view.toolbar.select.list.removeAll()
+    Object.each @stack, (value,key)->
+       @addItem new Iterable.ListItem({label:key,removeable:false,draggable:false})
+    , view.toolbar.select
   updateToolBars: ->
     @children.each (child)->
-      child.toolbar.select.list.removeAll()
-      Object.each @stack, (value,key)->
-         @addItem new Iterable.ListItem({label:key,removeable:false,draggable:false})
-      , child.toolbar.select
+      @updateToolBar child
     , @
 }

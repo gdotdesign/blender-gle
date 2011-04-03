@@ -67,9 +67,13 @@ Blender.View = new Class {
           @removeChild oldVal
           if oldVal.toolbar?
             @toolbar.removeChild oldVal.toolbar
-        @addChild newVal, 'top'
-        if newVal.toolbar?
-          @toolbar.addChild newVal.toolbar
+        delete oldVal
+        if newVal?
+          if newVal.base?
+            newVal.base.setStyle 'position', 'relative'
+          @addChild newVal, 'top'
+          if newVal.toolbar?
+            @toolbar.addChild newVal.toolbar
         newVal
     }
     stack: {
@@ -99,6 +103,8 @@ Blender.View = new Class {
       @slider.show()
     else
       @slider.hide()
+  updateScrollTop: ->
+    @content.base.setStyle 'top', ((@base.getSize().y-@content.base.getSize().y-30)/100)*@slider.get('value')
   create: ->
     @windowSize = window.getSize()
     @addEvent 'rightChange', (o)->
@@ -141,6 +147,10 @@ Blender.View = new Class {
     @slider = new Core.Slider({steps:100,mode:'vertical'})
     @slider.minSize = 0
     @slider.base.setStyle 'min-height', 0
+    
+    @slider.addEvent 'step', @updateScrollTop.bind @
+      
+    
     @toolbar = new Blender.Toolbar()
     @toolbar.select.addEvent 'change', ((e)->
       @fireEvent 'content-change', e

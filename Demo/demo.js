@@ -49,8 +49,8 @@ create: function(){
 window.addEvent('domready', function(){
 slider = new Blender();
 document.body.grab(slider);
-slider.addToStack('node editor',asd)
-slider.addToStack('preview',asd1)
+slider.addToStack('node editor',asd,true)
+slider.addToStack('preview',asd1,true)
 slider.addToStack('info',Core.Abstract)
 slider.fromObj([
 {top: "0", left: "0",right: "100%-300",bottom:"32",stack:'info'},
