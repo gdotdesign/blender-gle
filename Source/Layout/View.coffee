@@ -10,7 +10,7 @@ license: MIT-style license.
 requires: 
   - G.UI/Core.Abstract
   - G.UI/Interfaces.Children
-  - G.UI/Core.Slider
+  - Core.Scrollbar
   - Blender.Corner
   - Blender.Toolbar
 
@@ -144,7 +144,7 @@ Blender.View = new Class {
           a.opp.each (item) ->
             item.set 'right', o.newVal
     @hooks = {}
-    @slider = new Core.Slider({steps:100,mode:'vertical'})
+    @slider = new Core.Srcollbar({steps:100,mode:'vertical'})
     @slider.minSize = 0
     @slider.base.setStyle 'min-height', 0
     

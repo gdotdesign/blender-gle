@@ -10,7 +10,7 @@ license: MIT-style license.
 requires: 
   - G.UI/Core.Abstract
   - G.UI/Interfaces.Children
-  - G.UI/Core.Button
+  - Core.Button
   - G.UI/Iterable.ListItem
 
 provides: Blender

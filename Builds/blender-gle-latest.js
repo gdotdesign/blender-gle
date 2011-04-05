@@ -475,6 +475,83 @@ Core.Abstract = new Class({
 /*
 ---
 
+name: Data.Abstract
+
+description: Abstract base class for data elements.
+
+license: MIT-style license.
+
+requires:
+  - GDotUI
+  - Core.Abstract
+
+provides: Data.Abstract
+
+...
+*/
+Data.Abstract = new Class({
+  Extends: Core.Abstract,
+  Attributes: {
+    value: {
+      value: null
+    }
+  }
+});
+/*
+---
+
+name: Interfaces.Children
+
+description:
+
+license: MIT-style license.
+
+requires:
+  - GDotUI
+
+provides: Interfaces.Children
+
+...
+*/
+Interfaces.Children = new Class({
+  _$Children: function() {
+    return this.children = [];
+  },
+  hasChild: function(child) {
+    if (this.children.indexOf(child === -1)) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+  adoptChildren: function() {
+    var children;
+    children = Array.from(arguments);
+    return children.each(function(child) {
+      return this.addChild(child);
+    }, this);
+  },
+  addChild: function(el, where) {
+    this.children.push(el);
+    return this.base.grab(el, where);
+  },
+  removeChild: function(el) {
+    if (this.children.contains(el)) {
+      this.children.erase(el);
+      document.id(el).dispose();
+      return delete el;
+    }
+  },
+  empty: function() {
+    this.children.each(function(child) {
+      return document.id(child).dispose();
+    });
+    return this.children.empty();
+  }
+});
+/*
+---
+
 name: Interfaces.Enabled
 
 description: Provides enable and disable function to elements.
@@ -541,6 +618,157 @@ Interfaces.Enabled = new Class({
 /*
 ---
 
+name: Interfaces.Draggable
+
+description: Porived dragging for elements that implements it.
+
+license: MIT-style license.
+
+provides: [Interfaces.Draggable, Drag.Float, Drag.Ghost]
+
+requires: [GDotUI]
+...
+*/
+Drag.Float = new Class({
+  Extends: Drag.Move,
+  initialize: function(el, options) {
+    return this.parent(el, options);
+  },
+  start: function(event) {
+    if (this.options.target === event.target) {
+      return this.parent(event);
+    }
+  }
+});
+Drag.Ghost = new Class({
+  Extends: Drag.Move,
+  options: {
+    opacity: 0.65,
+    pos: false,
+    remove: ''
+  },
+  start: function(event) {
+    if (!event.rightClick) {
+      this.droppables = $$(this.options.droppables);
+      this.ghost();
+      return this.parent(event);
+    }
+  },
+  cancel: function(event) {
+    if (event) {
+      this.deghost();
+    }
+    return this.parent(event);
+  },
+  stop: function(event) {
+    this.deghost();
+    return this.parent(event);
+  },
+  ghost: function() {
+    this.element = (this.element.clone()).setStyles({
+      'opacity': this.options.opacity,
+      'position': 'absolute',
+      'z-index': 5003,
+      'top': this.element.getCoordinates()['top'],
+      'left': this.element.getCoordinates()['left'],
+      '-webkit-transition-duration': '0s'
+    }).inject(document.body).store('parent', this.element);
+    return this.element.getElements(this.options.remove).dispose();
+  },
+  deghost: function() {
+    var e, newpos;
+    e = this.element.retrieve('parent');
+    newpos = this.element.getPosition(e.getParent());
+    if (this.options.pos && this.overed === null) {
+      e.setStyles({
+        'top': newpos.y,
+        'left': newpos.x
+      });
+    }
+    this.element.destroy();
+    return this.element = e;
+  }
+});
+Interfaces.Draggable = new Class({
+  Implements: Options,
+  options: {
+    draggable: false,
+    ghost: false,
+    removeClasses: ''
+  },
+  _$Draggable: function() {
+    if (this.options.draggable) {
+      if (this.handle === null) {
+        this.handle = this.base;
+      }
+      if (this.options.ghost) {
+        this.drag = new Drag.Ghost(this.base, {
+          target: this.handle,
+          handle: this.handle,
+          remove: this.options.removeClasses,
+          droppables: this.options.droppables,
+          precalculate: true,
+          pos: false
+        });
+      } else {
+        this.drag = new Drag.Float(this.base, {
+          target: this.handle,
+          handle: this.handle
+        });
+      }
+      return this.drag.addEvent('drop', (function() {
+        return this.fireEvent('dropped', arguments);
+      }).bindWithEvent(this));
+    }
+  }
+});
+/*
+---
+
+name: Interfaces.Size
+
+description: Size minsize from css....
+
+license: MIT-style license.
+
+provides: Interfaces.Size
+
+requires: [GDotUI]
+...
+*/
+Interfaces.Size = new Class({
+  _$Size: function() {
+    if (GDotUI.selectors["." + (this.get('class'))]) {
+      this.size = Number.from(GDotUI.selectors["." + (this.get('class'))]['width']);
+    } else {
+      this.size = 0;
+    }
+    if (GDotUI.selectors["." + (this.get('class'))]) {
+      this.minSize = Number.from(GDotUI.selectors["." + (this.get('class'))]['min-width']);
+    } else {
+      this.minSize = 0;
+    }
+    this.addAttribute('minSize', {
+      value: null,
+      setter: function(value, old) {
+        this.base.setStyle('min-width', value);
+        return value;
+      }
+    });
+    return this.addAttribute('size', {
+      value: null,
+      setter: function(value, old) {
+        var size;
+        size = value < this.minSize ? this.minSize : value;
+        this.base.setStyle('width', size);
+        return size;
+      }
+    });
+  }
+});
+/*
+---
+
 name: Interfaces.Controls
 
 description: Some control functions.
@@ -576,6 +804,543 @@ Interfaces.Controls = new Class({
 /*
 ---
 
+name: Iterable.ListItem
+
+description: List items for Iterable.List.
+
+license: MIT-style license.
+
+requires: Core.Abstract
+
+provides: Iterable.ListItem
+
+requires: [GDotUI, Interfaces.Draggable]
+...
+*/
+Iterable.ListItem = new Class({
+  Extends: Core.Abstract,
+  Implements: [Interfaces.Draggable, Interfaces.Enabled, Options],
+  Attributes: {
+    label: {
+      value: '',
+      setter: function(value) {
+        this.title.set('text', value);
+        return value;
+      }
+    },
+    "class": {
+      value: GDotUI.Theme.ListItem["class"]
+    }
+  },
+  options: {
+    classes: {
+      title: GDotUI.Theme.ListItem.title,
+      subtitle: GDotUI.Theme.ListItem.subTitle
+    },
+    title: '',
+    subtitle: '',
+    draggable: false,
+    dragreset: true,
+    ghost: true,
+    removeClasses: '.' + GDotUI.Theme.Icon["class"],
+    invokeEvent: 'click',
+    selectEvent: 'click',
+    removeable: true,
+    sortable: false,
+    dropppables: ''
+  },
+  initialize: function(options) {
+    this.setOptions(options);
+    return this.parent(options);
+  },
+  create: function() {
+    this.base.setStyle('position', 'relative');
+    this.title = new Element('div');
+    this.subtitle = new Element('div');
+    this.base.adopt(this.title, this.subtitle);
+    this.base.addEvent(this.options.selectEvent, (function(e) {
+      return this.fireEvent('select', [this, e]);
+    }).bindWithEvent(this));
+    this.base.addEvent(this.options.invokeEvent, (function() {
+      if (this.enabled && !this.options.draggable && !this.editing) {
+        return this.fireEvent('invoked', this);
+      }
+    }).bindWithEvent(this));
+    this.addEvent('dropped', (function(el, drop, e) {
+      return this.fireEvent('invoked', [this, e, drop]);
+    }).bindWithEvent(this));
+    this.base.addEvent('dblclick', (function() {
+      if (this.enabled) {
+        if (this.editing) {
+          return this.fireEvent('edit', this);
+        }
+      }
+    }).bindWithEvent(this));
+    return this;
+  },
+  toggleEdit: function() {
+    if (this.editing) {
+      if (this.options.draggable) {
+        this.drag.attach();
+      }
+      this.remove.base.setStyle('right', -this.remove.base.getSize().x);
+      this.handles.base.setStyle('left', -this.handles.base.getSize().x);
+      this.base.setStyle('padding-left', this.base.retrieve('padding-left:old'));
+      this.base.setStyle('padding-right', this.base.retrieve('padding-right:old'));
+      return this.editing = false;
+    } else {
+      if (this.options.draggable) {
+        this.drag.detach();
+      }
+      this.remove.base.setStyle('right', this.options.offset);
+      this.handles.base.setStyle('left', this.options.offset);
+      this.base.store('padding-left:old', this.base.getStyle('padding-left'));
+      this.base.store('padding-right:old', this.base.getStyle('padding-left'));
+      this.base.setStyle('padding-left', Number(this.base.getStyle('padding-left').slice(0, -2)) + this.handles.base.getSize().x);
+      this.base.setStyle('padding-right', Number(this.base.getStyle('padding-right').slice(0, -2)) + this.remove.base.getSize().x);
+      return this.editing = true;
+    }
+  },
+  ready: function() {
+    var baseSize;
+    if (!this.editing) {
+      baseSize = this.base.getSize();
+      this.parent();
+      if (this.options.draggable) {
+        return this.drag.addEvent('beforeStart', (function() {
+          return this.fireEvent('select', this);
+        }).bindWithEvent(this));
+      }
+    }
+  }
+});
+/*
+---
+
+name: Iterable.List
+
+description: List element, with editing and sorting.
+
+license: MIT-style license.
+
+requires: Core.Abstract
+
+provides: Iterable.List
+
+requires: [GDotUI]
+...
+*/
+Iterable.List = new Class({
+  Extends: Core.Abstract,
+  options: {
+    "class": GDotUI.Theme.List["class"],
+    selected: GDotUI.Theme.List.selected,
+    search: false
+  },
+  Attributes: {
+    selected: {
+      getter: function() {
+        return this.items.filter((function(item) {
+          if (item.base.hasClass(this.options.selected)) {
+            return true;
+          } else {
+            return false;
+          }
+        }).bind(this))[0];
+      },
+      setter: function(value, old) {
+        if (old) {
+          old.base.removeClass(this.options.selected);
+        }
+        if (value != null) {
+          value.base.addClass(this.options.selected);
+        }
+        return value;
+      }
+    }
+  },
+  initialize: function(options) {
+    return this.parent(options);
+  },
+  create: function() {
+    this.base.addClass(this.options["class"]);
+    this.sortable = new Sortables(null);
+    this.editing = false;
+    if (this.options.search) {
+      this.sinput = new Element('input', {
+        "class": 'search'
+      });
+      this.base.grab(this.sinput);
+      this.sinput.addEvent('keyup', (function() {
+        return this.search();
+      }).bindWithEvent(this));
+    }
+    return this.items = [];
+  },
+  ready: function() {},
+  search: function() {
+    var svalue;
+    svalue = this.sinput.get('value');
+    return this.items.each((function(item) {
+      if (item.title.get('text').test(/#{svalue}/ig) || item.subtitle.get('text').test(/#{svalue}/ig)) {
+        return item.base.setStyle('display', 'block');
+      } else {
+        return item.base.setStyle('display', 'none');
+      }
+    }).bind(this));
+  },
+  removeItem: function(li) {
+    li.removeEvents('invoked', 'edit', 'delete');
+    this.items.erase(li);
+    return li.base.destroy();
+  },
+  removeAll: function() {
+    if (this.options.search) {
+      this.sinput.set('value', '');
+    }
+    this.selected = null;
+    this.base.empty();
+    return this.items.empty();
+  },
+  toggleEdit: function() {
+    var bases;
+    bases = this.items.map(function(item) {
+      return item.base;
+    });
+    if (this.editing) {
+      this.sortable.removeItems(bases);
+      this.items.each(function(item) {
+        return item.toggleEdit();
+      });
+      return this.editing = false;
+    } else {
+      this.sortable.addItems(bases);
+      this.items.each(function(item) {
+        return item.toggleEdit();
+      });
+      return this.editing = true;
+    }
+  },
+  getItemFromTitle: function(title) {
+    var filtered;
+    filtered = this.items.filter(function(item) {
+      if (String.from(item.title.get('text')).toLowerCase() === String(title).toLowerCase()) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return filtered[0];
+  },
+  addItem: function(li) {
+    this.items.push(li);
+    this.base.grab(li);
+    li.addEvent('select', (function(item, e) {
+      return this.set('selected', item);
+    }).bindWithEvent(this));
+    li.addEvent('invoked', (function(item) {
+      return this.fireEvent('invoked', arguments);
+    }).bindWithEvent(this));
+    li.addEvent('edit', (function() {
+      return this.fireEvent('edit', arguments);
+    }).bindWithEvent(this));
+    return li.addEvent('delete', (function() {
+      return this.fireEvent('delete', arguments);
+    }).bindWithEvent(this));
+  }
+});
+/*
+---
+
+name: Forms.Input
+
+description: Input elements for Forms.
+
+license: MIT-style license.
+
+requires: GDotUI
+
+provides: Forms.Input
+
+...
+*/
+Forms.Input = new Class({
+  Implements: [Events, Options],
+  options: {
+    type: '',
+    name: ''
+  },
+  initialize: function(options) {
+    var select, tg;
+    this.setOptions(options);
+    if (this.options.type === 'text' || this.options.type === 'password' || this.options.type === 'button') {
+      this.base = new Element('input', {
+        type: this.options.type,
+        name: this.options.name
+      });
+    }
+    if (this.options.type === 'checkbox') {
+      tg = new Core.Toggler();
+      tg.base.setAttribute('name', this.options.name);
+      tg.base.setAttribute('type', 'checkbox');
+      tg.set('checked', this.options.checked || false);
+      this.base = tg.base;
+    }
+    if (this.options.type === "textarea") {
+      this.base = new Element('textarea', {
+        name: this.options.name
+      });
+    }
+    if (this.options.type === "select") {
+      select = new Data.Select({
+        "default": this.options.name
+      });
+      select.base.setAttribute('name', this.options.name);
+      select.base.setAttribute('type', 'select');
+      this.options.options.each((function(item) {
+        return select.addItem(new Iterable.ListItem({
+          label: item.label
+        }));
+      }).bind(this));
+      select.addEvent('change', function(v) {
+        return this.base.set('value', v);
+      });
+      this.base = select.base;
+    }
+    if (this.options.type === "radio") {
+      this.base = new Element('div');
+      this.options.options.each((function(item, i) {
+        var input, label;
+        label = new Element('label', {
+          'text': item.label
+        });
+        input = new Element('input', {
+          type: 'radio',
+          name: this.options.name,
+          value: item.value
+        });
+        return this.base.adopt(label, input);
+      }).bind(this));
+    }
+    if (this.options.validate != null) {
+      $splat(this.options.validate).each((function(val) {
+        if (this.options.type !== "radio") {
+          return this.base.addClass(val);
+        }
+      }).bind(this));
+    }
+    return this;
+  },
+  toElement: function() {
+    return this.base;
+  }
+});
+/*
+---
+
+name: Forms.Field
+
+description: Field Element for Forms.Fieldset.
+
+license: MIT-style license.
+
+requires:
+  - GDotUI
+  - Forms.Input
+
+provides: Forms.Field
+
+...
+*/
+Forms.Field = new Class({
+  Implements: [Events, Options],
+  Attributes: {
+    structure: {
+      readOnly: true,
+      value: GDotUI.Theme.Forms.Field.struct
+    }
+  },
+  initialize: function(options) {
+    var h;
+    this.setOptions(options);
+    h = new Hash(this.get('structure'));
+    return h.each((function(value, key) {
+      this.base = new Element(key);
+      return this.create(value, this.base);
+    }).bind(this));
+  },
+  create: function(item, parent) {
+    var data, el, key, _results;
+    if (!(parent != null)) {
+      return null;
+    } else {
+      switch (typeOf(item)) {
+        case "object":
+          _results = [];
+          for (key in item) {
+            data = new Hash(item).get(key);
+            if (key === 'input') {
+              el = new Forms.Input(this.options);
+            } else if (key === 'label') {
+              el = new Element('label', {
+                'text': this.options.label
+              });
+            } else {
+              el = new Element(key);
+            }
+            parent.grab(el);
+            _results.push(this.create(data, el));
+          }
+          return _results;
+      }
+    }
+  },
+  toElement: function() {
+    return this.base;
+  }
+});
+/*
+---
+
+name: Forms.Fieldset
+
+description: Fieldset for Forms.Form.
+
+license: MIT-style license.
+
+requires: [Core.Abstract, Forms.Field, GDotUI]
+
+provides: Forms.Fieldset
+
+...
+*/
+Forms.Fieldset = new Class({
+  Implements: [Events, Options],
+  options: {
+    name: '',
+    inputs: []
+  },
+  initialize: function(options) {
+    this.setOptions(options);
+    this.base = new Element('fieldset');
+    this.legend = new Element('legend', {
+      text: this.options.name
+    });
+    this.base.grab(this.legend);
+    this.options.inputs.each((function(item) {
+      var input;
+      input = new Forms.Field(item);
+      this.inputs.push(input);
+      return this.base.grab(input);
+    }).bind(this));
+    return this;
+  },
+  toElement: function() {
+    return this.base;
+  }
+});
+/*
+---
+
+name: Forms.Form
+
+description: Class for creating forms from javascript objects.
+
+license: MIT-style license.
+
+requires: [Core.Abstract, Forms.Fieldset, GDotUI]
+
+provides: Forms.Form
+
+...
+*/
+Forms.Form = new Class({
+  Extends: Core.Abstract,
+  Implements: Options,
+  Binds: ['success', 'faliure'],
+  options: {
+    data: {}
+  },
+  initialize: function(options) {
+    this.fieldsets = [];
+    this.setOptions(options);
+    return this.parent(options);
+  },
+  create: function() {
+    delete this.base;
+    this.base = new Element('form');
+    if (this.options.data != null) {
+      this.options.data.each((function(fs) {
+        return this.addFieldset(new Forms.Fieldset(fs));
+      }).bind(this));
+    }
+    this.extra = this.options.extra;
+    this.useRequest = this.options.useRequest;
+    if (this.useRequest) {
+      this.request = new Request.JSON({
+        url: this.options.action,
+        resetForm: false,
+        method: this.options.method
+      });
+      this.request.addEvent('success', this.success);
+      this.request.addEvent('faliure', this.faliure);
+    } else {
+      this.base.set('action', this.options.action);
+      this.base.set('method', this.options.method);
+    }
+    this.submit = new Core.Button({
+      label: this.options.submit
+    });
+    this.base.grab(this.submit);
+    this.validator = new Form.Validator(this.base, {
+      serial: false
+    });
+    this.validator.start();
+    return this.submit.addEvent('click', (function() {
+      if (this.validator.validate()) {
+        if (this.useRequest) {
+          return this.send();
+        } else {
+          return this.fireEvent('passed', this.geatherdata());
+        }
+      } else {
+        return this.fireEvent('failed', {
+          message: 'Validation failed'
+        });
+      }
+    }).bindWithEvent(this));
+  },
+  addFieldset: function(fieldset) {
+    if (this.fieldsets.indexOf(fieldset) === -1) {
+      this.fieldsets.push(fieldset);
+      return this.base.grab(fieldset);
+    }
+  },
+  geatherdata: function() {
+    var data;
+    data = {};
+    this.base.getElements('div[type=select], input[type=text], input[type=password], textarea, input[type=radio]:checked, input[type=checkbox]:checked').each(function(item) {
+      return data[item.get('name')] = item.get('type') === "checkbox" ? true : item.get('value');
+    });
+    return data;
+  },
+  send: function() {
+    return this.request.send({
+      data: $extend(this.geatherdata(), this.extra)
+    });
+  },
+  success: function(data) {
+    return this.fireEvent('success', data);
+  },
+  faliure: function() {
+    return this.fireEvent('failed', {
+      message: 'Request error!'
+    });
+  }
+});
+/*
+---
+
 name: Core.Icon
 
 description: Generic icon element.
@@ -583,10 +1348,10 @@ description: Generic icon element.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Controls
-  - Interfaces.Enabled
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Enabled
 
 provides: Core.Icon
 
@@ -617,58 +1382,6 @@ Core.Icon = new Class({
 /*
 ---
 
-name: Interfaces.Children
-
-description:
-
-license: MIT-style license.
-
-requires:
-  - GDotUI
-
-provides: Interfaces.Children
-
-...
-*/
-Interfaces.Children = new Class({
-  _$Children: function() {
-    return this.children = [];
-  },
-  hasChild: function(child) {
-    if (this.children.indexOf(child === -1)) {
-      return false;
-    } else {
-      return true;
-    }
-  },
-  adoptChildren: function() {
-    var children;
-    children = Array.from(arguments);
-    return children.each(function(child) {
-      return this.addChild(child);
-    }, this);
-  },
-  addChild: function(el, where) {
-    this.children.push(el);
-    return this.base.grab(el, where);
-  },
-  removeChild: function(el) {
-    if (this.children.contains(el)) {
-      this.children.erase(el);
-      document.id(el).dispose();
-      return delete el;
-    }
-  },
-  empty: function() {
-    this.children.each(function(child) {
-      return document.id(child).dispose();
-    });
-    return this.children.empty();
-  }
-});
-/*
----
-
 name: Core.IconGroup
 
 description: Icon group with 5 types of layout.
@@ -676,11 +1389,11 @@ description: Icon group with 5 types of layout.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Controls
-  - Interfaces.Children
-  - Interfaces.Enabled
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Enabled
 
 provides: Core.IconGroup
 
@@ -938,8 +1651,8 @@ description: Tip class
 license: MIT-style license.
 
 requires:
-  - Core.Abstract
-  - GDotUI
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
 
 provides: Core.Tip
 
@@ -1038,10 +1751,10 @@ description: Slider element for other elements.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Controls
-  - Interfaces.Enabled
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Enabled
 
 provides: Core.Slider
 
@@ -1053,61 +1766,6 @@ Core.Slider = new Class({
   Attributes: {
     "class": {
       value: GDotUI.Theme.Slider.classes.base
-    },
-    mode: {
-      value: 'horizontal',
-      setter: function(value, old) {
-        var size;
-        this.base.removeClass(old);
-        this.base.addClass(value);
-        this.base.set('style', '');
-        this.base.setStyle('position', 'relative');
-        switch (value) {
-          case 'horizontal':
-            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['min-width']);
-            this.modifier = 'width';
-            this.drag.options.modifiers = {
-              x: 'width',
-              y: ''
-            };
-            this.drag.options.invert = false;
-            if (!(this.size != null)) {
-              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['width']);
-            }
-            this.set('size', size);
-            this.progress.set('style', '');
-            this.progress.setStyles({
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0
-            });
-            break;
-          case 'vertical':
-            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['min-height']);
-            this.modifier = 'height';
-            this.drag.options.modifiers = {
-              x: '',
-              y: 'height'
-            };
-            this.drag.options.invert = true;
-            if (!(this.size != null)) {
-              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['height']);
-            }
-            this.set('size', size);
-            this.progress.set('style', '');
-            this.progress.setStyles({
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0
-            });
-        }
-        if (this.base.isVisible()) {
-          this.set('value', this.value);
-        }
-        return value;
-      }
     },
     bar: {
       value: GDotUI.Theme.Slider.classes.bar,
@@ -1125,51 +1783,135 @@ Core.Slider = new Class({
     },
     range: {
       value: [0, 0]
-    },
-    size: {
-      setter: function(value, old) {
-        if (!(value != null)) {
-          value = old;
+    }
+  },
+  modeSetter: function(value, old) {
+    var size;
+    this.base.removeClass(old);
+    this.base.addClass(value);
+    this.base.set('style', '');
+    this.base.setStyle('position', 'relative');
+    switch (value) {
+      case 'horizontal':
+        this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['min-width']);
+        this.modifier = 'width';
+        this.drag.options.modifiers = {
+          x: 'width',
+          y: ''
+        };
+        this.drag.options.invert = false;
+        if (!(this.size != null)) {
+          size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['width']);
         }
-        if (this.minSize > value) {
-          value = this.minSize;
+        this.set('size', size);
+        this.progress.set('style', '');
+        this.progress.setStyles({
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0
+        });
+        break;
+      case 'vertical':
+        this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['min-height']);
+        this.modifier = 'height';
+        this.drag.options.modifiers = {
+          x: '',
+          y: 'height'
+        };
+        this.drag.options.invert = true;
+        if (!(this.size != null)) {
+          size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['height']);
         }
-        this.base.setStyle(this.modifier, value);
-        this.progress.setStyle(this.modifier, this.reset ? value / 2 : this.value / this.steps * value);
-        return value;
+        this.set('size', size);
+        this.progress.set('style', '');
+        this.progress.setStyles({
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0
+        });
+    }
+    if (this.base.isVisible()) {
+      this.set('value', this.value);
+    }
+    return value;
+  },
+  valueSetter: function(value) {
+    var percent;
+    value = Number.from(value);
+    if (!this.reset) {
+      percent = Math.round((value / this.steps) * 100);
+      if (value < 0) {
+        this.progress.setStyle(this.modifier, 0);
+        value = 0;
       }
-    },
-    value: {
-      value: 0,
-      setter: function(value) {
-        var percent;
-        value = Number.from(value);
-        if (!this.reset) {
-          percent = Math.round((value / this.steps) * 100);
-          if (value < 0) {
-            this.progress.setStyle(this.modifier, 0);
-            value = 0;
-          }
-          if (this.value > this.steps) {
-            this.progress.setStyle(this.modifier, this.size);
-            value = this.steps;
-          }
-          if (!(value < 0) && !(value > this.steps)) {
-            this.progress.setStyle(this.modifier, (percent / 100) * this.size);
-          }
-        }
-        return value;
-      },
-      getter: function() {
+      if (this.value > this.steps) {
+        this.progress.setStyle(this.modifier, this.size);
+        value = this.steps;
+      }
+      if (!(value < 0) && !(value > this.steps)) {
+        this.progress.setStyle(this.modifier, (percent / 100) * this.size);
+      }
+    }
+    return value;
+  },
+  valueGetter: function() {
+    if (this.reset) {
+      return this.value;
+    } else {
+      return Number.from(this.progress.getStyle(this.modifier)) / this.size * this.steps;
+    }
+  },
+  sizeSetter: function(value, old) {
+    if (!(value != null)) {
+      value = old;
+    }
+    if (this.minSize > value) {
+      value = this.minSize;
+    }
+    this.base.setStyle(this.modifier, value);
+    this.progress.setStyle(this.modifier, this.reset ? value / 2 : this.value / this.steps * value);
+    return value;
+  },
+  onDrag: function(el, e) {
+    var offset, pos;
+    if (this.enabled) {
+      pos = Number.from(el.getStyle(this.modifier));
+      offset = Math.round((pos / this.size) * this.steps) - this.lastpos;
+      this.lastpos = Math.round((Number.from(el.getStyle(this.modifier)) / this.size) * this.steps);
+      if (pos > this.size) {
+        el.setStyle(this.modifier, this.size);
+        pos = this.size;
+      } else {
         if (this.reset) {
-          return this.value;
-        } else {
-          return Number.from(this.progress.getStyle(this.modifier)) / this.size * this.steps;
+          this.value += offset;
         }
       }
+      if (!this.reset) {
+        this.value = Math.round((pos / this.size) * this.steps);
+      }
+      this.fireEvent('step', this.value);
+      return this.update();
+    } else {
+      return el.setStyle(this.modifier, this.disabledTop);
     }
   },
   create: function() {
+    this.addAttributes({
+      mode: {
+        value: 'horizontal',
+        setter: this.modeSetter
+      },
+      value: {
+        value: 0,
+        setter: this.valueSetter,
+        getter: this.valueGetter
+      },
+      size: {
+        setter: this.sizeSetter
+      }
+    });
     this.progress = new Element("div");
     this.base.adopt(this.progress);
     this.drag = new Drag(this.progress, {
@@ -1189,29 +1931,7 @@ Core.Slider = new Class({
       }
       return this.fireEvent('complete');
     }).bind(this));
-    this.drag.addEvent('drag', (function(el, e) {
-      var offset, pos;
-      if (this.enabled) {
-        pos = Number.from(el.getStyle(this.modifier));
-        offset = Math.round((pos / this.size) * this.steps) - this.lastpos;
-        this.lastpos = Math.round((Number.from(el.getStyle(this.modifier)) / this.size) * this.steps);
-        if (pos > this.size) {
-          el.setStyle(this.modifier, this.size);
-          pos = this.size;
-        } else {
-          if (this.reset) {
-            this.value += offset;
-          }
-        }
-        if (!this.reset) {
-          this.value = Math.round((pos / this.size) * this.steps);
-        }
-        this.fireEvent('step', this.value);
-        return this.update();
-      } else {
-        return el.setStyle(this.modifier, this.disabledTop);
-      }
-    }).bind(this));
+    this.drag.addEvent('drag', this.onDrag.bind(this));
     return this.base.addEvent('mousewheel', (function(e) {
       e.stop();
       if (this.enabled) {
@@ -1224,45 +1944,101 @@ Core.Slider = new Class({
 /*
 ---
 
-name: Interfaces.Size
+name: Core.Scrollbar
 
-description: Size minsize from css....
+description: Slider element for other elements.
 
 license: MIT-style license.
 
-provides: Interfaces.Size
+requires:
+  - G.UI/GDotUI
+  - Core.Slider
 
-requires: [GDotUI]
+provides: Core.Scrollbar
+
 ...
 */
-Interfaces.Size = new Class({
-  _$Size: function() {
-    if (GDotUI.selectors["." + (this.get('class'))]) {
-      this.size = Number.from(GDotUI.selectors["." + (this.get('class'))]['width']);
-    } else {
-      this.size = 0;
+Core.Srcollbar = new Class({
+  Extends: Core.Slider,
+  create: function() {
+    return this.parent();
+  },
+  modeSetter: function(value, old) {
+    this.parent(value, old);
+    switch (value) {
+      case 'horizontal':
+        this.smodif = 'left';
+        this.drag.options.modifiers = {
+          x: 'left',
+          y: ''
+        };
+        break;
+      case 'vertical':
+        this.smodif = 'top';
+        this.drag.options.modifiers = {
+          x: '',
+          y: 'top'
+        };
+        this.drag.options.invert = false;
     }
-    if (GDotUI.selectors["." + (this.get('class'))]) {
-      this.minSize = Number.from(GDotUI.selectors["." + (this.get('class'))]['min-width']);
+    return value;
+  },
+  valueGetter: function() {
+    var width;
+    if (this.reset) {
+      return this.value;
     } else {
-      this.minSize = 0;
+      width = this.size - this.progressSize;
+      return Number.from(this.progress.getStyle(this.smodif)) / width * this.steps;
     }
-    this.addAttribute('minSize', {
-      value: null,
-      setter: function(value, old) {
-        this.base.setStyle('min-width', value);
-        return value;
+  },
+  sizeSetter: function(value, old) {
+    if (!(value != null)) {
+      value = old;
+    } else {
+      value = Number.from(value);
+    }
+    if (this.minSize > value) {
+      value = this.minSize;
+    }
+    this.base.setStyle(this.modifier, value);
+    this.progress.setStyle(this.modifier, value * 0.7);
+    this.progressSize = value * 0.7;
+    return value;
+  },
+  valueSetter: function(value) {
+    var percent, width;
+    value = Number.from(value);
+    width = this.size - this.progressSize;
+    if (!this.reset) {
+      percent = Math.round((value / this.steps) * 100);
+      if (value < 0) {
+        this.progress.setStyle(this.smodif, 0);
+        value = 0;
+      } else if (value > this.steps) {
+        this.progress.setStyle(this.smodif, width);
+        value = this.steps;
+      } else if (!(value < 0) && !(value > this.steps)) {
+        this.progress.setStyle(this.smodif, (percent / 100) * width);
       }
-    });
-    return this.addAttribute('size', {
-      value: null,
-      setter: function(value, old) {
-        var size;
-        size = value < this.minSize ? this.minSize : value;
-        this.base.setStyle('width', size);
-        return size;
-      }
-    });
+    }
+    return value;
+  },
+  onDrag: function(el, e) {
+    var left, width;
+    left = Number.from(this.progress.getStyle(this.smodif));
+    width = this.size - this.progressSize;
+    if (left < this.size - this.progressSize) {
+      this.value = left / width * this.steps;
+    } else {
+      el.setStyle(this.smodif, this.size - this.progressSize);
+      this.value = this.steps;
+    }
+    if (left < 0) {
+      el.setStyle(this.smodif, 0);
+      this.value = 0;
+    }
+    return this.fireEvent('step', Math.round(this.value));
   }
 });
 /*
@@ -1275,11 +2051,11 @@ description: Basic button element.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Controls
-  - Interfaces.Enabled
-  - Interfaces.Size
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Size
 
 provides: Core.Button
 
@@ -1318,10 +2094,10 @@ description: Data picker class.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Children
-  - Interfaces.Enabled
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Enabled
 
 provides: Core.Picker
 ...
@@ -1440,141 +2216,6 @@ Core.Picker = new Class({
 /*
 ---
 
-name: Iterable.List
-
-description: List element, with editing and sorting.
-
-license: MIT-style license.
-
-requires: Core.Abstract
-
-provides: Iterable.List
-
-requires: [GDotUI]
-...
-*/
-Iterable.List = new Class({
-  Extends: Core.Abstract,
-  options: {
-    "class": GDotUI.Theme.List["class"],
-    selected: GDotUI.Theme.List.selected,
-    search: false
-  },
-  Attributes: {
-    selected: {
-      getter: function() {
-        return this.items.filter((function(item) {
-          if (item.base.hasClass(this.options.selected)) {
-            return true;
-          } else {
-            return false;
-          }
-        }).bind(this))[0];
-      },
-      setter: function(value, old) {
-        if (old) {
-          old.base.removeClass(this.options.selected);
-        }
-        if (value != null) {
-          value.base.addClass(this.options.selected);
-        }
-        return value;
-      }
-    }
-  },
-  initialize: function(options) {
-    return this.parent(options);
-  },
-  create: function() {
-    this.base.addClass(this.options["class"]);
-    this.sortable = new Sortables(null);
-    this.editing = false;
-    if (this.options.search) {
-      this.sinput = new Element('input', {
-        "class": 'search'
-      });
-      this.base.grab(this.sinput);
-      this.sinput.addEvent('keyup', (function() {
-        return this.search();
-      }).bindWithEvent(this));
-    }
-    return this.items = [];
-  },
-  ready: function() {},
-  search: function() {
-    var svalue;
-    svalue = this.sinput.get('value');
-    return this.items.each((function(item) {
-      if (item.title.get('text').test(/#{svalue}/ig) || item.subtitle.get('text').test(/#{svalue}/ig)) {
-        return item.base.setStyle('display', 'block');
-      } else {
-        return item.base.setStyle('display', 'none');
-      }
-    }).bind(this));
-  },
-  removeItem: function(li) {
-    li.removeEvents('invoked', 'edit', 'delete');
-    this.items.erase(li);
-    return li.base.destroy();
-  },
-  removeAll: function() {
-    if (this.options.search) {
-      this.sinput.set('value', '');
-    }
-    this.selected = null;
-    this.base.empty();
-    return this.items.empty();
-  },
-  toggleEdit: function() {
-    var bases;
-    bases = this.items.map(function(item) {
-      return item.base;
-    });
-    if (this.editing) {
-      this.sortable.removeItems(bases);
-      this.items.each(function(item) {
-        return item.toggleEdit();
-      });
-      return this.editing = false;
-    } else {
-      this.sortable.addItems(bases);
-      this.items.each(function(item) {
-        return item.toggleEdit();
-      });
-      return this.editing = true;
-    }
-  },
-  getItemFromTitle: function(title) {
-    var filtered;
-    filtered = this.items.filter(function(item) {
-      if (String.from(item.title.get('text')).toLowerCase() === String(title).toLowerCase()) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return filtered[0];
-  },
-  addItem: function(li) {
-    this.items.push(li);
-    this.base.grab(li);
-    li.addEvent('select', (function(item, e) {
-      return this.set('selected', item);
-    }).bindWithEvent(this));
-    li.addEvent('invoked', (function(item) {
-      return this.fireEvent('invoked', arguments);
-    }).bindWithEvent(this));
-    li.addEvent('edit', (function() {
-      return this.fireEvent('edit', arguments);
-    }).bindWithEvent(this));
-    return li.addEvent('delete', (function() {
-      return this.fireEvent('delete', arguments);
-    }).bindWithEvent(this));
-  }
-});
-/*
----
-
 name: Core.Slot
 
 description: iOs style slot control.
@@ -1582,9 +2223,9 @@ description: iOs style slot control.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Iterable.List
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Iterable.List
 
 provides: Core.Slot
 
@@ -1708,11 +2349,11 @@ description: iOs style checkboxes
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Controls
-  - Interfaces.Enabled
-  - Interfaces.Size
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Size
 
 provides: Core.Toggler
 
@@ -1817,10 +2458,10 @@ description: Overlay for modal dialogs and stuff.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Controls
-  - Interfaces.Enabled
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Enabled
 
 provides: Core.Overlay
 
@@ -1865,8 +2506,8 @@ description: Tab element for Core.Tabs.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
 
 provides: Core.Tab
 
@@ -1918,8 +2559,8 @@ description: Tab navigation element.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
   - Core.Tab
 
 provides: Core.Tabs
@@ -1985,7 +2626,7 @@ description: Toggle button 'push' element.
 license: MIT-style license.
 
 requires:
-  - GDotUI
+  - G.UI/GDotUI
   - Core.Button
 
 provides: Core.Push
@@ -2032,11 +2673,11 @@ description: PushGroup element.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Core.Abstract
-  - Interfaces.Children
-  - Interfaces.Enabled
-  - Interfaces.Size
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Size
 
 provides: Core.PushGroup
 ...
@@ -2105,31 +2746,6 @@ Core.PushGroup = new Class({
 /*
 ---
 
-name: Data.Abstract
-
-description: Abstract base class for data elements.
-
-license: MIT-style license.
-
-requires:
-  - GDotUI
-  - Core.Abstract
-
-provides: Data.Abstract
-
-...
-*/
-Data.Abstract = new Class({
-  Extends: Core.Abstract,
-  Attributes: {
-    value: {
-      value: null
-    }
-  }
-});
-/*
----
-
 name: Dialog.Prompt
 
 description: Select Element
@@ -2137,7 +2753,7 @@ description: Select Element
 license: MIT-style license.
 
 requires:
-  - Core.Abstract
+  - G.UI/Core.Abstract
   - Core.Button
 
 provides: Dialog.Prompt
@@ -2202,15 +2818,15 @@ description: Select Element
 license: MIT-style license.
 
 requires:
-  - GDotUI
+  - G.UI/GDotUI
   - Core.Picker
-  - Data.Abstract
+  - G.UI/Data.Abstract
   - Dialog.Prompt
-  - Interfaces.Controls
-  - Interfaces.Children
-  - Interfaces.Enabled
-  - Interfaces.Size
-  - Iterable.List
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Size
+  - G.UI/Iterable.List
 
 provides: Data.Select
 
@@ -2409,9 +3025,9 @@ description: Text data element.
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Data.Abstract
-  - Interfaces.Size
+  - G.UI/GDotUI
+  - G.UI/Data.Abstract
+  - G.UI/Interfaces.Size
 
 provides: Data.Text
 
@@ -2454,7 +3070,10 @@ description: Number data element.
 
 license: MIT-style license.
 
-requires: [Data.Abstract, Core.Slider, GDotUI]
+requires:
+  - G.UI/GDotUI
+  - G.UI/Data.Abstract
+  - Core.Slider
 
 provides: Data.Number
 
@@ -2519,12 +3138,12 @@ description: Color data element. ( color picker )
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Data.Abstract
+  - G.UI/GDotUI
+  - G.UI/Data.Abstract
   - Data.Number
-  - Interfaces.Enabled
-  - Interfaces.Children
-  - Interfaces.Size
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Size
 
 provides: Data.Color
 
@@ -2679,12 +3298,12 @@ description: ColorWheel data element. ( color picker )
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Data.Abstract
+  - G.UI/GDotUI
+  - G.UI/Data.Abstract
   - Data.Color
-  - Interfaces.Children
-  - Interfaces.Enabled
-  - Interfaces.Size
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Size
 
 provides: Data.ColorWheel
 
@@ -2842,226 +3461,6 @@ Data.ColorWheel = new Class({
 /*
 ---
 
-name: Interfaces.Draggable
-
-description: Porived dragging for elements that implements it.
-
-license: MIT-style license.
-
-provides: [Interfaces.Draggable, Drag.Float, Drag.Ghost]
-
-requires: [GDotUI]
-...
-*/
-Drag.Float = new Class({
-  Extends: Drag.Move,
-  initialize: function(el, options) {
-    return this.parent(el, options);
-  },
-  start: function(event) {
-    if (this.options.target === event.target) {
-      return this.parent(event);
-    }
-  }
-});
-Drag.Ghost = new Class({
-  Extends: Drag.Move,
-  options: {
-    opacity: 0.65,
-    pos: false,
-    remove: ''
-  },
-  start: function(event) {
-    if (!event.rightClick) {
-      this.droppables = $$(this.options.droppables);
-      this.ghost();
-      return this.parent(event);
-    }
-  },
-  cancel: function(event) {
-    if (event) {
-      this.deghost();
-    }
-    return this.parent(event);
-  },
-  stop: function(event) {
-    this.deghost();
-    return this.parent(event);
-  },
-  ghost: function() {
-    this.element = (this.element.clone()).setStyles({
-      'opacity': this.options.opacity,
-      'position': 'absolute',
-      'z-index': 5003,
-      'top': this.element.getCoordinates()['top'],
-      'left': this.element.getCoordinates()['left'],
-      '-webkit-transition-duration': '0s'
-    }).inject(document.body).store('parent', this.element);
-    return this.element.getElements(this.options.remove).dispose();
-  },
-  deghost: function() {
-    var e, newpos;
-    e = this.element.retrieve('parent');
-    newpos = this.element.getPosition(e.getParent());
-    if (this.options.pos && this.overed === null) {
-      e.setStyles({
-        'top': newpos.y,
-        'left': newpos.x
-      });
-    }
-    this.element.destroy();
-    return this.element = e;
-  }
-});
-Interfaces.Draggable = new Class({
-  Implements: Options,
-  options: {
-    draggable: false,
-    ghost: false,
-    removeClasses: ''
-  },
-  _$Draggable: function() {
-    if (this.options.draggable) {
-      if (this.handle === null) {
-        this.handle = this.base;
-      }
-      if (this.options.ghost) {
-        this.drag = new Drag.Ghost(this.base, {
-          target: this.handle,
-          handle: this.handle,
-          remove: this.options.removeClasses,
-          droppables: this.options.droppables,
-          precalculate: true,
-          pos: false
-        });
-      } else {
-        this.drag = new Drag.Float(this.base, {
-          target: this.handle,
-          handle: this.handle
-        });
-      }
-      return this.drag.addEvent('drop', (function() {
-        return this.fireEvent('dropped', arguments);
-      }).bindWithEvent(this));
-    }
-  }
-});
-/*
----
-
-name: Iterable.ListItem
-
-description: List items for Iterable.List.
-
-license: MIT-style license.
-
-requires: Core.Abstract
-
-provides: Iterable.ListItem
-
-requires: [GDotUI, Interfaces.Draggable]
-...
-*/
-Iterable.ListItem = new Class({
-  Extends: Core.Abstract,
-  Implements: [Interfaces.Draggable, Interfaces.Enabled, Options],
-  Attributes: {
-    label: {
-      value: '',
-      setter: function(value) {
-        this.title.set('text', value);
-        return value;
-      }
-    },
-    "class": {
-      value: GDotUI.Theme.ListItem["class"]
-    }
-  },
-  options: {
-    classes: {
-      title: GDotUI.Theme.ListItem.title,
-      subtitle: GDotUI.Theme.ListItem.subTitle
-    },
-    title: '',
-    subtitle: '',
-    draggable: false,
-    dragreset: true,
-    ghost: true,
-    removeClasses: '.' + GDotUI.Theme.Icon["class"],
-    invokeEvent: 'click',
-    selectEvent: 'click',
-    removeable: true,
-    sortable: false,
-    dropppables: ''
-  },
-  initialize: function(options) {
-    this.setOptions(options);
-    return this.parent(options);
-  },
-  create: function() {
-    this.base.setStyle('position', 'relative');
-    this.title = new Element('div');
-    this.subtitle = new Element('div');
-    this.base.adopt(this.title, this.subtitle);
-    this.base.addEvent(this.options.selectEvent, (function(e) {
-      return this.fireEvent('select', [this, e]);
-    }).bindWithEvent(this));
-    this.base.addEvent(this.options.invokeEvent, (function() {
-      if (this.enabled && !this.options.draggable && !this.editing) {
-        return this.fireEvent('invoked', this);
-      }
-    }).bindWithEvent(this));
-    this.addEvent('dropped', (function(el, drop, e) {
-      return this.fireEvent('invoked', [this, e, drop]);
-    }).bindWithEvent(this));
-    this.base.addEvent('dblclick', (function() {
-      if (this.enabled) {
-        if (this.editing) {
-          return this.fireEvent('edit', this);
-        }
-      }
-    }).bindWithEvent(this));
-    return this;
-  },
-  toggleEdit: function() {
-    if (this.editing) {
-      if (this.options.draggable) {
-        this.drag.attach();
-      }
-      this.remove.base.setStyle('right', -this.remove.base.getSize().x);
-      this.handles.base.setStyle('left', -this.handles.base.getSize().x);
-      this.base.setStyle('padding-left', this.base.retrieve('padding-left:old'));
-      this.base.setStyle('padding-right', this.base.retrieve('padding-right:old'));
-      return this.editing = false;
-    } else {
-      if (this.options.draggable) {
-        this.drag.detach();
-      }
-      this.remove.base.setStyle('right', this.options.offset);
-      this.handles.base.setStyle('left', this.options.offset);
-      this.base.store('padding-left:old', this.base.getStyle('padding-left'));
-      this.base.store('padding-right:old', this.base.getStyle('padding-left'));
-      this.base.setStyle('padding-left', Number(this.base.getStyle('padding-left').slice(0, -2)) + this.handles.base.getSize().x);
-      this.base.setStyle('padding-right', Number(this.base.getStyle('padding-right').slice(0, -2)) + this.remove.base.getSize().x);
-      return this.editing = true;
-    }
-  },
-  ready: function() {
-    var baseSize;
-    if (!this.editing) {
-      baseSize = this.base.getSize();
-      this.parent();
-      if (this.options.draggable) {
-        return this.drag.addEvent('beforeStart', (function() {
-          return this.fireEvent('select', this);
-        }).bindWithEvent(this));
-      }
-    }
-  }
-});
-/*
----
-
 name: Data.DateTime
 
 description:  Date & Time picker elements with Core.Slot-s
@@ -3069,12 +3468,12 @@ description:  Date & Time picker elements with Core.Slot-s
 license: MIT-style license.
 
 requires:
-  - GDotUI
+  - G.UI/GDotUI
   - Core.Slot
-  - Data.Abstract
-  - Interfaces.Children
-  - Interfaces.Enabled
-  - Iterable.ListItem
+  - G.UI/Data.Abstract
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Enabled
+  - G.UI/Iterable.ListItem
 
 provides:
   - Data.DateTime
@@ -3276,7 +3675,9 @@ name: Data.Table
 
 description: Text data element.
 
-requires: [Data.Abstract, GDotUI]
+requires:
+  - G.UI/GDotUI
+  - G.UI/Data.Abstract
 
 provides: Data.Table
 
@@ -3635,13 +4036,13 @@ description: Color data element. ( color picker )
 license: MIT-style license.
 
 requires:
-  - GDotUI
-  - Data.Abstract
+  - G.UI/GDotUI
+  - G.UI/Data.Abstract
   - Data.Number
   - Data.Select
-  - Interfaces.Children
-  - Interfaces.Size
-  - Interfaces.Enabled
+  - G.UI/Interfaces.Children
+  - G.UI/Interfaces.Size
+  - G.UI/Interfaces.Enabled
 
 provides: Data.Unit
 
@@ -3734,7 +4135,9 @@ name: Data.List
 
 description: Text data element.
 
-requires: [Data.Abstract, GDotUI]
+requires:
+  - G.UI/GDotUI
+  - G.UI/Data.Abstract
 
 provides: Data.List
 
@@ -3822,359 +4225,6 @@ Data.List = new Class({
 /*
 ---
 
-name: Forms.Input
-
-description: Input elements for Forms.
-
-license: MIT-style license.
-
-requires: GDotUI
-
-provides: Forms.Input
-
-...
-*/
-Forms.Input = new Class({
-  Implements: [Events, Options],
-  options: {
-    type: '',
-    name: ''
-  },
-  initialize: function(options) {
-    var select, tg;
-    this.setOptions(options);
-    if (this.options.type === 'text' || this.options.type === 'password' || this.options.type === 'button') {
-      this.base = new Element('input', {
-        type: this.options.type,
-        name: this.options.name
-      });
-    }
-    if (this.options.type === 'checkbox') {
-      tg = new Core.Toggler();
-      tg.base.setAttribute('name', this.options.name);
-      tg.base.setAttribute('type', 'checkbox');
-      tg.set('checked', this.options.checked || false);
-      this.base = tg.base;
-    }
-    if (this.options.type === "textarea") {
-      this.base = new Element('textarea', {
-        name: this.options.name
-      });
-    }
-    if (this.options.type === "select") {
-      select = new Data.Select({
-        "default": this.options.name
-      });
-      select.base.setAttribute('name', this.options.name);
-      select.base.setAttribute('type', 'select');
-      this.options.options.each((function(item) {
-        return select.addItem(new Iterable.ListItem({
-          label: item.label
-        }));
-      }).bind(this));
-      select.addEvent('change', function(v) {
-        return this.base.set('value', v);
-      });
-      this.base = select.base;
-    }
-    if (this.options.type === "radio") {
-      this.base = new Element('div');
-      this.options.options.each((function(item, i) {
-        var input, label;
-        label = new Element('label', {
-          'text': item.label
-        });
-        input = new Element('input', {
-          type: 'radio',
-          name: this.options.name,
-          value: item.value
-        });
-        return this.base.adopt(label, input);
-      }).bind(this));
-    }
-    if (this.options.validate != null) {
-      $splat(this.options.validate).each((function(val) {
-        if (this.options.type !== "radio") {
-          return this.base.addClass(val);
-        }
-      }).bind(this));
-    }
-    return this;
-  },
-  toElement: function() {
-    return this.base;
-  }
-});
-/*
----
-
-name: Forms.Field
-
-description: Field Element for Forms.Fieldset.
-
-license: MIT-style license.
-
-requires:
-  - GDotUI
-  - Forms.Input
-
-provides: Forms.Field
-
-...
-*/
-Forms.Field = new Class({
-  Implements: [Events, Options],
-  Attributes: {
-    structure: {
-      readOnly: true,
-      value: GDotUI.Theme.Forms.Field.struct
-    }
-  },
-  initialize: function(options) {
-    var h;
-    this.setOptions(options);
-    h = new Hash(this.get('structure'));
-    return h.each((function(value, key) {
-      this.base = new Element(key);
-      return this.create(value, this.base);
-    }).bind(this));
-  },
-  create: function(item, parent) {
-    var data, el, key, _results;
-    if (!(parent != null)) {
-      return null;
-    } else {
-      switch (typeOf(item)) {
-        case "object":
-          _results = [];
-          for (key in item) {
-            data = new Hash(item).get(key);
-            if (key === 'input') {
-              el = new Forms.Input(this.options);
-            } else if (key === 'label') {
-              el = new Element('label', {
-                'text': this.options.label
-              });
-            } else {
-              el = new Element(key);
-            }
-            parent.grab(el);
-            _results.push(this.create(data, el));
-          }
-          return _results;
-      }
-    }
-  },
-  toElement: function() {
-    return this.base;
-  }
-});
-/*
----
-
-name: Forms.Fieldset
-
-description: Fieldset for Forms.Form.
-
-license: MIT-style license.
-
-requires: [Core.Abstract, Forms.Field, GDotUI]
-
-provides: Forms.Fieldset
-
-...
-*/
-Forms.Fieldset = new Class({
-  Implements: [Events, Options],
-  options: {
-    name: '',
-    inputs: []
-  },
-  initialize: function(options) {
-    this.setOptions(options);
-    this.base = new Element('fieldset');
-    this.legend = new Element('legend', {
-      text: this.options.name
-    });
-    this.base.grab(this.legend);
-    this.options.inputs.each((function(item) {
-      var input;
-      input = new Forms.Field(item);
-      this.inputs.push(input);
-      return this.base.grab(input);
-    }).bind(this));
-    return this;
-  },
-  toElement: function() {
-    return this.base;
-  }
-});
-/*
----
-
-name: Forms.Form
-
-description: Class for creating forms from javascript objects.
-
-license: MIT-style license.
-
-requires: [Core.Abstract, Forms.Fieldset, GDotUI]
-
-provides: Forms.Form
-
-...
-*/
-Forms.Form = new Class({
-  Extends: Core.Abstract,
-  Implements: Options,
-  Binds: ['success', 'faliure'],
-  options: {
-    data: {}
-  },
-  initialize: function(options) {
-    this.fieldsets = [];
-    this.setOptions(options);
-    return this.parent(options);
-  },
-  create: function() {
-    delete this.base;
-    this.base = new Element('form');
-    if (this.options.data != null) {
-      this.options.data.each((function(fs) {
-        return this.addFieldset(new Forms.Fieldset(fs));
-      }).bind(this));
-    }
-    this.extra = this.options.extra;
-    this.useRequest = this.options.useRequest;
-    if (this.useRequest) {
-      this.request = new Request.JSON({
-        url: this.options.action,
-        resetForm: false,
-        method: this.options.method
-      });
-      this.request.addEvent('success', this.success);
-      this.request.addEvent('faliure', this.faliure);
-    } else {
-      this.base.set('action', this.options.action);
-      this.base.set('method', this.options.method);
-    }
-    this.submit = new Core.Button({
-      label: this.options.submit
-    });
-    this.base.grab(this.submit);
-    this.validator = new Form.Validator(this.base, {
-      serial: false
-    });
-    this.validator.start();
-    return this.submit.addEvent('click', (function() {
-      if (this.validator.validate()) {
-        if (this.useRequest) {
-          return this.send();
-        } else {
-          return this.fireEvent('passed', this.geatherdata());
-        }
-      } else {
-        return this.fireEvent('failed', {
-          message: 'Validation failed'
-        });
-      }
-    }).bindWithEvent(this));
-  },
-  addFieldset: function(fieldset) {
-    if (this.fieldsets.indexOf(fieldset) === -1) {
-      this.fieldsets.push(fieldset);
-      return this.base.grab(fieldset);
-    }
-  },
-  geatherdata: function() {
-    var data;
-    data = {};
-    this.base.getElements('div[type=select], input[type=text], input[type=password], textarea, input[type=radio]:checked, input[type=checkbox]:checked').each(function(item) {
-      return data[item.get('name')] = item.get('type') === "checkbox" ? true : item.get('value');
-    });
-    return data;
-  },
-  send: function() {
-    return this.request.send({
-      data: $extend(this.geatherdata(), this.extra)
-    });
-  },
-  success: function(data) {
-    return this.fireEvent('success', data);
-  },
-  faliure: function() {
-    return this.fireEvent('failed', {
-      message: 'Request error!'
-    });
-  }
-});
-/*
----
-
-name: Pickers
-
-description: Pickers for Data classes.
-
-license: MIT-style license.
-
-requires: [Core.Picker, Data.Color, Data.Number, Data.Text, Data.Date, Data.Time, Data.DateTime, GDotUI]
-
-provides: [Pickers.Base, Pickers.Color, Pickers.Number, Pickers.Text, Pickers.Time, Pickers.Date, Pickers.DateTime ]
-
-...
-*/
-Pickers.Base = new Class({
-  Delegates: {
-    picker: ['attach', 'detach', 'show'],
-    data: ['set']
-  },
-  Attributes: {
-    type: {
-      value: null
-    }
-  },
-  update: function() {},
-  initialize: function(options) {
-    this.setAttributes(options);
-    this.picker = new Core.Picker();
-    this.data = new Data[this.type]();
-    this.picker.set('content', this.data);
-    return this;
-  }
-});
-Pickers.Color = new Pickers.Base({
-  type: 'ColorWheel'
-});
-Pickers.Number = new Pickers.Base({
-  type: 'Number'
-});
-Pickers.Time = new Pickers.Base({
-  type: 'Time'
-});
-Pickers.Text = new Pickers.Base({
-  type: 'Text'
-});
-Pickers.Date = new Pickers.Base({
-  type: 'Date'
-});
-Pickers.DateTime = new Pickers.Base({
-  type: 'DateTime'
-});
-Pickers.Table = new Pickers.Base({
-  type: 'Table'
-});
-Pickers.Unit = new Pickers.Base({
-  type: 'Unit'
-});
-Pickers.Select = new Pickers.Base({
-  type: 'Select'
-});
-Pickers.List = new Pickers.Base({
-  type: 'List'
-});
-/*
----
-
 name: Blender
 
 description: Blender Layout Engine for G.UI
@@ -4184,7 +4234,7 @@ license: MIT-style license.
 requires:
   - G.UI/Core.Abstract
   - G.UI/Interfaces.Children
-  - G.UI/Core.Button
+  - Core.Button
   - G.UI/Iterable.ListItem
 
 provides: Blender
@@ -4497,7 +4547,7 @@ description: Viewport
 license: MIT-style license.
 
 requires:
-  - G.UI/Core.Icon
+  - Core.Icon
 
 provides: Blender.Corner
 
@@ -4563,7 +4613,7 @@ license: MIT-style license.
 requires:
   - G.UI/Core.Abstract
   - G.UI/Interfaces.Children
-  - G.UI/Data.Select
+  - Data.Select
 
 provides: Blender.Toolbar
 
@@ -4613,7 +4663,7 @@ license: MIT-style license.
 requires:
   - G.UI/Core.Abstract
   - G.UI/Interfaces.Children
-  - G.UI/Core.Slider
+  - Core.Scrollbar
   - Blender.Corner
   - Blender.Toolbar
 
@@ -4683,6 +4733,7 @@ Blender.View = new Class({
             this.toolbar.removeChild(oldVal.toolbar);
           }
         }
+        delete oldVal;
         if (newVal != null) {
           if (newVal.base != null) {
             newVal.base.setStyle('position', 'relative');
@@ -4730,7 +4781,6 @@ Blender.View = new Class({
     }
   },
   updateScrollTop: function() {
-    console.log(this.slider.get('value'));
     return this.content.base.setStyle('top', ((this.base.getSize().y - this.content.base.getSize().y - 30) / 100) * this.slider.get('value'));
   },
   create: function() {
@@ -4800,7 +4850,7 @@ Blender.View = new Class({
       }
     });
     this.hooks = {};
-    this.slider = new Core.Slider({
+    this.slider = new Core.Srcollbar({
       steps: 100,
       mode: 'vertical'
     });
@@ -4914,4 +4964,76 @@ Blender.View = new Class({
     }).bind(this));
   },
   check: function() {}
+});
+/*
+---
+
+name: Pickers
+
+description: Pickers for Data classes.
+
+license: MIT-style license.
+
+requires:
+  - G.UI/GDotUI
+  - Core.Picker
+  - Data.Color
+  - Data.Number
+  - Data.Text
+  - Data.Date
+  - Data.Time
+  - Data.DateTime
+
+provides: [Pickers.Base, Pickers.Color, Pickers.Number, Pickers.Text, Pickers.Time, Pickers.Date, Pickers.DateTime ]
+
+...
+*/
+Pickers.Base = new Class({
+  Delegates: {
+    picker: ['attach', 'detach', 'show'],
+    data: ['set']
+  },
+  Attributes: {
+    type: {
+      value: null
+    }
+  },
+  update: function() {},
+  initialize: function(options) {
+    this.setAttributes(options);
+    this.picker = new Core.Picker();
+    this.data = new Data[this.type]();
+    this.picker.set('content', this.data);
+    return this;
+  }
+});
+Pickers.Color = new Pickers.Base({
+  type: 'ColorWheel'
+});
+Pickers.Number = new Pickers.Base({
+  type: 'Number'
+});
+Pickers.Time = new Pickers.Base({
+  type: 'Time'
+});
+Pickers.Text = new Pickers.Base({
+  type: 'Text'
+});
+Pickers.Date = new Pickers.Base({
+  type: 'Date'
+});
+Pickers.DateTime = new Pickers.Base({
+  type: 'DateTime'
+});
+Pickers.Table = new Pickers.Base({
+  type: 'Table'
+});
+Pickers.Unit = new Pickers.Base({
+  type: 'Unit'
+});
+Pickers.Select = new Pickers.Base({
+  type: 'Select'
+});
+Pickers.List = new Pickers.Base({
+  type: 'List'
 });

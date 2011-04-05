@@ -8,7 +8,7 @@ description: Viewport
 license: MIT-style license.
 
 requires: 
-  - G.UI/Core.Icon
+  - Core.Icon
 
 provides: Blender.Corner
 
