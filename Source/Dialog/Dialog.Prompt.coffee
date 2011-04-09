@@ -9,7 +9,7 @@ license: MIT-style license.
 
 requires: 
   - G.UI/Core.Abstract
-  - Core.Button
+  - Buttons.Button
 
 provides: Dialog.Prompt
 
@@ -48,7 +48,7 @@ Dialog.Prompt = new Class {
   create: ->
     @labelDiv = new Element 'div'
     @input = new Element 'input',{type:'text'}
-    @button = new Core.Button()
+    @button = new Buttons.Abstract()
     @base.adopt @labelDiv, @input, @button
     @picker = new Core.Picker()
     @picker.set 'content', @base

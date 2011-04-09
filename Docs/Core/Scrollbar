@@ -1,0 +1,6 @@
+---
+class: Core.Scrollbar
+description: Scrollbar element. Same as slider just with a fixed bar size.
+extends: Core.Slider
+...
+

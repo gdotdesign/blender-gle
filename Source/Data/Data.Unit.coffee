@@ -55,7 +55,7 @@ Data.Unit = new Class {
   Binds: ['update']
   Attributes: {
     class: {
-      value: GDotUI.Theme.Unit.class
+      value: 'blender-unit'
     }
     value: {
       setter: (value) ->

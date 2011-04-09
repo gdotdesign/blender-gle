@@ -1,0 +1,17 @@
+.color input {
+  width: 200px; }
+.color #black {
+  background-image: -moz-linear-gradient(100% 100% 90deg, black, rgba(0, 0, 0, 0));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0)), to(black)); }
+.color #white {
+  background-image: -moz-linear-gradient(100% 50%, rgba(255, 255, 255, 0), white);
+  background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, from(white), to(rgba(255, 255, 255, 0))); }
+.color #color_linear {
+  background-image: -moz-linear-gradient(100% 100%, red, fuchsia, blue, aqua, lime, yellow, red);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(red), color-stop(0.167, yellow), color-stop(0.333, lime), color-stop(0.5, #00e1ff), color-stop(0.667, blue), color-stop(0.833, fuchsia), to(red)); }
+.color #knob {
+  background-color: black; }
+.color #xyknob {
+  width: 15px;
+  height: 15px;
+  background-color: black; }

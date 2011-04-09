@@ -21,7 +21,11 @@ todo: Circular center position and size
 ###
 Core.IconGroup = new Class {
   Extends: Core.Abstract
-  Implements: [Interfaces.Controls, Interfaces.Enabled, Interfaces.Children]
+  Implements: [
+    Interfaces.Children
+    Interfaces.Controls
+    Interfaces.Enabled
+  ]
   Binds: ['delegate']
   Attributes: {
     mode: {
@@ -42,7 +46,7 @@ Core.IconGroup = new Class {
         Number.from(value)
       validator: (value) ->
         if (a = Number.from(value))?
-          (a >= 0 and a <= 360)
+          a >= 0 and a <= 360
         else no
     }
     radius: {
@@ -80,7 +84,7 @@ Core.IconGroup = new Class {
         else no
     }
     class: {
-      value: GDotUI.Theme.IconGroup.class
+      value: 'blender-icon-group'
     }
   }
   create: ->
@@ -108,13 +112,13 @@ Core.IconGroup = new Class {
       switch @mode
         when 'grid'
           if @rows? and @columns?
-            if Number.from(@rows) < Number.from(@columns)
+            if @rows < @columns
               rows = null
               columns = @columns
             else
               columns = null
               rows = @rows
-          icpos = @children.map ((item,i) ->
+          icpos = @children.map (item,i) =>
             if rows?
               if i % rows == 0
                 y = 0
@@ -130,31 +134,27 @@ Core.IconGroup = new Class {
             @size.x = x+item.base.getSize().x
             @size.y = y+item.base.getSize().y
             {x:x, y:y}
-            ).bind @
         when 'linear'
-          icpos = @children.map ((item,i) ->
+          icpos = @children.map (item,i) =>
             x = if i==0 then x+x else x+spacing.x+item.base.getSize().x
             y = if i==0 then y+y else y+spacing.y+item.base.getSize().y
             @size.x = x+item.base.getSize().x
             @size.y = y+item.base.getSize().y
             {x:x, y:y}
-            ).bind @
         when 'horizontal'
-          icpos = @children.map ((item,i) ->
+          icpos = @children.map (item,i) =>
             x = if i==0 then x+x else x+item.base.getSize().x+spacing.x
             y = if i==0 then y else y
             @size.x = x+item.base.getSize().x
             @size.y = item.base.getSize().y
             {x:x, y:y}
-            ).bind @
         when 'vertical'
-          icpos = @children.map ((item,i) ->
+          icpos = @children.map (item,i) =>
             x = if i==0 then x else x
             y = if i==0 then y+y else y+item.base.getSize().y+spacing.y
             @size.x = item.base.getSize().x
             @size.y = y+item.base.getSize().y
             {x:x,y:y}
-            ).bind @
         when 'circular'
           n = @children.length
           radius = @radius

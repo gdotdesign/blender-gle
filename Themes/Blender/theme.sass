@@ -1,0 +1,182 @@
+@import ../Chrome/_mixins.sass
+@import _rules.sass
+@import _buttons.sass
+@import _slider&number.sass
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
+
+.blender-checkbox
+  :width $width
+  :min-width $minWidth
+  :line-height $height
+  :height $height
+  :font-size 12px
+  :cursor pointer
+  :-webkit-user-select none
+  &.checked
+    :color $colorLight
+    .blender-checkbox-sign
+      &:before
+        :content '\00A0\221A'
+  .blender-checkbox-sign
+    :width $height - 7px
+    :height $height - 7px
+    @extend .basic
+    @extend .dark-on-light
+    :margin 2px 5px
+    :float left
+    &:before
+      :content ''
+      :font-weight bold
+      :font-size 18px
+      :position relative
+      :top -6px
+      :left -2px
+      :color $colorLight
+.blender-icon
+  @extend .basic
+  @extend .light-on-dark
+  :width $height
+  :height $height
+  :background-repeat no-repeat
+  :background-position center center
+  :cursor pointer
+
+.blender-list-item
+  :color $colorLight
+  :font-size 12px
+  :padding 4px
+  :cursor pointer 
+  &:hover
+    :background-color $blue
+    :color $colorDark
+    
+.blender-list
+  @extend .basic
+  :background-color transparent
+  
+.blender-picker > *:first-child
+  @extend .nobasic
+
+.blender-textarea
+  textarea
+    @extend .basic
+    :background-color $light
+    :color $colorDark
+    :padding 5px
+    :-webkit-user-select auto
+    :-webkit-background-clip padding-box
+    :resize none
+  :width $width - 10px
+  :min-width $minWidth
+
+.blender-push-group
+  @extend .basic
+  :width $width
+  :min-width $minWidth
+  :height $height
+  :line-height $height
+  .blender-button-push:first-child
+    +round($borderRadius,0,$borderRadius,0)
+  .blender-button-push:last-child
+    +round(0,$borderRadius,0,$borderRadius)
+  .blender-button-push:last-child
+    :border-right none
+  .blender-button-push
+    @extend .nobasic
+    :float left
+    +round_full(0)
+  
+.blender-push-group
+  @extend .basic
+  :width $width
+  :min-width $minWidth
+  :height $height
+  :line-height $height
+  .blender-button-push:first-child
+    +round($borderRadius,0,$borderRadius,0)
+  .blender-button-push:last-child
+    +round(0,$borderRadius,0,$borderRadius)
+  .blender-button-push:last-child
+    :border-right none
+  .blender-button-push
+    @extend .nobasic
+    :float left
+    +round_full(0)
+
+.blender-picker
+  :z-index 99
+  :padding 1px
+  :background-color $darker
+  +box_shadow(0,0,8px,rgba(0,0,0,0.6))
+  :background-color rgba(0,0,0,0.8)
+
+.blender-unit
+  @extend .basic
+  :width $width
+  :min-width 170px
+  :height $height
+  .blender-number, .blender-select
+    :float left
+    :height $height
+  .blender-number
+    @extend .nobasic
+    +round($borderRadius,0,$borderRadius,0)
+    .blender-number-text
+      @extend .nobasic
+    +box_shadow(0,0,0,transparent)
+    .blender-slider-progress
+      +round($borderRadius,0,$borderRadius,0)
+  .blender-select
+    @extend .nobasic
+    +round(0,$borderRadius,0,$borderRadius)
+    .blender-select-text
+      +round(0,$borderRadius,0,$borderRadius)
+
+.blender-select
+  @extend .basic
+  @extend .dark-on-light
+  :min-width 80px
+  &:after
+    :content ''
+    :z-index 1
+    :position absolute
+    :top 5px
+    :left 3px
+    width: 0
+    height: 0
+    border-left: 4px solid transparent
+    border-right: 4px solid transparent
+    border-bottom: 4px solid $colorLight
+  &:before
+    :content ''
+    :z-index 1
+    :position absolute
+    :bottom 5px
+    :left 3px
+    width: 0
+    height: 0
+    border-left: 4px solid transparent
+    border-right: 4px solid transparent
+    border-top: 4px solid $colorLight
+  .text
+    +round_full($borderRadius)
+    :padding-left 15px
+  :cursor pointer
+  :line-height 21px
+  :color $colorLight
+  .blender-icon
+    @extend .nobasic
+    :line-height 15px
+    :text-align center
+    :font-size 22px
+    :color $colorLight
+    &.remove
+      +round(0,$borderRadius,0,$borderRadius)   
+    :float right
+    :width $height
+    :height $height
+    :border none
+    :border-left 1px solid $border
+  :height $height
+  :width $width
+  :min-width $minWidth

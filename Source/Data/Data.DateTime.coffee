@@ -13,7 +13,7 @@ requires:
   - G.UI/Data.Abstract
   - G.UI/Interfaces.Children
   - G.UI/Interfaces.Enabled
-  - G.UI/Iterable.ListItem
+  - Iterable.ListItem
 
 provides: 
   - Data.DateTime

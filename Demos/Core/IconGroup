@@ -1,0 +1,76 @@
+---JS
+window.addEvent('domready', function(){
+  icons = ['/home.png', '/idea-inv.png', '/layers-inv.png','/save-inv.png','/documents-inv.png']
+  positions = ['horizontal', 'vertical', 'grid', 'circular','linear']
+  iconGroup = new Core.IconGroup({mode:'grid',rows:3,spacing:{y:10,x:10},radius:60});
+
+  slider = new Data.Number({label:'Radius'})
+  slider.addEvent('change',function(value){
+    iconGroup.set('radius', value)
+  });
+  slider.set('value',60)
+  slider1 = new Data.Number({label:'Start Angle',reset:false,steps:360})
+  slider1.addEvent('change',function(value){
+    iconGroup.set('startAngle', value)
+  });
+  slider1.set('value',0)
+  slider2 = new Data.Number({label:'Degree',reset:false,steps:360})
+  slider2.addEvent('change',function(value){
+    iconGroup.set('degree', value)
+  });
+  slider2.set('value',360)
+  slider3 = new Data.Number({label:'Spacing',reset:false,steps:40})
+  slider3.addEvent('change',function(value){
+    iconGroup.set('spacing', {x:value,y:value})
+  });
+  slider3.set('value',10)
+  slider4 = new Data.Number({label:'Rows',reset:false,steps:10})
+  slider4.addEvent('change',function(value){
+    iconGroup.set('rows', value)
+  });
+  slider4.set('value',3)
+  slider5 = new Data.Number({label:'Columns',reset:false,steps:10})
+  slider5.addEvent('change',function(value){
+    iconGroup.set('columns', value)
+  });
+  slider5.set('value',0)
+  pushgroup = new Data.Select({editable:false});
+  pushgroup.addEvent('change', function(value){
+    iconGroup.set('mode',value)
+    if(value === 'grid'){
+      slider.disable()
+      slider1.disable()
+      slider2.disable()
+      slider3.enable()
+      slider4.enable()
+      slider5.enable()
+    }
+    if(value === 'circular'){
+      slider.enable()
+      slider1.enable()
+      slider2.enable()
+      slider3.disable()
+      slider4.disable()
+      slider5.disable()
+    }
+    if(value === 'linear' || value === 'horizontal' || value === 'vertical'){
+      slider.disable()
+      slider1.disable()
+      slider2.disable()
+      slider3.enable()
+      slider4.disable()
+      slider5.disable()
+    }
+  });
+  positions.each(function(item){
+      p = new Iterable.ListItem({label:item})
+      pushgroup.addItem(p)
+  })
+  for(i=0;i<8;i++){
+    icon = new Core.Icon({image:icons[Math.round(Math.random()*4)]});
+    iconGroup.addIcon(icon)
+  }
+  pushgroup.set('value','grid')
+  $("demo").adopt(iconGroup)
+  $("options").adopt(slider,slider1, slider2,slider3,slider4,slider5,pushgroup);
+});

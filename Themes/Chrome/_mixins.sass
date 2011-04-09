@@ -1,0 +1,84 @@
+//Rounded Corners (shorthand)
+
+=round($top_left: 0, $top_right: 0, $bottom_left: 0, $bottom_right: 0)
+  -moz-border-radius: $top_left $top_right $bottom_right $bottom_left
+  -webkit-border-radius: $top_left $top_right $bottom_right $bottom_left
+  -khtml-border-radius: $top_left $top_right $bottom_right $bottom_left
+  border-radius: $top_left $top_right $bottom_right $bottom_left
+
+//Rounded Corners (full)
+
+=round_full($value)
+  -moz-border-radius: $value
+  -webkit-border-radius: $value
+  -khtml-border-radius: $value
+  border-radius: $value
+
+//Relative Positioning
+
+=position_relative($top, $left)
+  position: relative
+  top: $top
+  left: $left
+
+//Arrow_left
+
+=arrow_right($size: 10px, $color: #000)
+  font-size: 0px
+  line-height: 0%
+  width: 0px
+  border-top: $size solid transparent
+  border-bottom: $size solid transparent
+  border-right none
+  border-left: $size solid $color
+
+=arrow_left($size: 10px, $color: #000)
+  font-size: 0px
+  line-height: 0%
+  width: 0px
+  border-top: $size solid transparent
+  border-bottom: $size solid transparent
+  border-left none
+  border-right: $size solid $color
+
+//Opacity
+
+=opacity($value)
+  -ms-filter: unquote("progid:DXImageTransform.Microsoft.Alpha(Opacity={!value})")
+  filter: unquote("alpha(opacity={!value})")
+  -moz-opacity: $value / 100
+  -khtml-opacity: $value / 100
+  opacity: $value / 100
+
+=box_shadow_inner($ho: 0, $vo: 0, $blur: 5, $color: #000)
+  box-shadow: $ho $vo $blur $color inset
+  -moz-box-shadow: $ho $vo $blur $color inset
+  -webkit-box-shadow: $ho $vo $blur $color inset
+
+=box_shadow_inner_imp($ho: 0, $vo: 0, $blur: 5, $color: #000)
+  box-shadow: $ho $vo $blur $color inset !important
+  -moz-box-shadow: $ho $vo $blur $color inset !important
+  -webkit-box-shadow: $ho $vo $blur $color inset !important
+
+//Box-shadow
+
+=box_shadow($ho: 0, $vo: 0, $blur: 5, $color: #000)
+  box-shadow: $ho $vo $blur $color
+  -moz-box-shadow: $ho $vo $blur $color
+  -webkit-box-shadow: $ho $vo $blur $color
+  
+=box_shadow_imp($ho: 0, $vo: 0, $blur: 5, $color: #000)
+  box-shadow: $ho $vo $blur $color !important
+  -moz-box-shadow: $ho $vo $blur $color !important
+  -webkit-box-shadow: $ho $vo $blur $color !important
+  
+//Gradient
+=linear_gradient_hor($top: #fff,$bottom: #000)
+  :background-image -moz-linear-gradient(100% 100% 0deg, $bottom, $top)
+  :background-image -webkit-gradient(linear, right bottom, left bottom, from($top), to($bottom))
+=linear_gradient($top: #fff,$bottom: #000)
+  :background-image -moz-linear-gradient(100% 100% 90deg, $bottom, $top)
+  :background-image -webkit-gradient(linear, 0% 0%, 0% 100%, from($top), to($bottom))
+=linear_gradient_imp($top: #fff,$bottom: #000)
+  :background-image -moz-linear-gradient(100% 100% 90deg, $bottom, $top) !important
+  :background-image -webkit-gradient(linear, 0% 0%, 0% 100%, from($top), to($bottom)) !important

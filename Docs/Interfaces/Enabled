@@ -1,0 +1,11 @@
+---
+class: Interfaces.Enabled
+description: Enable-disable
+demo: false
+attributes:
+  enabled: 
+    type: Boolean
+    description: Enable disable
+    default: true
+...
+

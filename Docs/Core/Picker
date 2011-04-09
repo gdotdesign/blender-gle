@@ -1,0 +1,57 @@
+---
+class: Core.Picker
+demo: false
+description: |
+  A picker element, with a content element.
+extends: Core.Abstract
+implements:
+  - Interfaces.Children
+  - Interfaces.Enabled
+attributes:
+  offset:
+    type: Object 
+    description: |
+      x and y coordinates for the offset (i.e. {x: 10, y:100} will move it down 100 and to the right 10). Negative values are allowed.
+  position: 
+    description: The pickers position relative to the attach element.
+    type: Object
+    value: An object with x and y values. Acceptable values for the x axis are "auto", "left", "right", and "center", and for y you can use "auto", "top", "bottom" and "center".
+  content: 
+    type: Element
+    description: Either a Class with toElement() method or an Element.
+  picking: 
+    show: false
+    type: String
+    description: The CSS class which is added to the attached element when the picker is shown.
+functions:
+  attach:
+    description: Attaches the picker to an element.
+    arguments:
+      - element:
+        description: The Element to attach to.
+        type: Element
+      - attach:
+        description: Wether or not attach the show event.
+        type: Boolean
+  detach:
+    description: Detaches the picker from the attached element.
+  show:
+    description: Shows the picker.
+    arguments:
+      - event:
+        description: An Event.
+        type: Event
+      - attach:
+        description: Wether or not attach the hide event.
+        type: Boolean
+  hide:
+    description: Hides the picker.
+    arguments:
+      - event:
+        description: An Event.
+        type: Event
+      - force:
+        description: Force hide the picker. Usefull when the event target is on the picker.
+        type: Boolean
+...
+

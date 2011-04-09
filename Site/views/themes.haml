@@ -1,0 +1,48 @@
+.box.d
+  #box
+  .clear
+:javascript
+  window.addEvent('domready', function(){
+    icon = new Core.Icon({image:'/home.png'});
+    icon1 = new Core.Icon({image:'/idea-inv.png'});
+    icon2 = new Core.Icon({image:'/layers-inv.png'}); 
+    icon3 = new Core.Icon({image:'/layers-inv.png'}); 
+    icon4 = new Core.Icon({image:'/layers-inv.png'});    
+    
+    pushButton = new Buttons.Toggle({label:'Push Button!'});
+    button = new Buttons.Abstract({label:"Default Button!"});
+    checkbox = new Core.Checkbox({label:"Checkbox"});
+    
+    horizontalSlider = new Core.Slider();
+    scroller = new Core.Scrollbar();
+    toggler = new Core.Toggler();
+    texta = new Data.Text();
+    number = new Data.Number();
+    number.addEvent('change',function(e){
+      button.set('size',e);
+      pushButton.set('size',e);
+      horizontalSlider.set('size',e);
+      toggler.set('size',e);
+      group.set('size',e);
+      select.set('size',e);
+      unit.set('size',e);
+      texta.set('size',e);
+    });
+    
+    group = new Core.PushGroup();
+    for(i=0;i<5;i++){
+      group.addItem(new Buttons.Toggle({label:i}));  
+    }
+    
+    
+    
+    unit = new Data.Unit();
+    
+    select = new Data.Select({'default':'background-break'});
+    list = [' bounding-box','each-box','continuous','border-box','padding-box','content-box','no-clip']
+    list.each(function(item){
+      select.addItem(new Iterable.ListItem({label:item,removeable:false,draggable:false}))
+    });
+    
+    $("box").adopt( button,pushButton, horizontalSlider,scroller, toggler, number, select, unit,group,checkbox,texta, icon );
+  });

@@ -1,0 +1,49 @@
+---
+class: Data.Select
+description: |
+  Editable select element.
+extends: Data.Abstract
+implements:
+  - Interfaces.Controls
+  - Interfaces.Enabled
+  - Interfaces.Size
+  - Interfaces.Children
+attributes:
+  default: 
+    type: String
+    description: Text of the label when nothing is selected
+    default: 'Select something...'
+  editable: 
+    type: Boolean
+    default: true
+    description: Toggles the remove and add buttons.
+  value: 
+    show: false
+    type: Element
+    description: The selected list item.
+  class:
+    show: false
+    type: String
+    description: Elements CSS class.
+  size:
+    default: 200
+    type: Number
+    description: Size of the element.
+events:
+  - invoked:
+    description: Fires when the selected item changes.
+functions:
+  addItem:
+    description: Adds a new item to the element.
+    arguments:
+      - item:
+        description: The item to be added.
+        type: Element
+  removeItem:
+    description: Remove an item from the element.
+    arguments:
+      - item:
+        description: The item to be removed.
+        type: Element
+...
+

@@ -1,0 +1,11 @@
+---
+class: Interfaces.Size
+description: 
+demo: false
+attributes:
+  size: 
+    type: Number
+    description: Size of the element
+    default: 200
+...
+

@@ -1,0 +1,11 @@
+---
+class: Interfaces.Controls
+description: 
+demo: false
+functions:
+  show:
+    description: Shows the element.
+  hide:
+    description: Shows the element.
+...
+

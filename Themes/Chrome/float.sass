@@ -1,0 +1,42 @@
+@import _mixins.sass
+.float
+  :z-index 200
+  :position fixed
+  .controls
+    :position absolute
+    :top 0
+    :right -5px
+    :width 0
+    :height 0
+    > div
+      :position static !important
+    > div:first-child
+      .icon
+        :position static !important
+        :margin-bottom 6px
+  +box_shadow(0,2px,5px, rgba(0,0,0,0.4))
+  +round_full(5px)
+  +linear_gradient(#E0E0E0,#D9D9D9)
+  .handle, .bottom
+    :height 10px
+  .handle
+    :background-color #87B5ED
+    :border-bottom 1px solid #7A9CDB
+    +linear_gradient(#799DE0,#85A7EA)
+    +round(5px,5px,0,0)
+  .bottom
+    :background-color #6F95DB
+    +linear_gradient(#85A7EA,#6F95DB)
+    +round(0,0,5px,5px)
+    :border-top 1px solid #7A9CDB
+  .base
+    :background-color #E0E0E0
+  .icon
+    :width 15px
+    :height 15px
+    :cursor pointer
+    :background
+      :position center
+  .controls
+    > div
+      :-webkit-transition-duration 0.3s 

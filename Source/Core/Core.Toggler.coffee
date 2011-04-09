@@ -27,34 +27,34 @@ Core.Toggler = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Toggler.class
+      value: 'blender-button-toggle'
     }
     onLabel: {
-      value: GDotUI.Theme.Toggler.onText
+      value: 'ON'
       setter: (value) ->
         @onDiv.set 'text', value
     }
     offLabel: {
-      value: GDotUI.Theme.Toggler.offText
+      value: 'OFF'
       setter: (value) ->
         @offDiv.set 'text', value
     }
     onClass: {
-      value: GDotUI.Theme.Toggler.onClass
+      value: 'blender-button-toggle-on'
       setter: (value, old) ->
         @onDiv.removeClass old
         @onDiv.addClass value
         value
     }
     offClass: {
-      value: GDotUI.Theme.Toggler.offClass
+      value: 'blender-button-toggle-off'
       setter: (value, old) ->
         @offDiv.removeClass old
         @offDiv.addClass value
         value
     }
     separatorClass: {
-      value: GDotUI.Theme.Toggler.separatorClass
+      value: 'blender-button-toggle-separator'
       setter: (value, old) ->
         @separator.removeClass old
         @separator.addClass value
@@ -91,12 +91,11 @@ Core.Toggler = new Class {
       'left': 0
     }
     
-    @base.addEvent 'click', ( ->
+    @base.addEvent 'click', =>
        if @enabled
          if @checked
           @set 'checked', no
          else
           @set 'checked', yes
-    ).bind @
     
 }

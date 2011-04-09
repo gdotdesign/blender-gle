@@ -1,0 +1,32 @@
+.time {
+  height: 140px; }
+  .time .slot {
+    float: left;
+    height: 140px; }
+    .time .slot .list .list-item {
+      font-weight: bold;
+      text-align: right; }
+  .time .slot:first-child {
+    border-right: 2px solid #878787; }
+    .time .slot:first-child .list .list-item {
+      text-align: right; }
+
+.date-time {
+  height: 140px; }
+  .date-time .date {
+    border-right: 4px solid #878787; }
+  .date-time .time, .date-time .date {
+    float: left; }
+
+.date {
+  height: 140px; }
+  .date .slot {
+    height: 140px;
+    float: left; }
+  .date .slot:first-child {
+    border-right: 2px solid #878787; }
+  .date .slot:last-child {
+    border-left: 2px solid #878787; }
+  .date .list .list-item {
+    font-weight: bold;
+    text-align: right; }

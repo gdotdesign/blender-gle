@@ -1,0 +1,49 @@
+---
+class: Core.Slider
+description: Slider element.
+extends: Core.Abstract
+implements: 
+  - Interfaces.Controls
+  - Interfaces.Enabled
+attributes:
+  mode: 
+    type: String
+    dtype: Select
+    values:
+      - horizontal
+      - vertical
+    default: horizontal
+    description: The mode of Slider, can be either 'horizontal' or 'vertical'.
+  value: 
+    type: Number 
+    default: 0
+    description: Value (curent position) of the slider.
+  size: 
+    type: Number
+    default: 200
+    description: Size of the slider. Height when vertical, Width when horizontal. 
+  steps: 
+    default: 200
+    type: Number
+    description: The number of steps the Slider should move/tick.
+  reset: 
+    default: false
+    type: Boolean
+    description: Wether or not reset the sliders position to the center after dragging is finished.
+  bar: 
+    type: String 
+    show: false
+    description: CSS Class of the bar.
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - step:
+    description: Fires when the value changes.
+    arguments:
+      - step:
+        description: Fires when the value changes
+        type: Number
+...
+

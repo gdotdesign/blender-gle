@@ -27,16 +27,16 @@ Core.PushGroup = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.PushGroup.class
+      value: 'blender-push-group'
     }
     active: {
       setter: (value, old) ->
         if not old?
-          value.on()
+          value.set 'state', true
         else
           if old isnt value
-            old.off()
-          value.on()
+            old.set 'state', false
+          value.set 'state', true
         value
     }
   }
@@ -46,10 +46,11 @@ Core.PushGroup = new Class {
       btn.set 'size', buttonwidth
     if last = @children.getLast()
       last.set 'size', @size-buttonwidth*(@children.length-1)
-  change: (button) ->
+  change: (button,value) ->
     if button isnt @active
-      @set 'active', button
-      @fireEvent 'change', button
+      if button.state
+        @set 'active', button
+        @fireEvent 'change', button
   emptyItems: ->
     @children.each (child) ->
       console.log child

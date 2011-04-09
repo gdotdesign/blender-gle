@@ -677,239 +677,6 @@ Interfaces.Controls = new Class {
 ###
 ---
 
-name: Iterable.ListItem
-
-description: List items for Iterable.List.
-
-license: MIT-style license.
-
-requires: Core.Abstract
-
-provides: Iterable.ListItem
-
-requires: [GDotUI, Interfaces.Draggable]
-...
-###
-Iterable.ListItem = new Class {
-  Extends:Core.Abstract
-  Implements: [Interfaces.Draggable
-               Interfaces.Enabled 
-               Options]
-  Attributes: {
-    label: {
-      value: ''
-      setter: (value) ->
-        @title.set 'text', value
-        value
-    }
-    class: {
-      value: GDotUI.Theme.ListItem.class
-    }
-  }
-  options:{
-    classes:{
-      title: GDotUI.Theme.ListItem.title
-      subtitle: GDotUI.Theme.ListItem.subTitle
-    }
-    title:''
-    subtitle:''
-    draggable: off
-    dragreset: on
-    ghost: on
-    removeClasses: '.'+GDotUI.Theme.Icon.class
-    invokeEvent: 'click'
-    selectEvent: 'click'
-    removeable: on
-    sortable: off
-    dropppables: ''
-  }
-  initialize: (options) ->
-    @setOptions options
-    @parent options
-  create: ->
-    @base.setStyle 'position','relative'
-    #@remove = new Core.Icon {image: @options.icons.remove}
-    #@handles = new Core.Icon {image: @options.icons.handle}
-    #@handles.base.addClass  @options.classes.handle
-    
-    #$$(@remove.base,@handles.base).setStyle 'position','absolute'
-    @title = new Element 'div'
-    @subtitle = new Element 'div'
-    @base.adopt @title,@subtitle
-    #if @options.removeable
-    #  @base.grab @remove
-    #if @options.sortable
-    #  @base.grab @handle
-    @base.addEvent @options.selectEvent, ( (e)->
-      @fireEvent 'select', [@,e]
-      ).bindWithEvent @
-    @base.addEvent @options.invokeEvent, ( ->
-      if @enabled and not @options.draggable and not @editing
-        @fireEvent 'invoked', @
-    ).bindWithEvent @
-    @addEvent 'dropped', ( (el,drop,e) ->
-      @fireEvent 'invoked', [@ ,e, drop]
-    ).bindWithEvent @
-    @base.addEvent 'dblclick', ( ->
-      if @enabled
-        if @editing
-          @fireEvent 'edit', @
-    ).bindWithEvent @
-    #@remove.addEvent 'invoked', ( ->
-    #  @fireEvent 'delete', @
-    #).bindWithEvent @
-    @
-  toggleEdit: ->
-    if @editing
-      if @options.draggable
-        @drag.attach()
-      @remove.base.setStyle 'right', -@remove.base.getSize().x
-      @handles.base.setStyle 'left', -@handles.base.getSize().x
-      @base.setStyle 'padding-left' , @base.retrieve( 'padding-left:old')
-      @base.setStyle 'padding-right', @base.retrieve( 'padding-right:old')
-      @editing = off
-    else
-      if @options.draggable
-        @drag.detach()
-      @remove.base.setStyle 'right', @options.offset
-      @handles.base.setStyle 'left', @options.offset
-      @base.store 'padding-left:old', @base.getStyle('padding-left')
-      @base.store 'padding-right:old', @base.getStyle('padding-left')
-      @base.setStyle 'padding-left', Number(@base.getStyle('padding-left').slice(0,-2))+@handles.base.getSize().x
-      @base.setStyle 'padding-right', Number(@base.getStyle('padding-right').slice(0,-2))+@remove.base.getSize().x
-      @editing = on
-  ready: ->
-    if not @editing
-      #handSize = @handles.base.getSize()
-      #remSize = @remove.base.getSize()
-      baseSize = @base.getSize()
-      #@remove.base.setStyles {
-      #  "right":-remSize.x
-      #  "top":(baseSize.y-remSize.y)/2
-      #  }
-      #@handles.base.setStyles {
-      #  "left":-handSize.x,
-      #  "top":(baseSize.y-handSize.y)/2
-      #  }
-      @parent()
-      if @options.draggable
-        @drag.addEvent 'beforeStart',( ->
-          #recalculate drops
-          @fireEvent 'select', @
-          ).bindWithEvent @
-}
-
-
-###
----
-
-name: Iterable.List
-
-description: List element, with editing and sorting.
-
-license: MIT-style license.
-
-requires: Core.Abstract
-
-provides: Iterable.List
-
-requires: [GDotUI]
-...
-###
-Iterable.List = new Class {
-  Extends:Core.Abstract
-  options:{
-    class: GDotUI.Theme.List.class
-    selected: GDotUI.Theme.List.selected
-    search: off
-  }
-  Attributes: {
-    selected: {
-      getter: ->
-        @items.filter(((item) ->
-          if item.base.hasClass @options.selected then true else false
-        ).bind(@))[0]
-      setter: (value, old) ->
-        if old
-          old.base.removeClass @options.selected
-        if value?
-          value.base.addClass @options.selected
-        value
-        
-    }
-  }
-  initialize: (options) ->
-    @parent options
-  create: ->
-    @base.addClass @options.class
-    @sortable = new Sortables null
-    @editing = off
-    if @options.search
-      @sinput = new Element 'input', {class:'search'}
-      @base.grab @sinput
-      @sinput.addEvent 'keyup', ( ->
-          @search()
-      ).bindWithEvent @
-    @items = []
-  ready: ->
-  search: ->
-    svalue = @sinput.get 'value'
-    @items.each ( (item) ->
-      if item.title.get('text').test(/#{svalue}/ig) or item.subtitle.get('text').test(/#{svalue}/ig)
-        item.base.setStyle 'display', 'block'
-      else
-        item.base.setStyle 'display', 'none'
-    ).bind @
-  removeItem: (li) ->
-    li.removeEvents 'invoked', 'edit', 'delete'
-    @items.erase li
-    li.base.destroy()
-  removeAll: ->
-    if @options.search
-      @sinput.set 'value', ''
-    @selected = null
-    @base.empty()
-    @items.empty()
-  toggleEdit: ->
-    bases = @items.map (item) ->
-      return item.base
-    if @editing
-      @sortable.removeItems bases
-      @items.each (item) ->
-        item.toggleEdit()
-      @editing = off
-    else
-      @sortable.addItems bases
-      @items.each (item) ->
-        item.toggleEdit()
-      @editing = on
-  getItemFromTitle: (title) ->
-    filtered = @items.filter (item) ->
-      if String.from(item.title.get('text')).toLowerCase() is String(title).toLowerCase()
-        yes
-      else no
-    filtered[0]
-  addItem: (li) -> 
-    @items.push li
-    @base.grab li
-    li.addEvent 'select', ( (item,e)->
-      @set 'selected', item 
-      ).bindWithEvent @
-    li.addEvent 'invoked', ( (item) ->
-      @fireEvent 'invoked', arguments
-      ).bindWithEvent @
-    li.addEvent 'edit', ( -> 
-      @fireEvent 'edit', arguments
-      ).bindWithEvent @
-    li.addEvent 'delete', ( ->
-      @fireEvent 'delete', arguments
-      ).bindWithEvent @
-}
-
-
-###
----
-
 name: Forms.Input
 
 description: Input elements for Forms.
@@ -1173,7 +940,7 @@ Core.Icon = new Class {
         value
     }
     class: {
-      value: GDotUI.Theme.Icon.class
+      value: 'blender-icon'
     }
   }
   create: ->
@@ -1266,7 +1033,7 @@ Core.IconGroup = new Class {
         else no
     }
     class: {
-      value: GDotUI.Theme.IconGroup.class
+      value: 'blender-icon-group'
     }
   }
   create: ->
@@ -1481,10 +1248,10 @@ Core.Slider = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Slider.classes.base
+      value: 'blender-slider'
     }
     bar: {
-      value: GDotUI.Theme.Slider.classes.bar
+      value: 'blender-slider-progress'
       setter: (value, old) ->
         @progress.removeClass old
         @progress.addClass value
@@ -1740,19 +1507,98 @@ Core.Button = new Class {
   ]
   Attributes: {
     label: {
-      value: GDotUI.Theme.Button.label
+      value: ''
       setter: (value) ->
         @base.set 'text', value
         value
     }
     class: {
-      value: GDotUI.Theme.Button.class
+      value: 'blender-button'
     }
   }
   create: ->
     @base.addEvent 'click', ((e)->
       if @enabled
         @fireEvent 'invoked', [@, e]
+    ).bind @
+}
+
+
+###
+---
+
+name: Core.Keymap
+
+description: Basic button element.
+
+license: MIT-style license.
+
+requires: 
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Size
+
+provides: Core.Keymap
+
+...
+###
+Core.Keymap = new Class {
+  Extends: Core.Abstract
+  Implements:[
+    Interfaces.Enabled
+    Interfaces.Controls
+    Interfaces.Size
+  ]
+  Attributes: {
+    label: {
+      value: ''
+      setter: (value) ->
+        @base.set 'text', value
+        value
+    }
+    class: {
+      value: 'blender-button-key'
+    }
+  }
+  getShortcut: (e) ->
+    @specialMap = {
+      '~':'`', '!':'1', '@':'2', '#':'3',
+      '$':'4', '%':'5', '^':'6', '&':'7',
+      '*':'8', '(':'9', ')':'0', '_':'-',
+      '+':'=', '{':'[', '}':']', '\\':'|',
+      ':':';', '"':'\'', '<':',', '>':'.',
+      '?':'/'
+    }
+
+    modifiers = ''
+    if e.control
+      modifiers += 'ctrl ' 
+    if event.meta
+      modifiers += 'meta '
+    if e.shift
+      specialKey = @specialMap[String.fromCharCode(e.code)]
+      if specialKey?
+        e.key = specialKey
+      modifiers += 'shift '
+    if e.alt
+      modifiers += 'alt '
+    modifiers + e.key
+  stopWindow: (e) ->
+    e.stop()
+  create: ->
+    @base.addEvent 'click', ((e)->
+      @set 'label', 'Press any key!'
+      @base.addClass 'active'
+      window.addEvent 'keydown', @stopWindow
+      window.addEvent 'keyup:once', (e) =>
+        @base.removeClass 'active'
+        shortcut = @getShortcut(e).toUpperCase()
+        if shortcut isnt "ESC"
+          @set 'label', shortcut
+          @fireEvent 'invoked', [@,shortcut]
+        window.removeEvent 'keydown', @stopWindow
     ).bind @
 }
 
@@ -1784,7 +1630,7 @@ Core.Picker = new Class {
   Binds: ['show','hide','delegate']
   Attributes: {
     class: {
-      value: GDotUI.Theme.Picker.class
+      value: 'blender-picker'
     }
     offset: {
       value: GDotUI.Theme.Picker.offset
@@ -1997,7 +1843,7 @@ Core.Toggler = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Toggler.class
+      value: 'blender-button-toggle'
     }
     onLabel: {
       value: GDotUI.Theme.Toggler.onText
@@ -2010,21 +1856,21 @@ Core.Toggler = new Class {
         @offDiv.set 'text', value
     }
     onClass: {
-      value: GDotUI.Theme.Toggler.onClass
+      value: 'blender-button-toggle-on'
       setter: (value, old) ->
         @onDiv.removeClass old
         @onDiv.addClass value
         value
     }
     offClass: {
-      value: GDotUI.Theme.Toggler.offClass
+      value: 'blender-button-toggle-off'
       setter: (value, old) ->
         @offDiv.removeClass old
         @offDiv.addClass value
         value
     }
     separatorClass: {
-      value: GDotUI.Theme.Toggler.separatorClass
+      value: 'blender-button-toggle-separator'
       setter: (value, old) ->
         @separator.removeClass old
         @separator.addClass value
@@ -2254,10 +2100,10 @@ Core.Push = new Class {
         @base.hasClass 'pushed' 
     }
     label: {
-      value: GDotUI.Theme.Push.label
+      value: ''
     }
     class: {
-      value: GDotUI.Theme.Push.class
+      value: 'blender-button-push'
     }
   }
   on: ->
@@ -2302,7 +2148,7 @@ Core.PushGroup = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.PushGroup.class
+      value: 'blender-push-group'
     }
     active: {
       setter: (value, old) ->
@@ -2429,6 +2275,43 @@ provides: Data.Select
 
 ...
 ###
+Iterable.BlenderListItem = new Class {
+  Extends: Core.Abstract
+  Attributes: {
+    icon: {
+      value: null
+      setter: (value) ->
+        @icon.set 'image', value
+    }
+    shortcut: {
+      value: ''
+      setter: (value) ->
+        @sc.set 'text', value.toUpperCase()
+        value
+    }
+    label: {
+      value: ''
+      setter: (value) ->
+        @title.set 'text', value
+        value
+    }
+    class: {
+      value: GDotUI.Theme.ListItem.class
+    }
+  }
+  create: ->
+    @icon = new Core.Icon({class:'blender-list-item-icon'})
+    @sc = new Element 'div'
+    @title = new Element 'div'
+    @sc.setStyle 'float', 'right'
+    @title.setStyle 'float', 'left'
+    @icon.base.setStyle 'float', 'left'
+    @base.adopt @icon, @title, @sc
+    @base.addEvent 'click', (e) =>
+      @fireEvent 'select', [@,e]
+    @base.addEvent 'click', =>
+      @fireEvent 'invoked', @
+}
 Data.Select = new Class {
   Extends: Data.Abstract
   Implements:[
@@ -2438,7 +2321,7 @@ Data.Select = new Class {
     Interfaces.Children]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Select.class
+      value: 'blender-select'
     }
     default: {
       value: ''
@@ -2491,21 +2374,15 @@ Data.Select = new Class {
         value 
     }
     listClass: {
-      value: GDotUI.Theme.Select.listClass
+      value: 'blender-list'
       setter: (value) ->
         @list.set 'class', value
-    }
-    listItemClass: {
-      value: GDotUI.Theme.Select.listItemClass
     }
   }
   ready: ->
     @set 'size', @size
   create: ->
     
-    @addEvent 'sizeChange', ( ->
-      @list.base.setStyle 'width', if @size < @minSize then @minSize else @size
-    ).bind @
     
     @base.setStyle 'position', 'relative'
     @text = new Element 'div'
@@ -2560,7 +2437,7 @@ Data.Select = new Class {
     @prompt.attach @base, false
     @prompt.addEvent 'invoked', ((value) ->
       if value
-        item = new Iterable.ListItem {label:value,removeable:false,draggable:false}
+        item = new Iterable.BlenderListItem {label:value,removeable:false,draggable:false}
         @addItem item
         @list.set 'selected', item
       @prompt.hide null, yes
@@ -2578,7 +2455,6 @@ Data.Select = new Class {
     @update()
     
   addItem: (item) ->
-    item.base.set 'class', @listItemClass
     @list.addItem item
   removeItem: (item) ->
     @list.removeItem item
@@ -2609,7 +2485,7 @@ Data.Text = new Class {
   Binds: ['update']  
   Attributes: {
     class: {
-      value: GDotUI.Theme.Text.class
+      value: 'blender-textarea'
     }
     value: {
       setter: (value) ->
@@ -2652,13 +2528,10 @@ Data.Number = new Class {
   Extends: Core.Slider
   Attributes: {
     class: {
-      value: GDotUI.Theme.Number.classes.base
-    }
-    bar: {
-      value: GDotUI.Theme.Number.classes.bar
+      value: 'blender-number'
     }
     text: {
-      value: GDotUI.Theme.Number.classes.text
+      value: 'blender-number-text'
       setter: (value, old) ->
         @textLabel.removeClass old
         @textLabel.addClass value
@@ -3483,7 +3356,7 @@ Data.Unit = new Class {
   Binds: ['update']
   Attributes: {
     class: {
-      value: GDotUI.Theme.Unit.class
+      value: 'blender-unit'
     }
     value: {
       setter: (value) ->
@@ -3589,6 +3462,239 @@ Data.List = new Class {
       self.add item
 }
     
+
+
+###
+---
+
+name: Iterable.ListItem
+
+description: List items for Iterable.List.
+
+license: MIT-style license.
+
+requires: Core.Abstract
+
+provides: Iterable.ListItem
+
+requires: [GDotUI, Interfaces.Draggable]
+...
+###
+Iterable.ListItem = new Class {
+  Extends:Core.Abstract
+  Implements: [Interfaces.Draggable
+               Interfaces.Enabled 
+               Options]
+  Attributes: {
+    label: {
+      value: ''
+      setter: (value) ->
+        @title.set 'text', value
+        value
+    }
+    class: {
+      value: 'blender-list-item'
+    }
+  }
+  options:{
+    classes:{
+      title: GDotUI.Theme.ListItem.title
+      subtitle: GDotUI.Theme.ListItem.subTitle
+    }
+    title:''
+    subtitle:''
+    draggable: off
+    dragreset: on
+    ghost: on
+    removeClasses: '.'+GDotUI.Theme.Icon.class
+    invokeEvent: 'click'
+    selectEvent: 'click'
+    removeable: on
+    sortable: off
+    dropppables: ''
+  }
+  initialize: (options) ->
+    @setOptions options
+    @parent options
+  create: ->
+    @base.setStyle 'position','relative'
+    #@remove = new Core.Icon {image: @options.icons.remove}
+    #@handles = new Core.Icon {image: @options.icons.handle}
+    #@handles.base.addClass  @options.classes.handle
+    
+    #$$(@remove.base,@handles.base).setStyle 'position','absolute'
+    @title = new Element 'div'
+    @subtitle = new Element 'div'
+    @base.adopt @title,@subtitle
+    #if @options.removeable
+    #  @base.grab @remove
+    #if @options.sortable
+    #  @base.grab @handle
+    @base.addEvent @options.selectEvent, ( (e)->
+      @fireEvent 'select', [@,e]
+      ).bindWithEvent @
+    @base.addEvent @options.invokeEvent, ( ->
+      if @enabled and not @options.draggable and not @editing
+        @fireEvent 'invoked', @
+    ).bindWithEvent @
+    @addEvent 'dropped', ( (el,drop,e) ->
+      @fireEvent 'invoked', [@ ,e, drop]
+    ).bindWithEvent @
+    @base.addEvent 'dblclick', ( ->
+      if @enabled
+        if @editing
+          @fireEvent 'edit', @
+    ).bindWithEvent @
+    #@remove.addEvent 'invoked', ( ->
+    #  @fireEvent 'delete', @
+    #).bindWithEvent @
+    @
+  toggleEdit: ->
+    if @editing
+      if @options.draggable
+        @drag.attach()
+      @remove.base.setStyle 'right', -@remove.base.getSize().x
+      @handles.base.setStyle 'left', -@handles.base.getSize().x
+      @base.setStyle 'padding-left' , @base.retrieve( 'padding-left:old')
+      @base.setStyle 'padding-right', @base.retrieve( 'padding-right:old')
+      @editing = off
+    else
+      if @options.draggable
+        @drag.detach()
+      @remove.base.setStyle 'right', @options.offset
+      @handles.base.setStyle 'left', @options.offset
+      @base.store 'padding-left:old', @base.getStyle('padding-left')
+      @base.store 'padding-right:old', @base.getStyle('padding-left')
+      @base.setStyle 'padding-left', Number(@base.getStyle('padding-left').slice(0,-2))+@handles.base.getSize().x
+      @base.setStyle 'padding-right', Number(@base.getStyle('padding-right').slice(0,-2))+@remove.base.getSize().x
+      @editing = on
+  ready: ->
+    if not @editing
+      #handSize = @handles.base.getSize()
+      #remSize = @remove.base.getSize()
+      baseSize = @base.getSize()
+      #@remove.base.setStyles {
+      #  "right":-remSize.x
+      #  "top":(baseSize.y-remSize.y)/2
+      #  }
+      #@handles.base.setStyles {
+      #  "left":-handSize.x,
+      #  "top":(baseSize.y-handSize.y)/2
+      #  }
+      @parent()
+      if @options.draggable
+        @drag.addEvent 'beforeStart',( ->
+          #recalculate drops
+          @fireEvent 'select', @
+          ).bindWithEvent @
+}
+
+
+###
+---
+
+name: Iterable.List
+
+description: List element, with editing and sorting.
+
+license: MIT-style license.
+
+requires: Core.Abstract
+
+provides: Iterable.List
+
+requires: [GDotUI]
+...
+###
+Iterable.List = new Class {
+  Extends:Core.Abstract
+  options:{
+    class: 'blender-list'
+    selected: 'blender-list-selected'
+    search: off
+  }
+  Attributes: {
+    selected: {
+      getter: ->
+        @items.filter(((item) ->
+          if item.base.hasClass @options.selected then true else false
+        ).bind(@))[0]
+      setter: (value, old) ->
+        if old
+          old.base.removeClass @options.selected
+        if value?
+          value.base.addClass @options.selected
+        value
+        
+    }
+  }
+  initialize: (options) ->
+    @parent options
+  create: ->
+    @base.addClass @options.class
+    @sortable = new Sortables null
+    @editing = off
+    if @options.search
+      @sinput = new Element 'input', {class:'search'}
+      @base.grab @sinput
+      @sinput.addEvent 'keyup', ( ->
+          @search()
+      ).bindWithEvent @
+    @items = []
+  ready: ->
+  search: ->
+    svalue = @sinput.get 'value'
+    @items.each ( (item) ->
+      if item.title.get('text').test(/#{svalue}/ig) or item.subtitle.get('text').test(/#{svalue}/ig)
+        item.base.setStyle 'display', 'block'
+      else
+        item.base.setStyle 'display', 'none'
+    ).bind @
+  removeItem: (li) ->
+    li.removeEvents 'invoked', 'edit', 'delete'
+    @items.erase li
+    li.base.destroy()
+  removeAll: ->
+    if @options.search
+      @sinput.set 'value', ''
+    @selected = null
+    @base.empty()
+    @items.empty()
+  toggleEdit: ->
+    bases = @items.map (item) ->
+      return item.base
+    if @editing
+      @sortable.removeItems bases
+      @items.each (item) ->
+        item.toggleEdit()
+      @editing = off
+    else
+      @sortable.addItems bases
+      @items.each (item) ->
+        item.toggleEdit()
+      @editing = on
+  getItemFromTitle: (title) ->
+    filtered = @items.filter (item) ->
+      if String.from(item.title.get('text')).toLowerCase() is String(title).toLowerCase()
+        yes
+      else no
+    filtered[0]
+  addItem: (li) -> 
+    @items.push li
+    @base.grab li
+    li.addEvent 'select', ( (item,e)->
+      @set 'selected', item 
+      ).bindWithEvent @
+    li.addEvent 'invoked', ( (item) ->
+      @fireEvent 'invoked', arguments
+      ).bindWithEvent @
+    li.addEvent 'edit', ( -> 
+      @fireEvent 'edit', arguments
+      ).bindWithEvent @
+    li.addEvent 'delete', ( ->
+      @fireEvent 'delete', arguments
+      ).bindWithEvent @
+}
 
 
 ###
@@ -3834,7 +3940,7 @@ Blender = new Class {
   updateToolBar: (view) ->
     view.toolbar.select.list.removeAll()
     Object.each @stack, (value,key)->
-       @addItem new Iterable.ListItem({label:key,removeable:false,draggable:false})
+       @addItem new Iterable.BlenderListItem({label:key,removeable:false,draggable:false})
     , view.toolbar.select
   updateToolBars: ->
     @children.each (child)->
@@ -4039,9 +4145,7 @@ Blender.View = new Class {
     @set 'top', Math.floor @top*vertpercent
     @set 'bottom', Math.floor @bottom*vertpercent
   update: ->
-    width = @base.getSize().x-10
-    if @slider.base.isVisible()
-      width -= 20
+    width = @base.getSize().x-30
     @children.each ((child) ->
       child.set 'size', width
     ).bind @

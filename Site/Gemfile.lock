@@ -1,0 +1,56 @@
+GIT
+  remote: https://github.com/spox/plist.git
+  revision: deb5f9e1ef1cd4ef7de7b2a2c8a1846ca5a29f4f
+  specs:
+    plist (3.0.1)
+
+GIT
+  remote: https://github.com/spox/textpow.git
+  revision: 652df324c12e2419a10330a0457ec3a5d3b6bb6e
+  specs:
+    textpow (0.10.3)
+      spox-plist
+
+GIT
+  remote: https://github.com/spox/ultraviolet.git
+  revision: 5591ac27784b783cd1a4dbe941f6e7f3a4eff65b
+  specs:
+    ultraviolet (0.10.5)
+      spox-textpow
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.0.1)
+    execjs (0.1.1)
+    haml (3.0.25)
+    maruku (0.6.0)
+      syntax (>= 1.0.0)
+    rack (1.2.2)
+    sass (3.1.0.alpha.252)
+    sinatra (1.2.1)
+      rack (~> 1.1)
+      tilt (< 2.0, >= 1.2.2)
+    spox-plist (3.0.1)
+    spox-textpow (0.10.3)
+      spox-plist
+    syntax (1.0.0)
+    therubyracer-heroku (0.8.1.pre3)
+    tilt (1.2.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  coffee-script
+  haml
+  maruku
+  plist!
+  sass
+  sinatra
+  textpow!
+  therubyracer-heroku (= 0.8.1.pre3)
+  ultraviolet!

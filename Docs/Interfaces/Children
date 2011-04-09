@@ -1,0 +1,36 @@
+---
+class: Interfaces.Children
+description: 
+demo: false
+functions:
+  hasChild:
+    description: Tests the Element to see if it has the child.
+    arguments:
+      - child:
+        description: The elemtn to be tested. 
+        type: Element
+  addChild:
+    description: Appends the Element at a particular place relative to the Element's children (specified by the where parameter).
+    arguments:
+      - child:
+        description: The element to be added.
+        type: Element
+      - where:
+        type: String
+        description: The place to append the Element
+  removeChild:
+    description:
+    arguments:
+      - child:
+        description: The element to be removed.
+        type: Element
+  adoptChildren:
+    description: Inserts the passed element(s) inside the Element.
+    arguments:
+      - children: 
+        description: The elemnts to be inserted.
+        type: Element
+  empty:
+    description: Empties the element from all of its children.
+...
+

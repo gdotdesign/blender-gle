@@ -10,7 +10,8 @@ license: MIT-style license.
 provides: Element.Extras
 
 ...
-*/var Blender, Core, Data, Dialog, Forms, GDotUI, Interfaces, Iterable, Layout, Pickers, UnitList, checkForKey;
+*/var Blender, Buttons, Core, Data, Dialog, Forms, GDotUI, Interfaces, Iterable, Layout, Pickers, UnitList, checkForKey, mergeOneNew;
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 Element.Properties.checked = {
   get: function() {
     if (this.getChecked != null) {
@@ -262,12 +263,48 @@ Class.Mutators.Delegates = function(delegations) {
     }, this);
   }, this);
 };
+mergeOneNew = function(source, key, current) {
+  switch (typeOf(current)) {
+    case 'object':
+      if (typeOf(source[key]) === 'object') {
+        Object.mergeNew(source[key], current);
+      } else {
+        source[key] = Object.clone(current);
+      }
+      break;
+    case 'array':
+      source[key] = current.clone();
+      break;
+    case 'function':
+      current.prototype.parent = source[key];
+      source[key] = current;
+      break;
+    default:
+      source[key] = current;
+  }
+  return source;
+};
+Object.extend({
+  mergeNew: function(source, k, v) {
+    var i, object, _ref;
+    if (typeOf(k) === 'string') {
+      return mergeOneNew(source, k, v);
+    }
+    for (i = 1, _ref = arguments.length - 1; (1 <= _ref ? i <= _ref : i >= _ref); (1 <= _ref ? i += 1 : i -= 1)) {
+      object = arguments[i];
+      Object.each(object, function(value, key) {
+        return mergeOneNew(source, key, value);
+      });
+    }
+    return source;
+  }
+});
 Class.Mutators.Attributes = function(attributes) {
   var $getter, $setter;
   $setter = attributes.$setter;
   $getter = attributes.$getter;
   if (this.prototype.$attributes) {
-    attributes = Object.merge(this.prototype.$attributes, attributes);
+    attributes = Object.mergeNew(this.prototype.$attributes, attributes);
   }
   delete attributes.$setter;
   delete attributes.$getter;
@@ -303,7 +340,7 @@ Class.Mutators.Attributes = function(attributes) {
           oldVal = attr.value;
           if (!attr.validator || attr.validator.call(this, value)) {
             if (attr.setter) {
-              newVal = attr.setter.attempt([value, oldVal], this);
+              newVal = attr.setter.call(this, value, oldVal, attr.setter);
             } else {
               newVal = value;
             }
@@ -566,53 +603,33 @@ requires:
 */
 Interfaces.Enabled = new Class({
   _$Enabled: function() {
-    return this.enabled = true;
-  },
-  supress: function() {
-    if (this.children != null) {
-      this.children.each(function(item) {
-        if (item.disable != null) {
-          return item.supress();
+    return this.addAttributes({
+      enabled: {
+        value: true,
+        setter: function(value) {
+          if (value) {
+            if (this.children != null) {
+              this.children.each(function(item) {
+                if (item.enable != null) {
+                  return item.set('enabled', true);
+                }
+              });
+            }
+            this.base.removeClass('disabled');
+          } else {
+            if (this.children != null) {
+              this.children.each(function(item) {
+                if (item.disable != null) {
+                  return item.set('enabled', false);
+                }
+              });
+            }
+            this.base.addClass('disabled');
+          }
+          return value;
         }
-      });
-    }
-    this.base.addClass('supressed');
-    return this.enabled = false;
-  },
-  unsupress: function() {
-    if (this.children != null) {
-      this.children.each(function(item) {
-        if (item.enable != null) {
-          return item.unsupress();
-        }
-      });
-    }
-    this.base.removeClass('supressed');
-    return this.enabled = true;
-  },
-  enable: function() {
-    if (this.children != null) {
-      this.children.each(function(item) {
-        if (item.enable != null) {
-          return item.unsupress();
-        }
-      });
-    }
-    this.enabled = true;
-    this.base.removeClass('disabled');
-    return this.fireEvent('enabled');
-  },
-  disable: function() {
-    if (this.children != null) {
-      this.children.each(function(item) {
-        if (item.disable != null) {
-          return item.supress();
-        }
-      });
-    }
-    this.enabled = false;
-    this.base.addClass('disabled');
-    return this.fireEvent('disabled');
+      }
+    });
   }
 });
 /*
@@ -799,254 +816,6 @@ Interfaces.Controls = new Class({
     if (this.enabled) {
       return this.base.toggle();
     }
-  }
-});
-/*
----
-
-name: Iterable.ListItem
-
-description: List items for Iterable.List.
-
-license: MIT-style license.
-
-requires: Core.Abstract
-
-provides: Iterable.ListItem
-
-requires: [GDotUI, Interfaces.Draggable]
-...
-*/
-Iterable.ListItem = new Class({
-  Extends: Core.Abstract,
-  Implements: [Interfaces.Draggable, Interfaces.Enabled, Options],
-  Attributes: {
-    label: {
-      value: '',
-      setter: function(value) {
-        this.title.set('text', value);
-        return value;
-      }
-    },
-    "class": {
-      value: GDotUI.Theme.ListItem["class"]
-    }
-  },
-  options: {
-    classes: {
-      title: GDotUI.Theme.ListItem.title,
-      subtitle: GDotUI.Theme.ListItem.subTitle
-    },
-    title: '',
-    subtitle: '',
-    draggable: false,
-    dragreset: true,
-    ghost: true,
-    removeClasses: '.' + GDotUI.Theme.Icon["class"],
-    invokeEvent: 'click',
-    selectEvent: 'click',
-    removeable: true,
-    sortable: false,
-    dropppables: ''
-  },
-  initialize: function(options) {
-    this.setOptions(options);
-    return this.parent(options);
-  },
-  create: function() {
-    this.base.setStyle('position', 'relative');
-    this.title = new Element('div');
-    this.subtitle = new Element('div');
-    this.base.adopt(this.title, this.subtitle);
-    this.base.addEvent(this.options.selectEvent, (function(e) {
-      return this.fireEvent('select', [this, e]);
-    }).bindWithEvent(this));
-    this.base.addEvent(this.options.invokeEvent, (function() {
-      if (this.enabled && !this.options.draggable && !this.editing) {
-        return this.fireEvent('invoked', this);
-      }
-    }).bindWithEvent(this));
-    this.addEvent('dropped', (function(el, drop, e) {
-      return this.fireEvent('invoked', [this, e, drop]);
-    }).bindWithEvent(this));
-    this.base.addEvent('dblclick', (function() {
-      if (this.enabled) {
-        if (this.editing) {
-          return this.fireEvent('edit', this);
-        }
-      }
-    }).bindWithEvent(this));
-    return this;
-  },
-  toggleEdit: function() {
-    if (this.editing) {
-      if (this.options.draggable) {
-        this.drag.attach();
-      }
-      this.remove.base.setStyle('right', -this.remove.base.getSize().x);
-      this.handles.base.setStyle('left', -this.handles.base.getSize().x);
-      this.base.setStyle('padding-left', this.base.retrieve('padding-left:old'));
-      this.base.setStyle('padding-right', this.base.retrieve('padding-right:old'));
-      return this.editing = false;
-    } else {
-      if (this.options.draggable) {
-        this.drag.detach();
-      }
-      this.remove.base.setStyle('right', this.options.offset);
-      this.handles.base.setStyle('left', this.options.offset);
-      this.base.store('padding-left:old', this.base.getStyle('padding-left'));
-      this.base.store('padding-right:old', this.base.getStyle('padding-left'));
-      this.base.setStyle('padding-left', Number(this.base.getStyle('padding-left').slice(0, -2)) + this.handles.base.getSize().x);
-      this.base.setStyle('padding-right', Number(this.base.getStyle('padding-right').slice(0, -2)) + this.remove.base.getSize().x);
-      return this.editing = true;
-    }
-  },
-  ready: function() {
-    var baseSize;
-    if (!this.editing) {
-      baseSize = this.base.getSize();
-      this.parent();
-      if (this.options.draggable) {
-        return this.drag.addEvent('beforeStart', (function() {
-          return this.fireEvent('select', this);
-        }).bindWithEvent(this));
-      }
-    }
-  }
-});
-/*
----
-
-name: Iterable.List
-
-description: List element, with editing and sorting.
-
-license: MIT-style license.
-
-requires: Core.Abstract
-
-provides: Iterable.List
-
-requires: [GDotUI]
-...
-*/
-Iterable.List = new Class({
-  Extends: Core.Abstract,
-  options: {
-    "class": GDotUI.Theme.List["class"],
-    selected: GDotUI.Theme.List.selected,
-    search: false
-  },
-  Attributes: {
-    selected: {
-      getter: function() {
-        return this.items.filter((function(item) {
-          if (item.base.hasClass(this.options.selected)) {
-            return true;
-          } else {
-            return false;
-          }
-        }).bind(this))[0];
-      },
-      setter: function(value, old) {
-        if (old) {
-          old.base.removeClass(this.options.selected);
-        }
-        if (value != null) {
-          value.base.addClass(this.options.selected);
-        }
-        return value;
-      }
-    }
-  },
-  initialize: function(options) {
-    return this.parent(options);
-  },
-  create: function() {
-    this.base.addClass(this.options["class"]);
-    this.sortable = new Sortables(null);
-    this.editing = false;
-    if (this.options.search) {
-      this.sinput = new Element('input', {
-        "class": 'search'
-      });
-      this.base.grab(this.sinput);
-      this.sinput.addEvent('keyup', (function() {
-        return this.search();
-      }).bindWithEvent(this));
-    }
-    return this.items = [];
-  },
-  ready: function() {},
-  search: function() {
-    var svalue;
-    svalue = this.sinput.get('value');
-    return this.items.each((function(item) {
-      if (item.title.get('text').test(/#{svalue}/ig) || item.subtitle.get('text').test(/#{svalue}/ig)) {
-        return item.base.setStyle('display', 'block');
-      } else {
-        return item.base.setStyle('display', 'none');
-      }
-    }).bind(this));
-  },
-  removeItem: function(li) {
-    li.removeEvents('invoked', 'edit', 'delete');
-    this.items.erase(li);
-    return li.base.destroy();
-  },
-  removeAll: function() {
-    if (this.options.search) {
-      this.sinput.set('value', '');
-    }
-    this.selected = null;
-    this.base.empty();
-    return this.items.empty();
-  },
-  toggleEdit: function() {
-    var bases;
-    bases = this.items.map(function(item) {
-      return item.base;
-    });
-    if (this.editing) {
-      this.sortable.removeItems(bases);
-      this.items.each(function(item) {
-        return item.toggleEdit();
-      });
-      return this.editing = false;
-    } else {
-      this.sortable.addItems(bases);
-      this.items.each(function(item) {
-        return item.toggleEdit();
-      });
-      return this.editing = true;
-    }
-  },
-  getItemFromTitle: function(title) {
-    var filtered;
-    filtered = this.items.filter(function(item) {
-      if (String.from(item.title.get('text')).toLowerCase() === String(title).toLowerCase()) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return filtered[0];
-  },
-  addItem: function(li) {
-    this.items.push(li);
-    this.base.grab(li);
-    li.addEvent('select', (function(item, e) {
-      return this.set('selected', item);
-    }).bindWithEvent(this));
-    li.addEvent('invoked', (function(item) {
-      return this.fireEvent('invoked', arguments);
-    }).bindWithEvent(this));
-    li.addEvent('edit', (function() {
-      return this.fireEvent('edit', arguments);
-    }).bindWithEvent(this));
-    return li.addEvent('delete', (function() {
-      return this.fireEvent('delete', arguments);
-    }).bindWithEvent(this));
   }
 });
 /*
@@ -1341,6 +1110,70 @@ Forms.Form = new Class({
 /*
 ---
 
+name: Core.Checkbox
+
+description: Blender style checkboxes
+
+license: MIT-style license.
+
+requires:
+  - G.UI/GDotUI
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Enabled
+  - G.UI/Interfaces.Size
+
+provides: Core.Checkbox
+
+...
+*/
+Core.Checkbox = new Class({
+  Extends: Core.Abstract,
+  Implements: [Interfaces.Enabled, Interfaces.Size],
+  Attributes: {
+    "class": {
+      value: 'blender-checkbox'
+    },
+    state: {
+      value: true,
+      setter: function(value, old) {
+        if (value) {
+          this.base.addClass('checked');
+        } else {
+          this.base.removeClass('checked');
+        }
+        if (value !== old) {
+          this.fireEvent('invoked', [this, value]);
+        }
+        return value;
+      }
+    },
+    label: {
+      value: '',
+      setter: function(value) {
+        this.textNode.textContent = value;
+        return value;
+      }
+    }
+  },
+  create: function() {
+    this.sign = new Element('div');
+    this.sign.addClass(this.get('class') + "-sign");
+    this.textNode = document.createTextNode('');
+    this.base.adopt(this.sign, this.textNode);
+    return this.base.addEvent('click', __bind(function() {
+      if (this.enabled) {
+        if (this.state) {
+          return this.set('state', false);
+        } else {
+          return this.set('state', true);
+        }
+      }
+    }, this));
+  }
+});
+/*
+---
+
 name: Core.Icon
 
 description: Generic icon element.
@@ -1368,15 +1201,15 @@ Core.Icon = new Class({
       }
     },
     "class": {
-      value: GDotUI.Theme.Icon["class"]
+      value: 'blender-icon'
     }
   },
   create: function() {
-    return this.base.addEvent('click', (function(e) {
+    return this.base.addEvent('click', __bind(function(e) {
       if (this.enabled) {
         return this.fireEvent('invoked', [this, e]);
       }
-    }).bind(this));
+    }, this));
   }
 });
 /*
@@ -1402,7 +1235,7 @@ todo: Circular center position and size
 */
 Core.IconGroup = new Class({
   Extends: Core.Abstract,
-  Implements: [Interfaces.Controls, Interfaces.Enabled, Interfaces.Children],
+  Implements: [Interfaces.Children, Interfaces.Controls, Interfaces.Enabled],
   Binds: ['delegate'],
   Attributes: {
     mode: {
@@ -1499,7 +1332,7 @@ Core.IconGroup = new Class({
       }
     },
     "class": {
-      value: GDotUI.Theme.IconGroup["class"]
+      value: 'blender-icon-group'
     }
   },
   create: function() {
@@ -1538,7 +1371,7 @@ Core.IconGroup = new Class({
       switch (this.mode) {
         case 'grid':
           if ((this.rows != null) && (this.columns != null)) {
-            if (Number.from(this.rows) < Number.from(this.columns)) {
+            if (this.rows < this.columns) {
               rows = null;
               columns = this.columns;
             } else {
@@ -1546,7 +1379,7 @@ Core.IconGroup = new Class({
               rows = this.rows;
             }
           }
-          icpos = this.children.map((function(item, i) {
+          icpos = this.children.map(__bind(function(item, i) {
             if (rows != null) {
               if (i % rows === 0) {
                 y = 0;
@@ -1569,10 +1402,10 @@ Core.IconGroup = new Class({
               x: x,
               y: y
             };
-          }).bind(this));
+          }, this));
           break;
         case 'linear':
-          icpos = this.children.map((function(item, i) {
+          icpos = this.children.map(__bind(function(item, i) {
             x = i === 0 ? x + x : x + spacing.x + item.base.getSize().x;
             y = i === 0 ? y + y : y + spacing.y + item.base.getSize().y;
             this.size.x = x + item.base.getSize().x;
@@ -1581,10 +1414,10 @@ Core.IconGroup = new Class({
               x: x,
               y: y
             };
-          }).bind(this));
+          }, this));
           break;
         case 'horizontal':
-          icpos = this.children.map((function(item, i) {
+          icpos = this.children.map(__bind(function(item, i) {
             x = i === 0 ? x + x : x + item.base.getSize().x + spacing.x;
             y = i === 0 ? y : y;
             this.size.x = x + item.base.getSize().x;
@@ -1593,10 +1426,10 @@ Core.IconGroup = new Class({
               x: x,
               y: y
             };
-          }).bind(this));
+          }, this));
           break;
         case 'vertical':
-          icpos = this.children.map((function(item, i) {
+          icpos = this.children.map(__bind(function(item, i) {
             x = i === 0 ? x : x;
             y = i === 0 ? y + y : y + item.base.getSize().y + spacing.y;
             this.size.x = item.base.getSize().x;
@@ -1605,7 +1438,7 @@ Core.IconGroup = new Class({
               x: x,
               y: y
             };
-          }).bind(this));
+          }, this));
           break;
         case 'circular':
           n = this.children.length;
@@ -1765,10 +1598,10 @@ Core.Slider = new Class({
   Implements: [Interfaces.Controls, Interfaces.Enabled],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Slider.classes.base
+      value: 'blender-slider'
     },
     bar: {
-      value: GDotUI.Theme.Slider.classes.bar,
+      value: 'blender-slider-progress',
       setter: function(value, old) {
         this.progress.removeClass(old);
         this.progress.addClass(value);
@@ -1783,96 +1616,104 @@ Core.Slider = new Class({
     },
     range: {
       value: [0, 0]
-    }
-  },
-  modeSetter: function(value, old) {
-    var size;
-    this.base.removeClass(old);
-    this.base.addClass(value);
-    this.base.set('style', '');
-    this.base.setStyle('position', 'relative');
-    switch (value) {
-      case 'horizontal':
-        this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['min-width']);
-        this.modifier = 'width';
-        this.drag.options.modifiers = {
-          x: 'width',
-          y: ''
-        };
-        this.drag.options.invert = false;
-        if (!(this.size != null)) {
-          size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['width']);
+    },
+    mode: {
+      value: 'horizontal',
+      setter: function(value, old) {
+        var size;
+        this.base.removeClass(old);
+        this.base.addClass(value);
+        this.base.set('style', '');
+        this.base.setStyle('position', 'relative');
+        switch (value) {
+          case 'horizontal':
+            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['min-width']);
+            this.modifier = 'width';
+            this.drag.options.modifiers = {
+              x: 'width',
+              y: ''
+            };
+            this.drag.options.invert = false;
+            if (!(this.size != null)) {
+              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['width']);
+            }
+            this.set('size', size);
+            this.progress.set('style', '');
+            this.progress.setStyles({
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0
+            });
+            break;
+          case 'vertical':
+            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['min-height']);
+            this.modifier = 'height';
+            this.drag.options.modifiers = {
+              x: '',
+              y: 'height'
+            };
+            this.drag.options.invert = true;
+            if (!(this.size != null)) {
+              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['height']);
+            }
+            this.set('size', size);
+            this.progress.set('style', '');
+            this.progress.setStyles({
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0
+            });
         }
-        this.set('size', size);
-        this.progress.set('style', '');
-        this.progress.setStyles({
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0
-        });
-        break;
-      case 'vertical':
-        this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['min-height']);
-        this.modifier = 'height';
-        this.drag.options.modifiers = {
-          x: '',
-          y: 'height'
-        };
-        this.drag.options.invert = true;
-        if (!(this.size != null)) {
-          size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['height']);
+        if (this.base.isVisible()) {
+          this.set('value', this.value);
         }
-        this.set('size', size);
-        this.progress.set('style', '');
-        this.progress.setStyles({
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0
-        });
-    }
-    if (this.base.isVisible()) {
-      this.set('value', this.value);
-    }
-    return value;
-  },
-  valueSetter: function(value) {
-    var percent;
-    value = Number.from(value);
-    if (!this.reset) {
-      percent = Math.round((value / this.steps) * 100);
-      if (value < 0) {
-        this.progress.setStyle(this.modifier, 0);
-        value = 0;
+        return value;
       }
-      if (this.value > this.steps) {
-        this.progress.setStyle(this.modifier, this.size);
-        value = this.steps;
+    },
+    value: {
+      value: 0,
+      setter: function(value) {
+        var percent;
+        value = Number.from(value);
+        if (!this.reset) {
+          percent = Math.round((value / this.steps) * 100);
+          if (value < 0) {
+            this.progress.setStyle(this.modifier, 0);
+            value = 0;
+          }
+          if (this.value > this.steps) {
+            this.progress.setStyle(this.modifier, this.size);
+            value = this.steps;
+          }
+          if (!(value < 0) && !(value > this.steps)) {
+            this.progress.setStyle(this.modifier, (percent / 100) * this.size);
+          }
+        }
+        return value;
+      },
+      getter: function() {
+        if (this.reset) {
+          return this.value;
+        } else {
+          return Number.from(this.progress.getStyle(this.modifier)) / this.size * this.steps;
+        }
       }
-      if (!(value < 0) && !(value > this.steps)) {
-        this.progress.setStyle(this.modifier, (percent / 100) * this.size);
+    },
+    size: {
+      setter: function(value, old) {
+        if (!(value != null)) {
+          value = old;
+        }
+        if (this.minSize > value) {
+          value = this.minSize;
+        }
+        this.base.setStyle(this.modifier, value);
+        this.progress.setStyle(this.modifier, this.reset ? value / 2 : this.value / this.steps * value);
+        return value;
       }
     }
-    return value;
-  },
-  valueGetter: function() {
-    if (this.reset) {
-      return this.value;
-    } else {
-      return Number.from(this.progress.getStyle(this.modifier)) / this.size * this.steps;
-    }
-  },
-  sizeSetter: function(value, old) {
-    if (!(value != null)) {
-      value = old;
-    }
-    if (this.minSize > value) {
-      value = this.minSize;
-    }
-    this.base.setStyle(this.modifier, value);
-    this.progress.setStyle(this.modifier, this.reset ? value / 2 : this.value / this.steps * value);
-    return value;
   },
   onDrag: function(el, e) {
     var offset, pos;
@@ -1898,47 +1739,33 @@ Core.Slider = new Class({
     }
   },
   create: function() {
-    this.addAttributes({
-      mode: {
-        value: 'horizontal',
-        setter: this.modeSetter
-      },
-      value: {
-        value: 0,
-        setter: this.valueSetter,
-        getter: this.valueGetter
-      },
-      size: {
-        setter: this.sizeSetter
-      }
-    });
     this.progress = new Element("div");
     this.base.adopt(this.progress);
     this.drag = new Drag(this.progress, {
       handle: this.base
     });
-    this.drag.addEvent('beforeStart', (function(el, e) {
+    this.drag.addEvent('beforeStart', __bind(function(el, e) {
       this.lastpos = Math.round((Number.from(el.getStyle(this.modifier)) / this.size) * this.steps);
       if (!this.enabled) {
         return this.disabledTop = el.getStyle(this.modifier);
       }
-    }).bind(this));
-    this.drag.addEvent('complete', (function(el, e) {
+    }, this));
+    this.drag.addEvent('complete', __bind(function(el, e) {
       if (this.reset) {
         if (this.enabled) {
           el.setStyle(this.modifier, this.size / 2 + "px");
         }
       }
       return this.fireEvent('complete');
-    }).bind(this));
+    }, this));
     this.drag.addEvent('drag', this.onDrag.bind(this));
-    return this.base.addEvent('mousewheel', (function(e) {
+    return this.base.addEvent('mousewheel', __bind(function(e) {
       e.stop();
       if (this.enabled) {
         this.set('value', this.value + Number.from(e.wheel));
         return this.fireEvent('step', this.value);
       }
-    }).bind(this));
+    }, this));
   }
 });
 /*
@@ -1958,93 +1785,105 @@ provides: Core.Scrollbar
 
 ...
 */
-Core.Srcollbar = new Class({
+Core.Scrollbar = new Class({
   Extends: Core.Slider,
+  Attributes: {
+    mode: {
+      setter: function(value, old, self) {
+        self.prototype.parent.call(this, value, old);
+        switch (value) {
+          case 'horizontal':
+            this.smodif = 'left';
+            this.drag.options.modifiers = {
+              x: 'left',
+              y: ''
+            };
+            break;
+          case 'vertical':
+            this.smodif = 'top';
+            this.drag.options.modifiers = {
+              x: '',
+              y: 'top'
+            };
+            this.drag.options.invert = false;
+        }
+        return value;
+      }
+    },
+    value: {
+      getter: function() {
+        var width;
+        if (this.reset) {
+          return this.value;
+        } else {
+          width = this.size - this.progressSize;
+          return Number.from(this.progress.getStyle(this.smodif)) / width * this.steps;
+        }
+      },
+      setter: function(value) {
+        var percent, width;
+        value = Number.from(value);
+        width = this.size - this.progressSize;
+        if (!this.reset) {
+          percent = Math.round((value / this.steps) * 100);
+          if (value < 0) {
+            this.progress.setStyle(this.smodif, 0);
+            value = 0;
+          } else if (value > this.steps) {
+            this.progress.setStyle(this.smodif, width);
+            value = this.steps;
+          } else if (!(value < 0) && !(value > this.steps)) {
+            this.progress.setStyle(this.smodif, (percent / 100) * width);
+          }
+        }
+        return value;
+      }
+    },
+    size: {
+      setter: function(value, old) {
+        if (!(value != null)) {
+          value = old;
+        } else {
+          value = Number.from(value);
+        }
+        if (this.minSize > value) {
+          value = this.minSize;
+        }
+        this.base.setStyle(this.modifier, value);
+        this.progress.setStyle(this.modifier, value * 0.7);
+        this.progressSize = value * 0.7;
+        return value;
+      }
+    }
+  },
   create: function() {
     return this.parent();
   },
-  modeSetter: function(value, old) {
-    this.parent(value, old);
-    switch (value) {
-      case 'horizontal':
-        this.smodif = 'left';
-        this.drag.options.modifiers = {
-          x: 'left',
-          y: ''
-        };
-        break;
-      case 'vertical':
-        this.smodif = 'top';
-        this.drag.options.modifiers = {
-          x: '',
-          y: 'top'
-        };
-        this.drag.options.invert = false;
-    }
-    return value;
-  },
-  valueGetter: function() {
-    var width;
-    if (this.reset) {
-      return this.value;
-    } else {
-      width = this.size - this.progressSize;
-      return Number.from(this.progress.getStyle(this.smodif)) / width * this.steps;
-    }
-  },
-  sizeSetter: function(value, old) {
-    if (!(value != null)) {
-      value = old;
-    } else {
-      value = Number.from(value);
-    }
-    if (this.minSize > value) {
-      value = this.minSize;
-    }
-    this.base.setStyle(this.modifier, value);
-    this.progress.setStyle(this.modifier, value * 0.7);
-    this.progressSize = value * 0.7;
-    return value;
-  },
-  valueSetter: function(value) {
-    var percent, width;
-    value = Number.from(value);
-    width = this.size - this.progressSize;
-    if (!this.reset) {
-      percent = Math.round((value / this.steps) * 100);
-      if (value < 0) {
-        this.progress.setStyle(this.smodif, 0);
-        value = 0;
-      } else if (value > this.steps) {
-        this.progress.setStyle(this.smodif, width);
-        value = this.steps;
-      } else if (!(value < 0) && !(value > this.steps)) {
-        this.progress.setStyle(this.smodif, (percent / 100) * width);
-      }
-    }
-    return value;
-  },
   onDrag: function(el, e) {
     var left, width;
-    left = Number.from(this.progress.getStyle(this.smodif));
-    width = this.size - this.progressSize;
-    if (left < this.size - this.progressSize) {
-      this.value = left / width * this.steps;
+    if (this.enabled) {
+      left = Number.from(this.progress.getStyle(this.smodif));
+      width = this.size - this.progressSize;
+      if (left < this.size - this.progressSize) {
+        this.value = left / width * this.steps;
+      } else {
+        el.setStyle(this.smodif, this.size - this.progressSize);
+        this.value = this.steps;
+      }
+      if (left < 0) {
+        el.setStyle(this.smodif, 0);
+        this.value = 0;
+      }
+      return this.fireEvent('step', Math.round(this.value));
     } else {
-      el.setStyle(this.smodif, this.size - this.progressSize);
-      this.value = this.steps;
+      return this.set('value', this.value);
     }
-    if (left < 0) {
-      el.setStyle(this.smodif, 0);
-      this.value = 0;
-    }
-    return this.fireEvent('step', Math.round(this.value));
   }
 });
 /*
 ---
 
-name: Core.Button
+name: Buttons.Abstract
 
 description: Basic button element.
 
@@ -2057,31 +1896,121 @@ requires:
   - G.UI/Interfaces.Enabled
   - G.UI/Interfaces.Size
 
-provides: Core.Button
+provides: Buttons.Abstract
 
 ...
 */
-Core.Button = new Class({
+Buttons = {};
+Buttons.Abstract = new Class({
   Extends: Core.Abstract,
   Implements: [Interfaces.Enabled, Interfaces.Controls, Interfaces.Size],
   Attributes: {
     label: {
-      value: GDotUI.Theme.Button.label,
+      value: '',
       setter: function(value) {
         this.base.set('text', value);
         return value;
       }
     },
     "class": {
-      value: GDotUI.Theme.Button["class"]
+      value: 'blender-button'
     }
   },
   create: function() {
-    return this.base.addEvent('click', (function(e) {
+    return this.base.addEvent('click', __bind(function(e) {
       if (this.enabled) {
         return this.fireEvent('invoked', [this, e]);
       }
-    }).bind(this));
+    }, this));
+  }
+});
+/*
+---
+
+name: Buttons.Key
+
+description: Button for shortcut editing.
+
+license: MIT-style license.
+
+requires:
+  - Buttons.Abstract
+
+provides: Buttons.Key
+
+...
+*/
+Buttons.Key = new Class({
+  Extends: Buttons.Abstract,
+  Attributes: {
+    "class": {
+      value: 'blender-button-key'
+    }
+  },
+  getShortcut: function(e) {
+    var modifiers, specialKey;
+    this.specialMap = {
+      '~': '`',
+      '!': '1',
+      '@': '2',
+      '#': '3',
+      '$': '4',
+      '%': '5',
+      '^': '6',
+      '&': '7',
+      '*': '8',
+      '(': '9',
+      ')': '0',
+      '_': '-',
+      '+': '=',
+      '{': '[',
+      '}': ']',
+      '\\': '|',
+      ':': ';',
+      '"': '\'',
+      '<': ',',
+      '>': '.',
+      '?': '/'
+    };
+    modifiers = '';
+    if (e.control) {
+      modifiers += 'ctrl ';
+    }
+    if (event.meta) {
+      modifiers += 'meta ';
+    }
+    if (e.shift) {
+      specialKey = this.specialMap[String.fromCharCode(e.code)];
+      if (specialKey != null) {
+        e.key = specialKey;
+      }
+      modifiers += 'shift ';
+    }
+    if (e.alt) {
+      modifiers += 'alt ';
+    }
+    return modifiers + e.key;
+  },
+  create: function() {
+    var stop;
+    stop = function(e) {
+      return e.stop();
+    };
+    return this.base.addEvent('click', __bind(function(e) {
+      this.set('label', 'Press any key!');
+      this.base.addClass('active');
+      window.addEvent('keydown', stop);
+      return window.addEvent('keyup:once', __bind(function(e) {
+        var shortcut;
+        this.base.removeClass('active');
+        shortcut = this.getShortcut(e).toUpperCase();
+        if (shortcut !== "ESC") {
+          this.set('label', shortcut);
+          this.fireEvent('invoked', [this, shortcut]);
+        }
+        return window.removeEvent('keydown', stop);
+      }, this));
+    }, this));
   }
 });
 /*
@@ -2108,10 +2037,13 @@ Core.Picker = new Class({
   Binds: ['show', 'hide', 'delegate'],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Picker["class"]
+      value: 'blender-picker'
     },
     offset: {
-      value: GDotUI.Theme.Picker.offset,
+      value: {
+        x: 0,
+        y: 0
+      },
       setter: function(value) {
         return value;
       }
@@ -2123,12 +2055,6 @@ Core.Picker = new Class({
       },
       validator: function(value) {
         return (value.x != null) && (value.y != null);
-      }
-    },
-    event: {
-      value: GDotUI.Theme.Picker.event,
-      setter: function(value, old) {
-        return value;
       }
     },
     content: {
@@ -2148,7 +2074,7 @@ Core.Picker = new Class({
       }
     },
     picking: {
-      value: GDotUI.Theme.Picker.picking
+      value: 'picking'
     }
   },
   create: function() {
@@ -2168,12 +2094,12 @@ Core.Picker = new Class({
     }
     this.attachedTo = el;
     if (auto) {
-      return el.addEvent(this.event, this.show);
+      return el.addEvent('click', this.show);
     }
   },
   detach: function() {
     if (this.attachedTo != null) {
-      this.attachedTo.removeEvent(this.event, this.show);
+      this.attachedTo.removeEvent('click', this.show);
       return this.attachedTo = null;
     }
   },
@@ -2216,6 +2142,142 @@ Core.Picker = new Class({
 /*
 ---
 
+name: Iterable.List
+
+description: List element, with editing and sorting.
+
+license: MIT-style license.
+
+requires: Core.Abstract
+
+provides: Iterable.List
+
+requires:
+  - G.UI/GDotUI
+...
+*/
+Iterable.List = new Class({
+  Extends: Core.Abstract,
+  options: {
+    "class": 'blender-list',
+    selected: 'blender-list-selected',
+    search: false
+  },
+  Attributes: {
+    selected: {
+      getter: function() {
+        return this.items.filter((function(item) {
+          if (item.base.hasClass(this.options.selected)) {
+            return true;
+          } else {
+            return false;
+          }
+        }).bind(this))[0];
+      },
+      setter: function(value, old) {
+        if (old) {
+          old.base.removeClass(this.options.selected);
+        }
+        if (value != null) {
+          value.base.addClass(this.options.selected);
+        }
+        return value;
+      }
+    }
+  },
+  initialize: function(options) {
+    return this.parent(options);
+  },
+  create: function() {
+    this.base.addClass(this.options["class"]);
+    this.sortable = new Sortables(null);
+    this.editing = false;
+    if (this.options.search) {
+      this.sinput = new Element('input', {
+        "class": 'search'
+      });
+      this.base.grab(this.sinput);
+      this.sinput.addEvent('keyup', (function() {
+        return this.search();
+      }).bindWithEvent(this));
+    }
+    return this.items = [];
+  },
+  ready: function() {},
+  search: function() {
+    var svalue;
+    svalue = this.sinput.get('value');
+    return this.items.each((function(item) {
+      if (item.title.get('text').test(/#{svalue}/ig) || item.subtitle.get('text').test(/#{svalue}/ig)) {
+        return item.base.setStyle('display', 'block');
+      } else {
+        return item.base.setStyle('display', 'none');
+      }
+    }).bind(this));
+  },
+  removeItem: function(li) {
+    li.removeEvents('invoked', 'edit', 'delete');
+    this.items.erase(li);
+    return li.base.destroy();
+  },
+  removeAll: function() {
+    if (this.options.search) {
+      this.sinput.set('value', '');
+    }
+    this.selected = null;
+    this.base.empty();
+    return this.items.empty();
+  },
+  toggleEdit: function() {
+    var bases;
+    bases = this.items.map(function(item) {
+      return item.base;
+    });
+    if (this.editing) {
+      this.sortable.removeItems(bases);
+      this.items.each(function(item) {
+        return item.toggleEdit();
+      });
+      return this.editing = false;
+    } else {
+      this.sortable.addItems(bases);
+      this.items.each(function(item) {
+        return item.toggleEdit();
+      });
+      return this.editing = true;
+    }
+  },
+  getItemFromTitle: function(title) {
+    var filtered;
+    filtered = this.items.filter(function(item) {
+      if (String.from(item.title.get('text')).toLowerCase() === String(title).toLowerCase()) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return filtered[0];
+  },
+  addItem: function(li) {
+    this.items.push(li);
+    this.base.grab(li);
+    li.addEvent('select', (function(item, e) {
+      return this.set('selected', item);
+    }).bindWithEvent(this));
+    li.addEvent('invoked', (function(item) {
+      return this.fireEvent('invoked', arguments);
+    }).bindWithEvent(this));
+    li.addEvent('edit', (function() {
+      return this.fireEvent('edit', arguments);
+    }).bindWithEvent(this));
+    return li.addEvent('delete', (function() {
+      return this.fireEvent('delete', arguments);
+    }).bindWithEvent(this));
+  }
+});
+/*
+---
+
 name: Core.Slot
 
 description: iOs style slot control.
@@ -2225,7 +2287,7 @@ license: MIT-style license.
 requires:
   - G.UI/GDotUI
   - G.UI/Core.Abstract
-  - G.UI/Iterable.List
+  - Iterable.List
 
 provides: Core.Slot
 
@@ -2364,22 +2426,22 @@ Core.Toggler = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Controls, Interfaces.Size],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Toggler["class"]
+      value: 'blender-button-toggle'
     },
     onLabel: {
-      value: GDotUI.Theme.Toggler.onText,
+      value: 'ON',
       setter: function(value) {
         return this.onDiv.set('text', value);
       }
     },
     offLabel: {
-      value: GDotUI.Theme.Toggler.offText,
+      value: 'OFF',
       setter: function(value) {
         return this.offDiv.set('text', value);
       }
     },
     onClass: {
-      value: GDotUI.Theme.Toggler.onClass,
+      value: 'blender-button-toggle-on',
       setter: function(value, old) {
         this.onDiv.removeClass(old);
         this.onDiv.addClass(value);
@@ -2387,7 +2449,7 @@ Core.Toggler = new Class({
       }
     },
     offClass: {
-      value: GDotUI.Theme.Toggler.offClass,
+      value: 'blender-button-toggle-off',
       setter: function(value, old) {
         this.offDiv.removeClass(old);
         this.offDiv.addClass(value);
@@ -2395,7 +2457,7 @@ Core.Toggler = new Class({
       }
     },
     separatorClass: {
-      value: GDotUI.Theme.Toggler.separatorClass,
+      value: 'blender-button-toggle-separator',
       setter: function(value, old) {
         this.separator.removeClass(old);
         this.separator.addClass(value);
@@ -2437,7 +2499,7 @@ Core.Toggler = new Class({
       'top': 0,
       'left': 0
     });
-    return this.base.addEvent('click', (function() {
+    return this.base.addEvent('click', __bind(function() {
       if (this.enabled) {
         if (this.checked) {
           return this.set('checked', false);
@@ -2445,7 +2507,7 @@ Core.Toggler = new Class({
           return this.set('checked', true);
         }
       }
-    }).bind(this));
+    }, this));
   }
 });
 /*
@@ -2453,7 +2515,7 @@ Core.Toggler = new Class({
 
 name: Core.Overlay
 
-description: Overlay for modal dialogs and stuff.
+description: Overlay for modal dialogs and alike.
 
 license: MIT-style license.
 
@@ -2472,7 +2534,7 @@ Core.Overlay = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Controls],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Overlay["class"]
+      value: 'blender-overlay'
     },
     zindex: {
       value: 0,
@@ -2481,7 +2543,7 @@ Core.Overlay = new Class({
         return value;
       },
       validator: function(value) {
-        return typeOf(Number.from(value)) === 'number';
+        return Number.from(value) !== null;
       }
     }
   },
@@ -2517,7 +2579,7 @@ Core.Tab = new Class({
   Extends: Core.Abstract,
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Tab["class"]
+      value: 'blender-tab'
     },
     label: {
       value: '',
@@ -2527,13 +2589,13 @@ Core.Tab = new Class({
       }
     },
     activeClass: {
-      value: GDotUI.Theme.Global.active
+      value: 'active'
     }
   },
   create: function() {
-    this.base.addEvent('click', (function() {
+    this.base.addEvent('click', __bind(function() {
       return this.fireEvent('activate', this);
-    }).bind(this));
+    }, this));
     return this.base.adopt(this.label);
   },
   activate: function(event) {
@@ -2619,48 +2681,49 @@ Core.Tabs = new Class({
 /*
 ---
 
-name: Core.Push
+name: Buttons.Toggle
 
 description: Toggle button 'push' element.
 
 license: MIT-style license.
 
 requires:
-  - G.UI/GDotUI
-  - Core.Button
+  - Buttons.Abstract
 
-provides: Core.Push
+provides: Buttons.Toggle
 
 ...
 */
-Core.Push = new Class({
-  Extends: Core.Button,
+Buttons.Toggle = new Class({
+  Extends: Buttons.Abstract,
   Attributes: {
     state: {
+      value: false,
+      setter: function(value, old) {
+        if (value) {
+          this.base.addClass('pushed');
+        } else {
+          this.base.removeClass('pushed');
+        }
+        return value;
+      },
       getter: function() {
         return this.base.hasClass('pushed');
       }
     },
-    label: {
-      value: GDotUI.Theme.Push.label
-    },
     "class": {
-      value: GDotUI.Theme.Push["class"]
+      value: 'blender-button-push'
     }
   },
-  on: function() {
-    return this.base.addClass('pushed');
-  },
-  off: function() {
-    return this.base.removeClass('pushed');
-  },
   create: function() {
-    this.base.addEvent('click', (function() {
+    this.addEvent('stateChange', function() {
+      return this.fireEvent('invoked', [this, this.state]);
+    });
+    return this.base.addEvent('click', __bind(function() {
       if (this.enabled) {
-        return this.base.toggleClass('pushed');
+        return this.set('state', this.state ? false : true);
       }
-    }).bind(this));
-    return this.parent();
+    }, this));
   }
 });
 /*
@@ -2688,17 +2751,17 @@ Core.PushGroup = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Children, Interfaces.Size],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.PushGroup["class"]
+      value: 'blender-push-group'
     },
     active: {
       setter: function(value, old) {
         if (!(old != null)) {
-          value.on();
+          value.set('state', true);
         } else {
           if (old !== value) {
-            old.off();
+            old.set('state', false);
           }
-          value.on();
+          value.set('state', true);
         }
         return value;
       }
@@ -2714,10 +2777,12 @@ Core.PushGroup = new Class({
       return last.set('size', this.size - buttonwidth * (this.children.length - 1));
     }
   },
-  change: function(button) {
+  change: function(button, value) {
     if (button !== this.active) {
-      this.set('active', button);
-      return this.fireEvent('change', button);
+      if (button.state) {
+        this.set('active', button);
+        return this.fireEvent('change', button);
+      }
     }
   },
   emptyItems: function() {
@@ -2754,7 +2819,7 @@ license: MIT-style license.
 
 requires:
   - G.UI/Core.Abstract
-  - Core.Button
+  - Buttons.Button
 
 provides: Dialog.Prompt
 
@@ -2799,7 +2864,7 @@ Dialog.Prompt = new Class({
     this.input = new Element('input', {
       type: 'text'
     });
-    this.button = new Core.Button();
+    this.button = new Buttons.Abstract();
     this.base.adopt(this.labelDiv, this.input, this.button);
     this.picker = new Core.Picker();
     this.picker.set('content', this.base);
@@ -2826,18 +2891,63 @@ requires:
   - G.UI/Interfaces.Children
   - G.UI/Interfaces.Enabled
   - G.UI/Interfaces.Size
-  - G.UI/Iterable.List
+  - Iterable.List
 
 provides: Data.Select
 
 ...
 */
+Iterable.BlenderListItem = new Class({
+  Extends: Core.Abstract,
+  Attributes: {
+    icon: {
+      value: null,
+      setter: function(value) {
+        return this.icon.set('image', value);
+      }
+    },
+    shortcut: {
+      value: '',
+      setter: function(value) {
+        this.sc.set('text', value.toUpperCase());
+        return value;
+      }
+    },
+    label: {
+      value: '',
+      setter: function(value) {
+        this.title.set('text', value);
+        return value;
+      }
+    },
+    "class": {
+      value: GDotUI.Theme.ListItem["class"]
+    }
+  },
+  create: function() {
+    this.icon = new Core.Icon({
+      "class": 'blender-list-item-icon'
+    });
+    this.sc = new Element('div');
+    this.title = new Element('div');
+    this.sc.setStyle('float', 'right');
+    this.title.setStyle('float', 'left');
+    this.icon.base.setStyle('float', 'left');
+    this.base.adopt(this.icon, this.title, this.sc);
+    this.base.addEvent('click', __bind(function(e) {
+      return this.fireEvent('select', [this, e]);
+    }, this));
+    return this.base.addEvent('click', __bind(function() {
+      return this.fireEvent('invoked', this);
+    }, this));
+  }
+});
 Data.Select = new Class({
   Extends: Data.Abstract,
   Implements: [Interfaces.Controls, Interfaces.Enabled, Interfaces.Size, Interfaces.Children],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Select["class"]
+      value: 'blender-select'
     },
     "default": {
       value: '',
@@ -2902,13 +3012,10 @@ Data.Select = new Class({
       }
     },
     listClass: {
-      value: GDotUI.Theme.Select.listClass,
+      value: 'blender-list',
       setter: function(value) {
         return this.list.set('class', value);
       }
-    },
-    listItemClass: {
-      value: GDotUI.Theme.Select.listItemClass
     }
   },
   ready: function() {
@@ -2984,7 +3091,7 @@ Data.Select = new Class({
     this.prompt.addEvent('invoked', (function(value) {
       var item;
       if (value) {
-        item = new Iterable.ListItem({
+        item = new Iterable.BlenderListItem({
           label: value,
           removeable: false,
           draggable: false
@@ -3008,7 +3115,6 @@ Data.Select = new Class({
     return this.update();
   },
   addItem: function(item) {
-    item.base.set('class', this.listItemClass);
     return this.list.addItem(item);
   },
   removeItem: function(item) {
@@ -3039,7 +3145,7 @@ Data.Text = new Class({
   Binds: ['update'],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Text["class"]
+      value: 'blender-textarea'
     },
     value: {
       setter: function(value) {
@@ -3083,13 +3189,10 @@ Data.Number = new Class({
   Extends: Core.Slider,
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Number.classes.base
-    },
-    bar: {
-      value: GDotUI.Theme.Number.classes.bar
+      value: 'blender-number'
     },
     text: {
-      value: GDotUI.Theme.Number.classes.text,
+      value: 'blender-number-text',
       setter: function(value, old) {
         this.textLabel.removeClass(old);
         this.textLabel.addClass(value);
@@ -3243,13 +3346,6 @@ Data.Color = new Class({
     }
   },
   create: function() {
-    this.addEvent('sizeChange', (function() {
-      this.col.set('size', this.size);
-      this.hueData.set('size', this.size);
-      this.saturationData.set('size', this.size);
-      this.lightnessData.set('size', this.size);
-      return this.alphaData.set('size', this.size);
-    }).bind(this));
     this.hueData = new Data.Number({
       range: [0, 360],
       reset: false,
@@ -3461,6 +3557,121 @@ Data.ColorWheel = new Class({
 /*
 ---
 
+name: Iterable.ListItem
+
+description: List items for Iterable.List.
+
+license: MIT-style license.
+
+requires: Core.Abstract
+
+provides: Iterable.ListItem
+
+requires:
+  - G.UI/GDotUI
+  - G.UI/Interfaces.Draggable
+...
+*/
+Iterable.ListItem = new Class({
+  Extends: Core.Abstract,
+  Implements: [Interfaces.Draggable, Interfaces.Enabled, Options],
+  Attributes: {
+    label: {
+      value: '',
+      setter: function(value) {
+        this.title.set('text', value);
+        return value;
+      }
+    },
+    "class": {
+      value: 'blender-list-item'
+    }
+  },
+  options: {
+    classes: {
+      title: GDotUI.Theme.ListItem.title,
+      subtitle: GDotUI.Theme.ListItem.subTitle
+    },
+    title: '',
+    subtitle: '',
+    draggable: false,
+    dragreset: true,
+    ghost: true,
+    removeClasses: '.' + GDotUI.Theme.Icon["class"],
+    invokeEvent: 'click',
+    selectEvent: 'click',
+    removeable: true,
+    sortable: false,
+    dropppables: ''
+  },
+  initialize: function(options) {
+    this.setOptions(options);
+    return this.parent(options);
+  },
+  create: function() {
+    this.base.setStyle('position', 'relative');
+    this.title = new Element('div');
+    this.subtitle = new Element('div');
+    this.base.adopt(this.title, this.subtitle);
+    this.base.addEvent(this.options.selectEvent, (function(e) {
+      return this.fireEvent('select', [this, e]);
+    }).bindWithEvent(this));
+    this.base.addEvent(this.options.invokeEvent, (function() {
+      if (this.enabled && !this.options.draggable && !this.editing) {
+        return this.fireEvent('invoked', this);
+      }
+    }).bindWithEvent(this));
+    this.addEvent('dropped', (function(el, drop, e) {
+      return this.fireEvent('invoked', [this, e, drop]);
+    }).bindWithEvent(this));
+    this.base.addEvent('dblclick', (function() {
+      if (this.enabled) {
+        if (this.editing) {
+          return this.fireEvent('edit', this);
+        }
+      }
+    }).bindWithEvent(this));
+    return this;
+  },
+  toggleEdit: function() {
+    if (this.editing) {
+      if (this.options.draggable) {
+        this.drag.attach();
+      }
+      this.remove.base.setStyle('right', -this.remove.base.getSize().x);
+      this.handles.base.setStyle('left', -this.handles.base.getSize().x);
+      this.base.setStyle('padding-left', this.base.retrieve('padding-left:old'));
+      this.base.setStyle('padding-right', this.base.retrieve('padding-right:old'));
+      return this.editing = false;
+    } else {
+      if (this.options.draggable) {
+        this.drag.detach();
+      }
+      this.remove.base.setStyle('right', this.options.offset);
+      this.handles.base.setStyle('left', this.options.offset);
+      this.base.store('padding-left:old', this.base.getStyle('padding-left'));
+      this.base.store('padding-right:old', this.base.getStyle('padding-left'));
+      this.base.setStyle('padding-left', Number(this.base.getStyle('padding-left').slice(0, -2)) + this.handles.base.getSize().x);
+      this.base.setStyle('padding-right', Number(this.base.getStyle('padding-right').slice(0, -2)) + this.remove.base.getSize().x);
+      return this.editing = true;
+    }
+  },
+  ready: function() {
+    var baseSize;
+    if (!this.editing) {
+      baseSize = this.base.getSize();
+      this.parent();
+      if (this.options.draggable) {
+        return this.drag.addEvent('beforeStart', (function() {
+          return this.fireEvent('select', this);
+        }).bindWithEvent(this));
+      }
+    }
+  }
+});
+/*
+---
+
 name: Data.DateTime
 
 description:  Date & Time picker elements with Core.Slot-s
@@ -3473,7 +3684,7 @@ requires:
   - G.UI/Data.Abstract
   - G.UI/Interfaces.Children
   - G.UI/Interfaces.Enabled
-  - G.UI/Iterable.ListItem
+  - Iterable.ListItem
 
 provides:
   - Data.DateTime
@@ -4079,7 +4290,7 @@ Data.Unit = new Class({
   Binds: ['update'],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Unit["class"]
+      value: 'blender-unit'
     },
     value: {
       setter: function(value) {
@@ -4235,7 +4446,7 @@ requires:
   - G.UI/Core.Abstract
   - G.UI/Interfaces.Children
   - Core.Button
-  - G.UI/Iterable.ListItem
+  - Iterable.ListItem
 
 provides: Blender
 
@@ -4524,7 +4735,7 @@ Blender = new Class({
   updateToolBar: function(view) {
     view.toolbar.select.list.removeAll();
     return Object.each(this.stack, function(value, key) {
-      return this.addItem(new Iterable.ListItem({
+      return this.addItem(new Iterable.BlenderListItem({
         label: key,
         removeable: false,
         draggable: false
@@ -4709,14 +4920,6 @@ Blender.View = new Class({
         return value;
       }
     },
-    restrains: {
-      value: {
-        top: false,
-        left: false,
-        right: false,
-        bottom: false
-      }
-    },
     bottom: {
       setter: function(value) {
         value = Number.eval(value, window.getSize().y);
@@ -4766,10 +4969,7 @@ Blender.View = new Class({
   },
   update: function() {
     var width;
-    width = this.base.getSize().x - 10;
-    if (this.slider.base.isVisible()) {
-      width -= 20;
-    }
+    width = this.base.getSize().x - 30;
     this.children.each((function(child) {
       return child.set('size', width);
     }).bind(this));

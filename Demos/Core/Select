@@ -1,0 +1,29 @@
+---JS
+window.addEvent('domready', function(){
+  select = new Data.Select({'default':'background-break'});
+  list = [' bounding-box','each-box','continuous','border-box','padding-box','content-box','no-clip']
+  list.each(function(item){
+    select.addItem(new Iterable.ListItem({label:item,removeable:false,draggable:false}))
+  });
+  tip = new Core.Tip({label:'Select something!',delay:2000,location:{x:"center",y:"bottom"}})
+  tip.attach(select)
+  
+  slider = new Data.Number({label:'Size'})
+  slider.addEvent('change',function(value){
+    select.set('size', value)
+  });
+  slider.set('value',200)
+  
+  push = new Core.Push({label:'Enable / Disable',size:200});
+  push.addEvent('invoked',function(){
+    if(push.get('state')){
+      select.enable();
+    }else{
+      select.disable();
+    }
+  })
+  push.on();
+  
+  $("options").adopt(slider,push);
+  $$('.demo')[0].grab(select);
+})

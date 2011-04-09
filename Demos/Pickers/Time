@@ -1,0 +1,24 @@
+---html
+<div id="cpick">
+  Click here for a date picker!
+</div>
+---css
+#cpick, #date{
+  width: 250px;
+  margin-bottom: 10px;
+  height: 50px;
+  line-height: 50px;
+  border: 1px dashed #aaa;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+---js
+window.addEvent('domready', function(){
+  Pickers.Time.attach($("cpick"));
+  $("cpick").addEvent('change', function(e){
+    this.set('text',e.format('%H:%M'));
+  });
+});
+

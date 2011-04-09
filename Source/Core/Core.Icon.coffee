@@ -30,12 +30,11 @@ Core.Icon = new Class {
         value
     }
     class: {
-      value: GDotUI.Theme.Icon.class
+      value: 'blender-icon'
     }
   }
   create: ->
-    @base.addEvent 'click', ((e)->
+    @base.addEvent 'click', (e) =>
       if @enabled
         @fireEvent 'invoked', [@, e]
-    ).bind @
 }

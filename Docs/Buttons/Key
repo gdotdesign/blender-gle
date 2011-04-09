@@ -1,0 +1,21 @@
+---
+class: Buttons.Key
+description: Button for shortcut editing. Click on it then press a key combination to change the keymap on the button.
+extends: Buttons.Abstract
+attributes:
+  class: 
+    type: String
+    show: false
+    description: Elements CSS class.
+events:
+  - invoked:
+    description: Fires when the keymap changes.
+    arguments:
+      - element:
+        description: The element.
+        type: Buttons.Key
+      - shortcut:
+        description: The keymap.
+        type: String
+...
+

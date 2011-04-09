@@ -100,13 +100,6 @@ Data.Color = new Class {
       ret.setType type
       @fireEvent 'change', new Hash(ret)
   create: ->
-    @addEvent 'sizeChange',( ->
-      @col.set 'size', @size
-      @hueData.set 'size', @size
-      @saturationData.set 'size', @size
-      @lightnessData.set 'size', @size
-      @alphaData.set 'size', @size
-    ).bind @
     
     @hueData = new Data.Number {range:[0,360],reset: off, steps: 360, label:'Hue'}
     @saturationData = new Data.Number {range:[0,100],reset: off, steps: 100 , label:'Saturation'}

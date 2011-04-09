@@ -11,7 +11,7 @@ requires:
   - G.UI/Core.Abstract
   - G.UI/Interfaces.Children
   - Core.Button
-  - G.UI/Iterable.ListItem
+  - Iterable.ListItem
 
 provides: Blender
 
@@ -241,7 +241,7 @@ Blender = new Class {
   updateToolBar: (view) ->
     view.toolbar.select.list.removeAll()
     Object.each @stack, (value,key)->
-       @addItem new Iterable.ListItem({label:key,removeable:false,draggable:false})
+       @addItem new Iterable.BlenderListItem({label:key,removeable:false,draggable:false})
     , view.toolbar.select
   updateToolBars: ->
     @children.each (child)->

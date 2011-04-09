@@ -1,0 +1,30 @@
+$slotWidthTime: 35px
+$slotwidthDate: 45px
+$height: 100px
+
+.time, .date, .date-time
+  +basic_style
+  :height $height
+  :margin-bottom 10px
+  :cursor pointer
+  .slot
+    +box_shadow(0,0,0,transparent)
+    :border none
+    :margin 0
+    :float left
+.date
+  :width $slotwidthDate*3
+  .slot
+    :width $slotwidthDate
+.time
+  :width $slotWidthTime*2
+  .slot
+    :width $slotWidthTime
+.date-time
+  .slot
+    :width $slotWidthTime
+  .slot:nth-child(3)
+    :border-right 1px solid #212121
+  .slot:first-child
+    :width $slotwidthDate
+  :width $slotwidthDate+$slotWidthTime*4+1

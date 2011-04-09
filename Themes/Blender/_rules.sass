@@ -1,0 +1,87 @@
+$width: 200px
+$minWidth: 85px
+$height: 20px
+$height2: 10px
+
+$colorDark: #212121
+$colorLight: #FDFDFD
+
+$dark: #3E4D5E
+$darker: darken($dark,8%)
+$middle: lighten($dark,15%)
+$light: lighten($dark,25%)
+$lighter: lighten($light,10%)
+$blue: #FF7F00
+$blue: #059F00
+$blue: #5680c2
+
+$border: darken($dark,8%)
+$border: darken($dark,20%)
+$borderRadius: 3px
+.blue-gadient
+  +linear_gradient(darken($blue,3%), lighten($blue,3%))
+
+.darker-gradient
+  +linear_gradient($dark, $darker)
+  &:hover
+    +linear_gradient(lighten($dark,5%), lighten($darker,5%))
+    
+.darker-gradient-inverze
+  +linear_gradient($darker $dark)
+  &:hover
+    +linear_gradient(lighten($darker,5%), lighten($dark,5%))
+
+.light-gadient
+  +linear_gradient($lighter, $light)
+  &:hover
+    +linear_gradient(lighten($lighter,3%), lighten($light,3%))
+
+.light-gadient-inverze
+  +linear_gradient(lighten($light,3%), lighten($lighter,3%))
+  &:hover
+    +linear_gradient($light, $lighter)
+
+.disabled
+  :opacity 0.4    
+    
+.basicSize
+  :width $width
+  :min-width $minWidth
+  :height $height
+  :line-height $height
+  
+.basic
+  :border 1px solid $border
+  :font-size 12px
+  :margin 5px
+  :color #666
+  :background-color $dark
+  +round_full($borderRadius)
+  +box_shadow(0,1px,2px,rgba(0,0,0,0.15))
+  :-webkit-user-select none
+  :-webkit-background-clip padding-box
+
+.nobasic
+  :margin 0
+  :border none
+  +round_full(0)
+  +box_shadow(0,0,0,transparent)
+
+.dark-on-light
+  :color $colorLight
+  :background-color $darker
+  &:hover
+    :background-color $dark
+  &:active
+    :background-color $light
+    :color $colorDark
+    
+.light-on-dark
+  :color $colorDark
+  :background-color $light
+  &:hover
+    :background-color $lighter
+  &:active
+    :background-color $dark
+    :color $colorLight
+

@@ -1,0 +1,24 @@
+@import ../Chrome/_mixins.sass
+.picker .color
+  .number, .pushgroup
+    +box_shadow(0,0,0,0)
+.color
+  :color #123457
+  .number
+    :-webkit-transition-duration 0
+  :width 200px
+  :min-width 85px
+  :margin 5px
+  :padding 10px
+  .pushgroup, .number
+    :margin 5px 0
+  .wrapper
+    :position relative
+    :margin 10px 0
+  .xyknob
+    :width 10px
+    :cursor crosshair
+    :height 10px
+    +round_full(5px)
+    :border 1px solid rgba(255,255,255,0.8)
+    +box_shadow(0,0,4px,rgba(0,0,0,0.4))

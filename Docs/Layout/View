@@ -1,0 +1,37 @@
+---
+class: Layout.View
+description: Viewport
+extends: Core.Abstract
+demo: false
+implements:
+  - Interfaces.Children
+attributes:
+  top: 
+    type: Number
+    description:
+  left: 
+    type: Number
+    description: 
+  right: 
+    type: Number
+    description: 
+  bottom: 
+    type: Number
+    description: 
+  width: 
+    type: Number
+    description: 
+  height: 
+    type: Number
+    description:  
+  content: 
+    type: Element
+    description:  
+  class: 
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - content-change:
+    description:
+...
+

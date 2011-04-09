@@ -1,0 +1,30 @@
+---
+class: Core.Toggler
+description: iOS style checkbox.
+extends: Core.Abstract
+implements:
+  - Interfaces.Enabled
+  - Interfaces.Controls
+  - Interfaces.Size
+attributes:
+  onLabel: 
+    type: String
+    description: 
+    default: 'ON'
+  offLabel:
+    type: String
+    description:
+    default: 'OFF'
+  checked: 
+    type: Boolean
+    description:
+    default: false
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - change:
+    description: Fires when checked changes.
+...
+

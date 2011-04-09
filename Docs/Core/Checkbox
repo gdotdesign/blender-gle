@@ -1,0 +1,32 @@
+---
+class: Core.Checkbox
+description: Blender style checkbox.
+extends: Core.Abstract
+implements:
+  - Interfaces.Enabled
+  - Interfaces.Size 
+attributes:
+  class: 
+    type: String
+    show: false
+    description: CSS Class of the element.
+  state: 
+    type: Boolean
+    description: State of the element (i.e. checked (true) or unchecked (false)).
+    default: true
+  label: 
+    type: String
+    default: 'Label of the checkbox...'
+    description: The label of the element.
+events:
+  - invoked:
+    description: Fires when the state attribute changes.
+    arguments:
+      - element:
+        description: The element.
+        type: Core.Checkbox
+      - state:
+        description: The state of the element.
+        type: Boolean
+...
+

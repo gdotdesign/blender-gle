@@ -16,12 +16,49 @@ requires:
   - G.UI/Interfaces.Children
   - G.UI/Interfaces.Enabled
   - G.UI/Interfaces.Size
-  - G.UI/Iterable.List
+  - Iterable.List
 
 provides: Data.Select
 
 ...
 ###
+Iterable.BlenderListItem = new Class {
+  Extends: Core.Abstract
+  Attributes: {
+    icon: {
+      value: null
+      setter: (value) ->
+        @icon.set 'image', value
+    }
+    shortcut: {
+      value: ''
+      setter: (value) ->
+        @sc.set 'text', value.toUpperCase()
+        value
+    }
+    label: {
+      value: ''
+      setter: (value) ->
+        @title.set 'text', value
+        value
+    }
+    class: {
+      value: GDotUI.Theme.ListItem.class
+    }
+  }
+  create: ->
+    @icon = new Core.Icon({class:'blender-list-item-icon'})
+    @sc = new Element 'div'
+    @title = new Element 'div'
+    @sc.setStyle 'float', 'right'
+    @title.setStyle 'float', 'left'
+    @icon.base.setStyle 'float', 'left'
+    @base.adopt @icon, @title, @sc
+    @base.addEvent 'click', (e) =>
+      @fireEvent 'select', [@,e]
+    @base.addEvent 'click', =>
+      @fireEvent 'invoked', @
+}
 Data.Select = new Class {
   Extends: Data.Abstract
   Implements:[
@@ -31,7 +68,7 @@ Data.Select = new Class {
     Interfaces.Children]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Select.class
+      value: 'blender-select'
     }
     default: {
       value: ''
@@ -84,18 +121,14 @@ Data.Select = new Class {
         value 
     }
     listClass: {
-      value: GDotUI.Theme.Select.listClass
+      value: 'blender-list'
       setter: (value) ->
         @list.set 'class', value
-    }
-    listItemClass: {
-      value: GDotUI.Theme.Select.listItemClass
     }
   }
   ready: ->
     @set 'size', @size
   create: ->
-    
     @addEvent 'sizeChange', ( ->
       @list.base.setStyle 'width', if @size < @minSize then @minSize else @size
     ).bind @
@@ -153,7 +186,7 @@ Data.Select = new Class {
     @prompt.attach @base, false
     @prompt.addEvent 'invoked', ((value) ->
       if value
-        item = new Iterable.ListItem {label:value,removeable:false,draggable:false}
+        item = new Iterable.BlenderListItem {label:value,removeable:false,draggable:false}
         @addItem item
         @list.set 'selected', item
       @prompt.hide null, yes
@@ -171,7 +204,6 @@ Data.Select = new Class {
     @update()
     
   addItem: (item) ->
-    item.base.set 'class', @listItemClass
     @list.addItem item
   removeItem: (item) ->
     @list.removeItem item

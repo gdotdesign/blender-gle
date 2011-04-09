@@ -22,7 +22,7 @@ Data.Text = new Class {
   Binds: ['update']  
   Attributes: {
     class: {
-      value: GDotUI.Theme.Text.class
+      value: 'blender-textarea'
     }
     value: {
       setter: (value) ->

@@ -1,0 +1,68 @@
+---
+class: Core.IconGroup
+description: |
+  Group for Core.Icon elements, with five types of layout: linear, horizontal, vertical, grid and circular. When an element added or removed, or when an attribute changes, the layout automatically gets updated.
+extends: Core.Abstract
+implements:
+  - Interfaces.Children
+  - Interfaces.Controls
+  - Interfaces.Enabled
+attributes:
+  mode: 
+    type: String
+    dtype: Select
+    values:
+      - linear
+      - horizontal
+      - vertical
+      - grid
+      - circular
+    default: grid
+    description: The layout type. Acceptable values are linear, horizontal, vertical, grid and circular
+  spacing: 
+    type: Object
+    description: An object with x and y values. Distance between the icons. Only available for linear, horizontal, vertical, grid.
+  startAngle: 
+    default: 0
+    type: Number
+    description: The start of the circle in degrees.
+    valid: 0-360 
+  radius: 
+    default: 200
+    type: Number
+    description: The radius of the circle.
+  degree: 
+    default: 0
+    type: Number
+    description: The end point of the semicircle. 
+  rows: 
+    default: 1
+    type: Number
+    description: Number of rows in the grid layout.
+  columns: 
+    default: 1
+    type: Number
+    description: Number of columns in the grid layout 
+  class: 
+    show: false
+    type: String
+    description: CSS Class of the element. 
+     
+events:
+  - invoked:
+    description: Delegates childrens invoked event.
+functions:
+  addIcon:
+    description: Adds an icon to the element.
+    arguments:
+      - icon:
+        description: The icon to be added.
+        type: Core.Icon
+  removeIcon:
+    description: Removes an icon from the element.
+    arguments:
+      - icon:
+        description: The icon to be removed.
+        type: Core.Icon
+...
+

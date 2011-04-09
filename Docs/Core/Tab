@@ -1,0 +1,23 @@
+---
+class: Core.Tab
+description: Tab.
+extends: Core.Abstract
+attributes:
+  label: 
+    type: String
+    description: Label of the element.
+  activeClass: 
+    type: String
+    show: false
+    description: CSS Class when the tab is active.
+  class: 
+    type: String 
+    show: false
+    description: CSS Class of the element. 
+events:
+  - activated:
+    description:
+  - deactivated:
+    description:
+...
+

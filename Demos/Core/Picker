@@ -1,0 +1,29 @@
+---html
+<div id="cpick">
+  Click here for a picker!
+</div>
+---css
+#cpick{
+  width: 500px;
+  height: 50px;
+  line-height: 50px;
+  border: 1px dashed #aaa;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+#pickercontent{
+  margin: 5px;
+  background-color: #eee;
+  color: #333;
+  padding: 5px;
+}
+---JS
+window.addEvent('domready', function(){
+  picker = new Core.Picker()
+  content = new Element('div#pickercontent',{text:'Pick something!'})
+  picker.set('content',content);
+  picker.attach($("cpick"));
+  
+});

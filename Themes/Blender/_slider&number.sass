@@ -1,0 +1,67 @@
+.blender-slider
+  :background-color $dark
+  &.horizontal
+    :width $width
+    :min-width $minWidth
+    :height $height2
+  &.vertical
+    :width $height2
+    :height $width
+    :min-height $minWidth
+  .blender-slider-progress
+    :background-color $light
+    
+.blender-number
+  .blender-slider-progress
+    :background-color transparent
+  :background-color $light
+  &:hover
+    :background-color $lighter
+  &:active
+    :background-color $middle
+  &:after
+    :content ''
+    :z-index 1
+    :position absolute
+    :top 6px
+    :left 5px
+    width: 0
+    height: 0
+    border-top: 4px solid transparent
+    border-bottom: 4px solid transparent
+    border-right: 4px solid $dark
+  &:before
+    :content ''
+    :z-index 1
+    :position absolute
+    :top 6px
+    :right 5px
+    width: 0
+    height: 0
+    border-top: 4px solid transparent
+    border-bottom: 4px solid transparent
+    border-left: 4px solid $dark
+  &.horizontal
+    :width $width
+    :height $height
+    :min-width $minWidth
+  &.vertical
+    :width $height
+    :height $width
+    :min-height $minWidth
+  
+.blender-slider, .blender-number
+  @extend .basic
+  :cursor move
+  :overflow hidden
+  .blender-slider-progress
+    +round_full($borderRadius)
+  .blender-number-text, input
+    :color $colorDark
+    :font-size 12px
+    :text-align center
+    :line-height $height
+  input
+    +round_full($borderRadius)
+    :-webkit-background-clip padding-box
+    :background-color rgba(0,0,0,0.5)

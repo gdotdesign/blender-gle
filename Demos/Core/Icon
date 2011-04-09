@@ -1,0 +1,5 @@
+---JS
+window.addEvent('domready', function(){
+  icon = new Core.Icon({image:'/home.png'})
+  $("demo").adopt(icon)
+});

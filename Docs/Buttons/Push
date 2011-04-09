@@ -1,0 +1,25 @@
+---
+class: Buttons.Toggle
+description:  Toggle button element.
+extends: Buttons.Abstract
+attributes:
+  state: 
+    type: Boolean 
+    description: The state of the element (i.e. on (true) or off (false)).
+    default: false
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element.  
+events:
+  - invoked:
+    description: Fires when the state changes.
+    arguments:
+      - element:
+        description: The element.
+        type: Buttons.Toggle
+      - state:
+        description: The state of the element.
+        type: Boolean
+...
+

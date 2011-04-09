@@ -1,0 +1,20 @@
+@import ../Chrome/_mixins.sass
+.color
+  +basic_style(5px, 0.1s)
+  .number
+    :-webkit-transition-duration 0
+  :width 210px
+  :padding 10px
+  .wrapper
+    :position relative
+    :width 200px
+    :height 200px
+    :margin 10px 0
+    :margin-left 5px
+  #xyknob
+    :width 10px
+    :cursor crosshair
+    :height 10px
+    +round_full(5px)
+    :border 1px solid rgba(255,255,255,0.8)
+    +box_shadow(0,0,4px,rgba(0,0,0,0.4))

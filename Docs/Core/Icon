@@ -1,0 +1,27 @@
+---
+class: Core.Icon
+description: Generic icon element.
+extends: Core.Abstract
+implements:
+  - Interfaces.Enabled
+  - Interfaces.Controls
+attributes:
+  class: 
+    type: String 
+    show: false
+    description: CSS Class of the element. 
+  image: 
+    type: String
+    description: The path of the background-image of the element. (relative to page location that runs the script, whithout the url())
+events:
+  - invoked:
+    description: Fires when the icon is clicked.
+    arguments:
+      - element:
+        description: The element.
+        type: Buttons.Abstract
+      - event:
+        description: The event.
+        type: Event
+...
+

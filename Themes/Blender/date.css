@@ -1,0 +1,78 @@
+/*
+Syntax error: Undefined mixin 'basic_style'.
+        on line 6 of date.sass, in `basic_style'
+        from line 6 of date.sass
+
+1: $slotWidthTime: 35px
+2: $slotwidthDate: 45px
+3: $height: 100px
+4: 
+5: .time, .date, .date-time
+6:   +basic_style
+7:   :height $height
+8:   :margin-bottom 10px
+9:   :cursor pointer
+10:   .slot
+11:     +box_shadow(0,0,0,transparent)
+
+Backtrace:
+date.sass:6:in `basic_style'
+date.sass:6
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:162:in `visit_mixin'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:18:in `visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:53:in `map'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:27:in `block in visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:39:in `with_environment'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:26:in `visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:232:in `visit_rule'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:18:in `visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:53:in `map'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:27:in `block in visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:39:in `with_environment'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:26:in `visit_children'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:47:in `visit_root'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:18:in `visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/visitors/perform.rb:7:in `visit'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/tree/root_node.rb:20:in `render'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/engine.rb:302:in `_render'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/engine.rb:249:in `render'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/plugin/compiler.rb:319:in `update_stylesheet'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/plugin/compiler.rb:169:in `block in update_stylesheets'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/plugin/compiler.rb:167:in `each'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/plugin/compiler.rb:167:in `update_stylesheets'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/plugin/compiler.rb:273:in `block (4 levels) in watch'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/path.rb:71:in `call'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/path.rb:71:in `run_callback'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/path.rb:54:in `callback_action'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/path.rb:34:in `update'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/state/file.rb:19:in `refresh'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/backends/polling.rb:17:in `block (2 levels) in run'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/backends/polling.rb:17:in `each'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/backends/polling.rb:17:in `block in run'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/backends/polling.rb:15:in `loop'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/backends/polling.rb:15:in `run'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm/monitor.rb:24:in `run'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/vendor/fssm/lib/fssm.rb:17:in `monitor'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/plugin/compiler.rb:245:in `watch'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/plugin.rb:111:in `method_missing'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/exec.rb:396:in `watch_or_update'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/exec.rb:284:in `process_result'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/exec.rb:41:in `parse'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/lib/sass/exec.rb:21:in `parse!'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.0.alpha.221/bin/sass:8:in `<top (required)>'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/bin/sass:19:in `load'
+/home/gdotdesign/.rvm/gems/ruby-1.9.2-p0/bin/sass:19:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: Undefined mixin 'basic_style'.\A         on line 6 of date.sass, in `basic_style'\A         from line 6 of date.sass\A \A 1: $slotWidthTime: 35px\A 2: $slotwidthDate: 45px\A 3: $height: 100px\A 4: \A 5: .time, .date, .date-time\A 6:   +basic_style\A 7:   :height $height\A 8:   :margin-bottom 10px\A 9:   :cursor pointer\A 10:   .slot\A 11:     +box_shadow(0,0,0,transparent)"; }

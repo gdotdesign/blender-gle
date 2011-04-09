@@ -1,0 +1,55 @@
+.blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle
+  @extend .basic
+  @extend .basicSize
+  :overflow hidden
+  :white-space nowrap
+  :text-align center
+  :cursor pointer
+
+.blender-button-key, .blender-button
+  @extend .light-on-dark
+
+.blender-button
+  +linear_gradient($lighter, $light)
+  &:hover
+    +linear_gradient(lighten($lighter,3%), lighten($light,3%))
+  &:active
+    +linear_gradient(darken($darker,5%), darken($dark,5%))
+  
+.blender-button-push
+  :background-color $darker
+  :color $colorLight
+  +linear_gradient($dark, $darker)
+  &:hover:not(.pushed)
+    :background-color $dark
+    +linear_gradient(lighten($dark,5%), lighten($darker,5%))
+  &.pushed
+    :color $colorDark
+    :background-color $blue
+    +linear_gradient(darken($blue,3%), lighten($blue,3%))
+
+.blender-button-toggle
+  :width $width
+  :min-width $minWidth
+  :height $height
+  :line-height $height
+  +linear_gradient($dark, $darker)
+  .blender-button-toggle-on
+    +round($borderRadius,0,$borderRadius,0)
+  .blender-button-toggle-off
+    +round(0,$borderRadius,0,$borderRadius)
+  .blender-button-toggle-on, .blender-button-toggle-off, .blender-button-toggle-sep
+    :font-size 12px
+    :text-align center
+    :width $width/2
+    :color $colorLight
+  .blender-button-toggle-separator
+    +round_full($borderRadius)
+    :background-color $light
+    +linear_gradient($lighter, $light)
+
+.blender-button-key.active
+  :background-color $darker
+  :color $colorLight
+      
+

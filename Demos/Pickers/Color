@@ -1,0 +1,53 @@
+---events
+change:Main event, dispatches when the picked color changes.
+---usage
+  Pickers.Color.attach(element);
+  element.addEvent('change',function(e){});
+---HTML
+<div id="cpick">
+  Click here for a color picker!
+</div>
+---CSS
+@-webkit-keyframes travel{
+  from {}
+  to {
+    background-position: 0 60px;
+  }
+}
+#cpick{
+  width: 225px;
+  height: 225px;
+  line-height: 225px;
+  border: 1px dashed #aaa;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  -webkit-animation-name: travel;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-duration: 1s;
+  -webkit-background-size: 60px 60px;
+  background-image:  -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(255, 255, 255, .1)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .1)), color-stop(.75, rgba(255, 255, 255, .1)), color-stop(.75, transparent), to(transparent));
+}
+  
+---JS
+window.addEvent('domready', function(){
+  Pickers.Color.attach($("cpick"));
+  $("cpick").addEvent('change', function(e){
+    this.setStyle('background-color',e.color);
+    this.setStyle('color',e.color.hsb[2] < 50?'#fff':'#333');
+  });
+});
+---CLASSES
+Color:{
+   sb:'sb',
+   black:'black',
+   white:'white',
+   wrapper:'wrapper',
+   class:'color',
+   format: 'hex', 
+   controls:{
+       class:'slotcontrol'
+   }
+}

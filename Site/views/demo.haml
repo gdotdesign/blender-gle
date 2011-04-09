@@ -1,0 +1,99 @@
+= haml :demoindex, :layout=>false
+.box.d
+  #demo.left
+    .demo
+      = @stuff[:html]
+      %style
+        = @stuff[:css]
+      %script{:type=>"text/javascript"}
+        = @stuff[:js]
+    .code
+      -if @stuff[:usage] 
+        %h3
+          Usage
+        .co
+          = Uv.parse( @stuff[:usage], "xhtml", "javascript", false, "slush_poppies")
+      -if @stuff[:options]
+        %h3
+          Options
+        .co
+          - options = @stuff[:options].split "\n"
+          %ul
+            - options.each do |option|
+              - parts = option.split ":"
+              %li
+                %b
+                  = parts[0]+":"
+                =parts[1]
+      -if @stuff[:events]
+        %h3
+          Events
+        .co
+          - options = @stuff[:events].split "\n"
+          %ul
+            - options.each do |option|
+              - parts = option.split ":"
+              %li
+                %b
+                  = parts[0]+":"
+                =parts[1]
+      -if @stuff[:classes]
+        %h3
+          Theme settings
+        .co
+          = Uv.parse( @stuff[:classes], "xhtml", "javascript", false, "slush_poppies")
+      -if @stuff[:html]
+        %h3
+          Html
+        .co
+          = Uv.parse( @stuff[:html], "xhtml", "html", false, "slush_poppies")
+      -if @stuff[:css]
+        %h3
+          CSS
+        .co
+          = Uv.parse( @stuff[:css], "xhtml", "css", false, "slush_poppies")
+      -if @stuff[:js]
+        %h3
+          Javascript
+        .co
+          = Uv.parse( @stuff[:js], "xhtml", "javascript", false, "slush_poppies")
+    .clear   
+  #options.right
+  .clear
+:javascript
+  window.addEvent('domready',function(){
+    tabs = new Core.Tabs({class:'demotabs'});
+    tabs.addEvent('change',function(tab){
+      $("demo").getChildren().dispose()
+      $("demo").adopt(tab.content)
+    });
+    tab2 = new Core.Tab({label:"Demo",class:'demotab'});
+    tab2.content = $$(".demo")[0];
+    tab2.content.dispose();
+    tabs.add(tab2);
+    $$("h3").each(function(item){
+      pre = item.getNext(".co"); 
+      item.dispose();
+      tab = new Core.Tab({label:item.get('text'),class:'demotab'})
+      tab.content = pre
+      tab.content.dispose();
+      tabs.add(tab);
+    });
+    $(tabs).inject($$(".box")[1],'after');
+    tabs.set('active',tab2)
+    $$(".box")[1].adopt(tab2.content)
+  });
+  /*
+  window.addEvent('domready',function(){
+    $$(".co").each(function(item){
+      item.set('tween',{duration:'short'});
+      item.set('rel',item.getSize().y);
+      item.setStyle('height',0)
+    })
+    $$("h3").addEvent('click',function(){
+      pre = this.getNext(".co");    
+      pre.tween('height',pre.getSize().y == 0?pre.get('rel'):0);
+    })
+  });
+  */
+

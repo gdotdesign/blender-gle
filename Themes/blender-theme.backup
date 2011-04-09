@@ -1,0 +1,393 @@
+
+dl
+  :clear both
+  :height 30px
+  :margin 0
+dt
+  :width 200px
+  :float left
+dt
+  :margin-top 10px
+dd
+  :float right
+  :margin 0
+  :padding 0
+  :text-align left
+label
+  :margin 5px
+  :font-size 12px
+  :color #333
+fieldset
+  +basic_style
+  :margin-bottom 10px
+  :text-align left
+  :border-color #666
+  legend
+    :font-size 14px
+    :font-weight bold
+    :color #333
+    :padding 0 15px 0 15px
+
+.table, .data-list
+  tr:nth-child(odd) 
+    :background-color #D3DCED
+  tr:nth-child(even) 
+    :background-color #C8CFDE
+  tr:first-child
+    td
+      :font-weight bold
+      :background-color #eee
+      > input
+        :font-weight bold
+  tr
+    td:first-child
+      :border none
+  tr
+    td
+      :border-left 1px solid #999
+      :width 60px
+      :height 20px
+      :text-align center
+      > input
+        :width inherit
+        :height inherit
+        :outline none
+        :border none !important
+        +round_full(0)
+        :margin 0
+        :padding 0
+        :min-width 0
+        +box_shadow(0,0,0,transparent)
+        :background-color transparent
+
+.slot .selected, .select .text, .pushgroup, .float .handle, .float .bottom, .push, .toggler .sep
+  +linear_gradient(#535353,#373737)
+  
+.slider.horizontal .progress
+  +linear_gradient(#979797,#7b7b7b)
+.slider.vertical .progress
+  +linear_gradient_hor(#7b7b7b,#979797)
+.slider.horizontal
+  +linear_gradient(#565656,#5c5c5c)
+.slider.vertical
+  +linear_gradient_hor(#5c5c5c,#565656)
+.number.horizontal
+  +linear_gradient(#979797,#7b7b7b)
+.select .text:active 
+  +linear_gradient(#373737,#535353)
+.select .text:hover, .icon:hover
+  +linear_gradient(#696969,#454545)
+.icon, .number .progress
+  +linear_gradient(#898989,#6a6a6a)
+.select-item:hover, .icon:active, .push.pushed, .toggler .on, .toggler .off
+  +linear_gradient(#638dcf,#4771b3)
+
+.select.disabled
+  :cursor auto
+.select.disabled .text
+  +linear_gradient_imp(#535353,#373737)
+
+.dialog-prompt
+  :background-color #626262
+  input
+    +basic_style
+    :width $width
+    :-webkit-user-select auto
+    :background-color #A3A3A3
+    :font-family Sans
+    :font-size 12px
+    :height 22px
+    :color #1c1c1c
+.dialog-prompt-label
+  :color #1c1c1c
+  :margin
+    :left 7px
+    :bottom 2px
+    :top 7px
+  :font-size 12px
+
+.icon.disabled, .icon.supressed
+  +linear_gradient_imp(#898989,#6a6a6a)
+
+.slot, textarea, input[type=text], .select, .icon, .pushgroup, .toggler, .number, .slider, .unit-pick, .dialog-prompt
+  +basic_style
+
+.picker > div:first-child
+  +box_shadow(0,0,0,transparent)
+  :margin-bottom 5px
+
+.unit-pick .select, .select .icon, .pushgroup .push
+  :margin 0
+  :border none
+  +box_shadow(0,0,0,transparent)  
+
+.slot
+  :height 100px
+  :width 40px
+  .list
+    .list-item
+      :color #555
+    :-webkit-transition-duration 0.3s
+  .selected
+    :border
+      :top 1px solid #212121
+      :bottom 1px solid #212121
+    :color #f5f5f5 !important
+    :background-color #333
+    
+.list-item
+  :padding 5px
+  :text-align center
+
+
+textarea, input[type=text]
+  :min-width $minWidth
+  :width $width
+  :background-color #A3A3A3
+  :font-family Sans
+  :font-size 12px
+  :padding 6px
+  :color #1c1c1c
+  :resize none
+  -webkit-box-sizing: border-box 
+  -moz-box-sizing: border-box  
+  box-sizing: border-box
+  :-webkit-user-select auto
+
+.overlay
+  :background-color rgba(0,0,0,0.6)
+
+.unit-pick
+  :width $width
+  :min-width 170px
+  :height 20px
+  .number, .select
+    :float left
+  .number
+    :margin 0
+    +round(5px,0,5px,0)
+    .text
+      :border none
+    +box_shadow(0,0,0,transparent)
+    .progress
+      +round(5px,0,5px,0)
+  .select
+    +round(0,5px,0,5px)
+    .text
+      +round(0,5px,0,5px)
+.tip
+  :color #f5f5f5
+  :padding 6px
+  :font-size 12px
+
+
+.picker, .tip
+  :z-index 99
+  :background-color rgba(20,20,20,0.7)
+  +round_full(5px)
+  +box_shadow(0,0,8px,rgba(0,0,0,0.6))
+
+
+
+.select-list
+  :margin-top 5px
+.select-item
+  :margin 0 1px
+  :cursor pointer
+  :text-align left
+  :height 12px
+  :padding 4px 6px
+  :color #f5f5f5
+  :font-size 12px
+  &:hover
+    :color #1c1c1c
+.select
+  :min-width 80px
+  &:after
+    :content ''
+    :z-index 1
+    :position absolute
+    :top 5px
+    :left 3px
+    width: 0
+    height: 0
+    border-left: 4px solid transparent
+    border-right: 4px solid transparent
+    border-bottom: 4px solid #A3A3A3
+  &:before
+    :content ''
+    :z-index 1
+    :position absolute
+    :bottom 5px
+    :left 3px
+    width: 0
+    height: 0
+    border-left: 4px solid transparent
+    border-right: 4px solid transparent
+    border-top: 4px solid #A3A3A3
+  .text
+    +round_full(5px)
+    :padding-left 15px
+  :cursor pointer
+  :line-height 21px
+  :color #f5f5f5
+  .icon
+    :line-height 15px
+    :text-align center
+    :font-size 22px
+    :color #fff
+    +round_full(0)
+    &.remove
+      +round(0,5px,0,5px)   
+    :float right
+    :width 20px
+    :height 20px
+    :border none
+    :border-left 1px solid #1c1c1c
+  :height 20px
+  :width $width
+  :min-width $minWidth
+
+.icon
+  :background-color #898989
+  :background-repeat no-repeat
+  :background-position center center
+  :width 30px
+  :height 30px
+  :cursor pointer
+  &.disabled
+    :background-color #898989 !important
+  &:hover
+    :background-color #9E9E9E
+  &:active
+    :background-color #696969
+
+.float
+  +round_full(5px)
+  +box_shadow(0,0,8px,rgba(0,0,0,0.6))
+  .handle, .bottom
+    :height 20px
+  .controls
+    :position absolute
+    :top 0
+    :right 0
+  .icongroup
+    :width 40px !important
+  .icon
+    :border none
+    +box_shadow(0,0,0,0)
+    :margin 0
+    :float left
+    :width 20px
+    :height 20px
+  .slider
+    :position absolute !important
+    :right -20px
+    :top -6px
+    :height 100px
+
+.disabled
+  :opacity 0.5
+
+.pushgroup
+  :width $width
+  :min-width $minWidth
+  :height 22px
+  .push:first-child
+    +round(5px,0,5px,0)
+  .push:last-child
+    +round(0,5px,0,5px)
+  .push:last-child
+    :border-right none
+  .push
+    :float left
+    +round_full(0)
+.push
+  :width $width
+  :min-width $minWidth
+  :color #f5f5f5
+  :height 22px
+  :text-align center
+  :line-height 22px
+  :cursor pointer
+  &.pushed
+    :color #1c1c1c
+
+.toggler
+  :width $width
+  :min-width $minWidth
+  :height 22px
+  :overflow hidden
+  :cursor pointer
+  .on
+    +round(5px,0,5px,0)
+  .off
+    +round(0,5px,0,5px)
+  .on, .off, .sep
+    :font-size 12px
+    :line-height 22px
+    :text-align center
+    :width 50px
+    :color #1c1c1c
+  .sep
+    +round_full(5px)
+  
+.number
+  &:after
+    :content ''
+    :z-index 1
+    :position absolute
+    :top 6px
+    :left 5px
+    width: 0
+    height: 0
+    border-top: 4px solid transparent
+    border-bottom: 4px solid transparent
+    border-right: 4px solid #494949
+  &:before
+    :content ''
+    :z-index 1
+    :position absolute
+    :top 6px
+    :right 5px
+    width: 0
+    height: 0
+    border-top: 4px solid transparent
+    border-bottom: 4px solid transparent
+    border-left: 4px solid #494949
+  :border none
+  &.horizontal
+    :width $width
+    :min-width $minWidth
+    :height 20px
+  &.vertical
+    :width 20px
+    :height $width
+    :min-height $minWidth
+
+.slider
+  &.horizontal
+    :width $width
+    :min-width $minWidth
+    :height 11px
+  &.vertical
+    :width 11px
+    :height $width
+    :min-height $minWidth
+    
+.slider, .number
+  :background-color #565656
+  :cursor move
+  :overflow hidden
+  .progress
+    +round_full(5px)
+  .text, input
+    :color #1c1c1c
+    :font-size 12px
+    :text-align center
+    :line-height 20px
+    +round_full(5px)
+    :border 1px solid #555
+  input
+    +round_full(10px)
+    :background-color rgba(0,0,0,0.5)

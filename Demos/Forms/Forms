@@ -1,0 +1,171 @@
+---js
+var Lang;
+Lang = {};
+Lang.EN = {
+  PROMPT_NAME: 'Provide a new name:',
+  PROMPT_DESC: 'Provide a new description:',
+  NO_FILES_YET: 'No files yet!',
+  CONFIRM_DELETE: "Are you really want to delete ",
+  CANT_RENAME: 'Open documents cannot be renamed. Please close it and try again.',
+  FIRST_RUN_MESSAGE: 'Welcome to INK\n==============\nThank you for puchasing INK.\nPlease view the [documentation](http://inksite.heroku.com/docs) and the [overview video](http://inksite.heroku.com/overview) if you have any trouble using the application.\nThis dialog can be closed with the close icon at the top right.',
+  DOCUMENT_SAVE_FAILED: 'Save failed.',
+  DATABASE_ERROR: 'Database Error: Please reload the application.',
+  CUSTOM_NODE_SAVE_FAILED: 'Custom node save failed: Please reload the application.',
+  SHORTCUT_SAVE: 'Save current document.',
+  SHORTCUT_LEAVE: 'Leave current Compound / Group.',
+  SHORTCUT_OPEN: 'Open document.',
+  SHORTCUT_ENTER: 'Enter selected compound / group.',
+  SHORTCUT_NEW: 'New document.',
+  SHORTCUT_CLOSE: 'Close document.',
+  SHORTCUT_PREVIEW: 'Toggle live preview.',
+  SHORTCUT_ACTIVE: 'Toggle active on selected nodes.',
+  SHORTCUT_DISCONNECT: 'Disconnect selected nodes.',
+  SHORTCUT_PREVIEWTAB: 'Open preview in a new tab.',
+  SHORTCUT_ABOUT: 'Show about dialog.',
+  SETTINGS_TIP_CONFIRM: 'Show confirm dialog when deleting custom nodes or documents.',
+  SETTINGS_TIP_LOWPREF: 'Toggles low preference stylehseet for nodes.</br> Turn it on if the there is lag.',
+  SETTINGS_TIP_GRID: 'Displays a grid in the background.',
+  SETTINGS_TIP_CURVES: 'Whether or not curves will be shown while dragging.',
+  SETTINGS_TIP_FILES: 'Restore open files on startup.',
+  SETTINGS_TIP_PREVIEW: 'Turns on preview on startup.',
+  SETTINGS_TIP_EXPORT_IMAGES: 'Default directory for images at export.',
+  SETTINGS_TIP_EXPORT_CSS: 'Default directory for css files at export.',
+  SETTINGS_TIP_COLOR: "Default color for the color node.",
+  SETTINGS_TIP_DATEFORMAT: "Controls date formatting.</br>[[Link to mootools]]",
+  SETTINGS_TIP_UNIT: "Default value for the unit node.",
+  SETTINGS_GENERAL: 'General',
+  SETTINGS_CONFIRM: 'Confirm delete',
+  SETTINGS_DISPLAY: 'Display',
+  SETTINGS_GRID: 'Display grid',
+  SETTINGS_PERFORMANCE: 'Performance',
+  SETTINGS_LOWPERF: 'Low performace',
+  SETTINGS_CURVES: 'Always show curves',
+  SETTINGS_STARTUP: 'Startup',
+  SETTINGS_FILES: 'Remember open files',
+  SETTINGS_PREVIEW: 'Start with preview',
+  SETTINGS_EXPORT: 'Export',
+  SETTINGS_EXPORT_IMAGES: 'Image directory',
+  SETTINGS_EXPORT_CSS: 'CSS directory',
+  SETTINGS_SHARED: 'Shared data nodes',
+  SETTINGS_COLOR: 'Color',
+  SETTINGS_DATEFORMAT: 'Date format',
+  SETTINGS_UNIT: 'Unit',
+  BUTTON_SAVE: 'Save',
+  BUTTON_EXPORT: 'Export',
+  BUTTON_CREATE: 'Create',
+  PREVIEW_HTML: 'HTML',
+  PREVIEW_CSS: 'CSS',
+  FORMS_NEW_NEW: 'New',
+  FORMS_NEW_NAME: 'Name',
+  FORMS_SAVENODE_TITLE: 'Save Node',
+  FORMS_SAVENODE_NAME: 'Name',
+  FORMS_SAVENODE_DESCRIPTION: 'Description',
+  MENU_NODES: 'nodes',
+  MENU_OPEN: 'open',
+  MENU_NEW: 'new',
+  MENU_EXPORT: 'export',
+  MENU_CLOSE: 'close',
+  MENU_SAVE: 'save',
+  MENU_LIBRARY: 'library',
+  MENU_HELP: 'help',
+  MENU_ACCOUNT: 'account',
+  MENU_CUSTOM: 'custom',
+  MENU_SETTINGS: 'settings',
+  MENU_SHORTCUTS: 'shortcuts',
+  CONTEXT_MENU_DISCONNECT: 'disconnect',
+  CONTEXT_MENU_ACTIVE: 'active',
+  CONTEXT_MENU_ENTER: 'enter',
+  CONTEXT_MENU_SAVE: 'save',
+  CONTEXT_MENU_ADD_PROPERTY: 'add property',
+  CONTEXT_MENU_ADD_ATTRIBUTE: 'add attribute',
+  CONTEXT_MENU_DELETE: 'delete'
+};
+LANG = 'EN'
+Settings = {
+  title: 'Settings',
+  submit: Lang[LANG].BUTTON_SAVE,
+  useRequest: false,
+  createSubmit: true,
+  data: [
+    {
+      name: Lang[LANG].SETTINGS_GENERAL,
+      inputs: [
+        {
+          name: 'confirm',
+          type: 'checkbox',
+          label: Lang[LANG].SETTINGS_CONFIRM
+        }
+      ]
+    }, {
+      name: Lang[LANG].SETTINGS_DISPLAY,
+      inputs: [
+        {
+          name: 'grid',
+          type: 'checkbox',
+          label: Lang[LANG].SETTINGS_GRID
+        }
+      ]
+    }, {
+      name: Lang[LANG].SETTINGS_PERFORMANCE,
+      inputs: [
+        {
+          name: 'lowperf',
+          type: 'checkbox',
+          label: Lang[LANG].SETTINGS_LOWPERF
+        }, {
+          name: 'curves',
+          type: 'checkbox',
+          label: Lang[LANG].SETTINGS_CURVES
+        }
+      ]
+    }, {
+      name: Lang[LANG].SETTINGS_STARTUP,
+      inputs: [
+        {
+          name: 'startFiles',
+          type: 'checkbox',
+          label: Lang[LANG].SETTINGS_FILES
+        }, {
+          name: 'startPreview',
+          type: 'checkbox',
+          label: Lang[LANG].SETTINGS_PREVIEW
+        }
+      ]
+    }, {
+      name: Lang[LANG].SETTINGS_EXPORT,
+      inputs: [
+        {
+          name: 'exportImages',
+          type: 'text',
+          label: Lang[LANG].SETTINGS_EXPORT_IMAGES
+        }, {
+          name: 'exportCSS',
+          type: 'text',
+          label: Lang[LANG].SETTINGS_EXPORT_CSS
+        }
+      ]
+    }, {
+      name: Lang[LANG].SETTINGS_SHARED,
+      inputs: [
+        {
+          name: 'color',
+          type: 'text',
+          label: Lang[LANG].SETTINGS_COLOR
+        }, {
+          name: 'dateFormat',
+          type: 'text',
+          label: Lang[LANG].SETTINGS_DATEFORMAT
+        }, {
+          name: 'baseUnit',
+          type: 'select',
+          options: [{label:'px'}],
+          label: Lang[LANG].SETTINGS_UNIT
+        }
+      ]
+    }
+  ]
+};
+window.addEvent('domready', function(){
+  form = new Forms.Form(Settings)
+  $("demo").adopt(form)
+})

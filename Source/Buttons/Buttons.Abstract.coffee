@@ -1,7 +1,7 @@
 ###
 ---
 
-name: Core.Button
+name: Buttons.Abstract
 
 description: Basic button element.
 
@@ -14,11 +14,12 @@ requires:
   - G.UI/Interfaces.Enabled
   - G.UI/Interfaces.Size
 
-provides: Core.Button
+provides: Buttons.Abstract
 
 ...
 ###
-Core.Button = new Class {
+Buttons = {}
+Buttons.Abstract = new Class {
   Extends: Core.Abstract
   Implements:[
     Interfaces.Enabled
@@ -27,18 +28,17 @@ Core.Button = new Class {
   ]
   Attributes: {
     label: {
-      value: GDotUI.Theme.Button.label
+      value: ''
       setter: (value) ->
         @base.set 'text', value
         value
     }
     class: {
-      value: GDotUI.Theme.Button.class
+      value: 'blender-button'
     }
   }
   create: ->
-    @base.addEvent 'click', ((e)->
+    @base.addEvent 'click', (e) =>
       if @enabled
         @fireEvent 'invoked', [@, e]
-    ).bind @
 }

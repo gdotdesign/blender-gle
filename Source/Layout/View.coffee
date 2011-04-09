@@ -51,9 +51,6 @@ Blender.View = new Class {
         @base.setStyle 'right',  window.getSize().x-value+1
         value
     }
-    restrains: {
-      value: {top: no, left: no, right: no, bottom: no}
-    }
     bottom: {
       setter: (value) ->
         value = Number.eval value, window.getSize().y
@@ -92,9 +89,7 @@ Blender.View = new Class {
     @set 'top', Math.floor @top*vertpercent
     @set 'bottom', Math.floor @bottom*vertpercent
   update: ->
-    width = @base.getSize().x-10
-    if @slider.base.isVisible()
-      width -= 20
+    width = @base.getSize().x-30
     @children.each ((child) ->
       child.set 'size', width
     ).bind @

@@ -25,10 +25,10 @@ Core.Picker = new Class {
   Binds: ['show','hide','delegate']
   Attributes: {
     class: {
-      value: GDotUI.Theme.Picker.class
+      value: 'blender-picker'
     }
     offset: {
-      value: GDotUI.Theme.Picker.offset
+      value: {x:0,y:0}
       setter: (value) ->
         value
     }
@@ -36,11 +36,6 @@ Core.Picker = new Class {
       value: {x:'auto',y:'auto'}
       validator: (value) ->
         value.x? and value.y?
-    }
-    event: {
-      value: GDotUI.Theme.Picker.event
-      setter: (value, old) ->
-        value
     }
     content: {
       value: null
@@ -55,7 +50,7 @@ Core.Picker = new Class {
         value
     }
     picking: {
-      value: GDotUI.Theme.Picker.picking
+      value: 'picking'
     }
   }
   create: ->
@@ -72,10 +67,10 @@ Core.Picker = new Class {
       @detach()
     @attachedTo = el
     if auto
-      el.addEvent @event, @show
+      el.addEvent 'click', @show
   detach: ->
     if @attachedTo?
-      @attachedTo.removeEvent @event, @show
+      @attachedTo.removeEvent 'click', @show
       @attachedTo = null
   delegate: ->
     if @attachedTo?

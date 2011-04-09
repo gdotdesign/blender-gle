@@ -1,0 +1,35 @@
+- p = Packager.new("../package.yml")
+.box
+  %h1
+    Download
+  %p
+    You are downloading G.UI.
+  %p
+    This page will generate a single JavaScript file, containing the chosen components.
+  %hr
+  %form#packager{:method=>"post", :action=>"/build"}
+    .package{:id=>"package-G.UI"}
+      %table
+        %tr
+          %th
+          %th
+            Name
+          %th
+            Provides
+          %th
+            Description
+        - p.components.each do |comp|
+          %tr.check
+            %td.chekk
+              .checkbox
+              %input{:type=>"checkbox", :style=>"display:none", :value=>comp.name, :"data-depends"=>comp.requires.join(', '), :name=>"files[]"}
+            %td.name
+              = comp.name
+            %td.provides
+              = comp.provides.join(', ')
+            %td.provides
+              = comp.description
+    .wrap
+      .border
+      %input{:type=>"submit", :value=>"Download!"}
+

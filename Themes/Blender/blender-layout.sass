@@ -1,0 +1,62 @@
+@import ../Chrome/_mixins.sass
+@import _rules.sass
+.blender-layout
+  :background-color #555
+  :position absolute
+  :top 0
+  :right 0
+  :left 0
+  :bottom 0
+.blender-toolbar
+  :background-color #888
+  :z-index 10
+.blender-view
+  .blender-toolbar
+    :position absolute
+    :height 30px
+    :right 0
+    :left 0
+    :bottom 0
+  .content
+    :width 100%
+    :height 100%
+  :position absolute
+  :min-height 30px
+  :min-width 30px
+  :top 0
+  :right 0
+  :left 0
+  :bottom 0
+  :background-color #727272
+  :border-top 1px solid #888
+  :overflow hidden
+  .slider
+    :position absolute !important
+    :top 10px
+    :right 0
+    :z-index 11
+  .topleft
+    :cursor crosshair
+    :z-index 99
+    :border
+      :top 7px solid #666
+      :left 7px solid transparent
+      :right 7px solid #666
+      :bottom 7px solid transparent
+    :position absolute
+    :top 0
+    :right 0
+    :width 0
+    :height 0
+  .bottomleft
+    :z-index 99
+    :border
+      :top 7px solid transparent
+      :left 7px solid #666
+      :right 7px solid transparent
+      :bottom 7px solid #666
+    :position absolute
+    :bottom 0
+    :left 0
+    :width 0
+    :height 0

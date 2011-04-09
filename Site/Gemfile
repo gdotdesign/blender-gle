@@ -1,0 +1,13 @@
+source :gemcutter
+gem 'sinatra'
+gem 'haml'
+gem 'sass'
+gem 'maruku'
+gem 'plist', :git => "https://github.com/spox/plist.git"
+gem 'textpow', :git => "https://github.com/spox/textpow.git"
+gem 'ultraviolet', :git => "https://github.com/spox/ultraviolet.git"
+gem 'coffee-script'
+
+group :v8 do
+  gem 'therubyracer-heroku', '0.8.1.pre3'
+end

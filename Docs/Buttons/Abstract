@@ -1,0 +1,31 @@
+---
+class: Buttons.Abstract
+description: |
+  Generic Button element.
+extends: Core.Abstract
+implements:
+  - Interfaces.Controls
+  - Interfaces.Enabled
+  - Interfaces.Size
+attributes:
+  label: 
+    type: String
+    description: Label of the button.
+    default: 'Label of the button...'
+  class: 
+    show: false
+    type: String
+    description: CSS Class of the element.
+    default: blender-button
+events:
+  - invoked:
+    description: Fires when the button is clicked.
+    arguments:
+      - element:
+        description: The element.
+        type: Buttons.Abstract
+      - event:
+        description: The event.
+        type: Event
+...
+

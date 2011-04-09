@@ -1,0 +1,17 @@
+---
+class: Core.Abstract
+description: Abstract base class.
+demo: false
+implements:
+  - Interfaces.Mux
+functions:
+  create:
+    description: 
+  ready:
+    description: 
+  update:
+    description: 
+  toElement:
+    description: 
+...
+

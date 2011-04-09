@@ -1,0 +1,37 @@
+---
+class: Core.PushGroup
+description: Group element for Core.Push elements.
+extends: Core.Abstract
+implements:
+  - Interfaces.Enabled
+  - Interfaces.Children
+  - Interfaces.Size
+attributes:
+  active: 
+    show: false
+    type: Core.Push
+    description: The active element.
+  class: 
+    show: false
+    type: String  
+    description: CSS Class of the element.
+events:
+  - change:
+    description: Fires when the active element changes.
+functions:
+  addItem:
+    description: Adds a new item to the element.
+    arguments:
+      - item:
+        description: The item to be added.
+        type: Core.Push
+  removeItem:
+    description: Remove an item from the element.
+    arguments:
+      - item:
+        description: The item to be removed.
+        type: Core.Push
+  emptyItems:
+    description: Removes all of the children.
+...
+

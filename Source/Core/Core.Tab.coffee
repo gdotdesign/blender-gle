@@ -19,7 +19,7 @@ Core.Tab = new Class {
   Extends: Core.Abstract
   Attributes: {
     class: {
-      value: GDotUI.Theme.Tab.class
+      value: 'blender-tab'
     }
     label: {
       value: ''
@@ -28,13 +28,12 @@ Core.Tab = new Class {
         value
     }
     activeClass: {
-      value: GDotUI.Theme.Global.active
+      value: 'active'
     }
   }
   create: ->
-    @base.addEvent 'click', ( ->
+    @base.addEvent 'click', =>
       @fireEvent 'activate', @
-    ).bind @
     @base.adopt @label
   activate: (event) ->
     if event

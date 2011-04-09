@@ -1,0 +1,163 @@
+= haml :docindex, :layout=>false
+- if @class.demo != false
+  .box#demo
+    #demoleft
+    #demoright
+    .clear
+  :javascript
+    window.addEvent('domready',function(){
+      el = new #{@class.name}()
+      $('demoleft').adopt(el)
+      a = #{@class.attributes.to_json}
+      Object.each(a,function(value,key){  
+        if(value.show == undefined){
+          type = value.dtype || value.type
+          if(type == 'Select'){
+            d = new Data.Select({editable:false})
+            value.values.each(function(item){
+              d.addItem(new Iterable.ListItem({label:item}))
+            })
+            d.addEvent('change',function(e,v){
+              el.set(key,e);
+            })
+            d.set('value',value.default)
+            el.set(key,value.default)
+          }
+          if(type == 'Number'){
+            d = new Data.Number({label:key.capitalize()});
+            d.addEvent('change',function(e,v){
+              el.set(key,e);
+            })
+            d.set('value',value.default)
+            el.set(key,value.default)
+          }
+          if(type == 'String'){
+            d = new Data.Text();
+            d.addEvent('change',function(e,v){
+              el.set(key,e);
+            })
+            d.set('value',value.default)
+            el.set(key,value.default)
+          }
+          if(type == 'Boolean'){
+            d = new Core.Checkbox({label:key.capitalize()});
+            d.addEvent('invoked',function(e,v){
+              el.set(key,v);
+            })
+            d.set('state',value.default)
+            el.set(key,value.default)
+          }
+          $('demoright').adopt(d)
+        }
+      });
+    });
+.doc.box
+  .extimp
+    - if @class.extends
+      %p
+        %span.extends >
+        = @class.extends
+    - if @class.implements
+      - @class.implements.each do |imp|
+        %p
+          %span.implements +
+          = imp
+    - if @class.functions
+      - @class.functions.each do |imp|
+        %p{:class=>if imp[1]["inherited"] then 'inherited' end}
+          %span.func ~
+          = imp[0]
+    - if @class.events
+      - @class.events.each do |imp|
+        %p
+          %span.ev ×
+          = imp.key(nil)
+    - if @class.attributes
+      - @class.attributes.each do |imp|
+        %p{:class=>if imp[1]["inherited"] then 'inherited' end}
+          %span.at #
+          = imp[0]
+  %h1.class
+    = @class.name
+  %p
+    = @class.description
+  - if @class.functions
+    %ul
+      - @class.functions.each do |func|
+        - args = ''
+        - if func[1]['arguments']
+          - func[1]['arguments'].each do |arg|
+            - args += ", #{arg.key(nil)}"
+        %li.function{:class=>if func[1]["inherited"] then 'inherited' end}
+          %h2
+            %span ~
+            #{func[0]}(#{args[2..args.length]})
+          %p
+            = func[1]['description']
+          -if func[1]['arguments']
+            %h4
+              Arguments
+            %ul.arguments
+              - func[1]['arguments'].each do |arg|
+                %li
+                  = arg.key(nil)
+                  :plain
+                    -
+                  %span.type
+                    ="(#{arg['type']})"
+                  = arg['description']
+  - if @class.events
+    %ul
+      - @class.events.each do |func|
+        - args = ''
+        - if func['arguments']
+          - func['arguments'].each do |arg|
+            - args += ", #{arg.key(nil)}" 
+        %li.event
+          %h2
+            %span × 
+            = func.key(nil)
+            - if args != ''
+              \/ #{args[2..args.length]}
+          %p
+            = func['description']
+          -if func['arguments']
+            %h4
+              Arguments
+            %ul.arguments
+              - func['arguments'].each do |arg|
+                %li
+                  = arg.key(nil)
+                  :plain
+                    -
+                  %span.type
+                    ="(#{arg['type']})"
+                  = arg['description']
+  - if @class.attributes
+    %ul
+      - @class.attributes.each do |imp|
+        %li.attribute{:class=>if imp[1]["inherited"] then 'inherited' end}
+          %h2
+            - if imp[1]["readonly"]
+              %span.readonly #
+            - else
+              %span #
+            #{imp[0]}
+          %p
+            %span.type 
+              (#{imp[1]["type"]})
+            =imp[1]["description"]
+:javascript
+  window.addEvent('domready',function(){
+    $$('li.inherited').each(function(el){
+      el.store('lastHeight', el.getSize().y)
+      el.setStyle('height',40)
+      el.addEvent('click',function(){
+        if(Number.from(this.getStyle('height')) == 40){
+          this.setStyle('height',this.retrieve('lastHeight'))
+        }else{
+          el.setStyle('height',40)
+        }
+      });
+    });
+  });

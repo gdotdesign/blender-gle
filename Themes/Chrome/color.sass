@@ -1,0 +1,87 @@
+@import _mixins.sass
+.slotcontrol
+  :clear both
+  :margin-left 6px
+  :margin-bottom 5px
+  div:nth-child(1)
+    .bar
+      :background-image -webkit-gradient(linear, 0% 0%, 100% 0%, from(rgba(255,0,0,1)), color-stop(0.166666,rgba(255,255,0,1)),color-stop(0.333333,rgba(0,255,0,1)),color-stop(0.5,rgba(0,225,255,1)),color-stop(0.66666666,rgba(0,0,255,1)),color-stop(0.8333333,rgba(255,0,255,1)), to(rgba(255,0,0,1))) !important
+  div:nth-child(2)
+    .bar
+      :background-color #f00
+      :background-image -webkit-gradient(linear, 100% 0%, 0% 0%, from(rgba(255,255,255,0)), to(rgba(255,255,255,1)))
+  div:nth-child(3), div:nth-child(4)
+    .bar
+      :background-color #fff
+      :background-image -webkit-gradient(linear, 100% 0%, 0% 0%, from(rgba(0,0,0,0)), to(rgba(0,0,0,1)))
+  .number
+    .bar
+      :width 200px
+  .slot
+    :height 80px
+.color
+  :width 200px
+  :padding 10px
+  .wrapper
+    :position relative
+    :width 200px
+    :height 200px
+    :margin 10px
+  .colorBox
+    :width 20px
+    :height 50px
+    :margin 2px
+    :margin-left 6px
+  label
+    :font-size 11px
+  .control
+    :padding 10px
+  dl
+    :width 100px
+    dt
+      :width 25px
+      :float left
+      :text-align right
+    dd
+      :width 70px
+      :float right
+      input
+        :width 65px
+  .format
+    :margin-top 5px
+    :margin-bottom 10px
+    dl
+      :width 228px
+      dd
+        :width 190px
+        input
+          :width 190px
+  .sb
+    :width 200px
+    :height 200px
+  .black, .white, .sb, .wrapper, .hue, .colorBox
+    +round_full(5px)
+  .black
+    :background-image -moz-linear-gradient(100% 100% 90deg, rgba(0,0,0,1), rgba(0,0,0,0))
+    :background-image -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0,0,0,0)), to(rgba(0,0,0,1)))
+    :cursor crosshair 
+  .white
+    :background-image -moz-linear-gradient(100% 50%, rgba(255,255,255,0), rgba(255,255,255,1))
+    :background-image -webkit-gradient(linear, 0% 0%, 100% 0%, from(rgba(255,255,255,1)), to(rgba(255,255,255,0)))
+  .hue, .wrapper, .colorBox
+  .hue
+    :margin-top 10px
+    :margin-right 10px
+    :background-image -moz-linear-gradient(100% 100%, rgba(255,0,0,1), rgba(255,0,255,1), rgba(0,0,255,1), rgba(0,255,255,1), rgba(0,255,0,1), rgba(255,255,0,1), rgba(255,0,0,1))
+    :background-image -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,0,0,1)), color-stop(0.166666,rgba(255,255,0,1)),color-stop(0.333333,rgba(0,255,0,1)),color-stop(0.5,rgba(0,225,255,1)),color-stop(0.66666666,rgba(0,0,255,1)),color-stop(0.8333333,rgba(255,0,255,1)), to(rgba(255,0,0,1)))
+  #knob
+    :background-color rgba(255,255,255,0.4)
+    :cursor pointer
+  #xyknob
+    :width 10px
+    :cursor crosshair
+    :height 10px
+  #xyknob, #knob
+    +round_full(5px)
+    :border 1px solid rgba(255,255,255,0.8)
+    +box_shadow(0,0,4px,rgba(0,0,0,0.4))

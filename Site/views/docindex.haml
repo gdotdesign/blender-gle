@@ -1,0 +1,15 @@
+.box
+  %ul
+    - Dir.entries('../Docs').sort.each do |dir|
+      - if not dir =~ /^\./ and File.directory? '../Docs/'+dir
+        %li.dir
+          %ul
+            %li.file
+              %span
+                = dir
+            - Dir.entries("../Docs/#{dir}").sort.each do |file|
+              - if not file =~ /^\./
+                %li.file
+                  %a{:href=>"/docs/#{dir}/#{file}"} 
+                    = file
+    .clear

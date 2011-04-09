@@ -10,7 +10,7 @@ license: MIT-style license.
 requires: 
   - G.UI/GDotUI
   - G.UI/Core.Abstract
-  - G.UI/Iterable.List
+  - Iterable.List
 
 provides: Core.Slot
 

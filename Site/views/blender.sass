@@ -1,0 +1,458 @@
+@import _mixins.sass
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
+.left
+  :float left
+hr
+  :border none
+  :border-bottom 1px solid #292929
+  :margin 10px 0
+.required
+  :background-color rgba(0,0,0,0.1)
+  .checkbox
+    :background-color #777
+.selected
+  :background-color rgba(0,0,0,0.2)
+  .checkbox
+    :background-color #333
+
+.demotabs
+  :margin 0 auto
+  :font-size 12px
+  :width 950px
+  :height 40px
+  :margin-top -10px
+  .demotab:first-child
+    +round(0,0,5px,0)
+  .demotab:last-child
+    +round(0,0,0,5px)
+  .demotab
+    :color #f5f5f5
+    :border 1px solid #272727
+    :margin-right -1px
+    +box_shadow(0,1px,1px,#878787)
+    +linear_gradient(#535353,#373737)
+    :cursor pointer
+    :line-height 20px
+    :padding 5px
+    :float left
+    &:hover, &.active
+      +linear_gradient(#4771b3,#638dcf)
+      :color #1c1c1c
+
+#demoleft
+  :float left
+#demoright
+  :float right
+p.inherited
+  :color lighten(#3E4D5E,16%)
+  .func
+    :color darken(#2FCB00,12%) !important
+  .event
+    span
+      :color #FF5BD6
+  .at
+    :color darken(#14E6FF,30%)
+li.inherited
+  :cursor pointer
+  &:hover
+    :color #aaa
+    h2
+      :color #aaa
+  :color #666
+  h2
+    :color #666
+  &.function
+    h2 span
+      :color darken(#2FCB00,20%)
+  .event
+    span
+      :color #FF5BD6
+  &.attribute
+    h2 span
+      :color darken(#14E6FF,30%)
+#packager
+  .wrap
+    :margin 0 auto
+    :margin-top 20px
+    :width 160px
+    :position relative
+    :height 40px
+  input[type=submit]
+    :cursor pointer
+    :position absolute
+    :border none
+    :width 150px
+    :height 33px
+    :top 5px
+    :left 5px
+    :border 1px solid #353535
+    :text-align center
+    :line-height 30px
+    :font-size 16px
+    :color #eee
+    :letter-spacing 1px
+    :z-index 2
+.package
+  :font-size 12px
+  .check
+    :cursor pointer
+  th
+    :text-align left
+    :padding-bottom 10px
+  tr
+    +round_full(5px)
+    :border-bottom 1px solid #292929
+  td.provides
+    :width 300px
+    :line-height 18px
+    :color #666
+    :vertical-align middle
+  td.name
+    :margin 0
+    :padding 0
+    :vertical-align middle
+    :height 22px
+    :width 280px
+    :margin-bottom 10px
+  td.chekk
+    :padding-left 5px
+    :padding-right 15px
+    :vertical-align middle
+.checkbox
+  :width 15px
+  :height 15px
+  +round_full(5px)
+  :border 1px solid #272727
+  :background-color #999
+@-webkit-keyframes travel
+  from 
+  to
+    background-position: 0 60px
+body
+  :background-color #000
+h2
+  :font-size 20px
+  :font-weight normal
+  :padding-top 7px
+  :border-top 1px solid darken(#3E4D5E,16%)
+  :margin 5px 0 10px 0
+  :color #fdfdfd
+h2 ~ p, h2 ~ h4
+  :margin-left 13px
+h1
+  :font-size 24px
+  :color #fdfdfd
+  :font-weight normal
+  :border-bottom 1px solid darken(#3E4D5E,16%)
+  :padding-bottom 10px
+  :margin-bottom 5px
+.dir
+  span
+    :font-size 16px
+    :margin-bottom 5px
+    :padding-bottom 5px
+  :clear both
+  .file
+    :vertical-align middle
+    :float left
+    :margin 5px 5px
+.header
+  +round(0,0,10px,10px)
+  :border-top none
+  :margin 0 auto
+  :margin-bottom 10px
+  :width 960px
+  :background-color #3E4D5E
+  :color #fdfdfd
+  h1,h2,ul li
+    :float left
+  ul.main
+    :position relative
+    :margin-right 10px
+    a:nth-child(odd)
+      li
+        :background-color lighten(#3E4D5E,6%)
+    a:nth-child(even)
+      li
+        :background-color lighten(#3E4D5E,10%)
+    a:first-child
+      li
+        :background-color transparent
+    a.current
+      li
+        :background-color #E38600
+    a
+      :color #fdfdfd
+    li
+      :padding 25px 15px 10px 0px
+      :font-size 14px
+      :width 120px
+      :text-align right
+
+.right
+  :float right !important
+        
+.box
+  +round_full(10px)
+  p
+    :margin-bottom 5px
+    :line-height 18px
+  :font-size 14px
+  :margin 0 auto
+  :margin-bottom 10px
+  :background-color darken(#3E4D5E,18%)
+  :color #fdfdfd
+  :padding 20px
+  :position relative
+  :width 920px
+.class
+  :width 760px
+.extimp
+  :margin-bottom -20px
+  :margin-left -5px
+  p
+    :padding 0
+    :margin 0
+  .extends
+    :color #E46300
+  .implements
+    :color #DDDC00
+  :position relative
+  :float right
+  :top -20px
+  :right -20px
+  :font-size 14px
+  :padding 10px
+  :color #eee
+  :width 150px  
+  :background-color #3E4D5E
+  +round(0,10px,10px,0)
+.startup
+  .w
+    :width 720px
+  :height 130px
+  .download
+    :width 200px
+    :height 40px
+    :position absolute
+    :top 0
+    :right 0
+    :background-color #3E4D5E
+    +round(0,10px,0,0)
+    :text-align center
+    :line-height 40px
+    :font-size 18px
+    :color #eee
+    :letter-spacing 1px
+    :z-index 2
+  .github
+    :width 200px
+    :height 40px
+    :position absolute
+    :top 41px
+    :right 0
+    :background-color #3E4D5E
+    +round(0,0,10px,0)
+    :text-align center
+    :line-height 40px
+    :font-size 18px
+    :color #eee
+    :letter-spacing 1px
+    :z-index 2
+p.small
+  :font-size 12px
+.doc
+  :font-size 14px
+  :color #aaa
+.implements, .function h3
+  :color #97B9CF
+  :font-size 16px
+  :margin-top 10px
+  :padding-top 5px
+  :margin-bottom 5px
+  :font-weight normal
+.function
+  span
+    :color #2FCB00
+.event
+  span
+    :color #FF5BD6
+.attribute
+  span
+    :color #14E6FF
+.event, .function, .attribute
+  :overflow hidden
+.at
+  :color #14E6FF
+.ev
+  :color #FF5BD6
+.func
+  :color #2FCB00
+.readonly
+  :color #666 !important
+.arguments
+  li
+    :margin 5px 0
+  :padding-left 20px
+.attribute, .arguments
+  .type
+    :color #666
+.imp
+  :padding-left 10px
+  :margin-bottom 5px
+  li
+    :margin-bottom 5px
+body
+  :font-family Ubuntu
+.clear
+  :clear both
+a
+  :color #97B9CF
+  :text-decoration none  
+
+.code
+  :width 400px
+  :margin-bottom 10px
+  :float left
+  :color #333
+  :padding-left 15px
+  :border-left 1px dashed #bbb
+  :font-size 14px
+  h1
+    :font-size 16px
+    :margin-top 10px
+    :font-weight normal
+    :margin-bottom 10px
+  h3
+    :border-bottom 1px dotted #bbb
+    :margin-top 5px
+    :padding 10px
+    :padding-left 15px
+    :font-size 12px
+    :cursor pointer
+  h2
+    :margin-top 15px
+    :font-size 14px
+    :font-weight normal
+    :color #666
+  ul
+    :list-style none
+    :padding 5px
+    :padding-left 10px
+    li
+      :padding 5px
+.co
+  :overflow hidden
+
+.demoslot
+  :height 40px
+  :float right
+  .list
+    :position absolute
+    :z-index 1
+  .litem
+    :height 20px
+    :padding 5px
+    :font-size 12px
+    :background-color #282828
+    :line-height 20px
+    :text-align center
+    :background-color #333
+    :font-weight bold
+    &.selected
+      :background-color #eee
+      :color #333
+  .over
+    :position absolute
+    :z-index 2
+    :top 0
+    :left 0
+    :height inherit
+    :cursor pointer     
+pre.slush_poppies .Directives
+  font-weight: bold  
+  
+pre.slush_poppies .TypeName 
+  color: #800080  
+  
+pre.slush_poppies .InheritedClass 
+  
+pre.slush_poppies .OcamlInfixFPOperators 
+  text-decoration: underline  
+  
+pre.slush_poppies .Number 
+  color: #00699e 
+  
+pre.slush_poppies .LibraryVariable 
+  
+pre.slush_poppies .Storage 
+  color: #008080  
+  
+pre.slush_poppies .line-numbers 
+  background-color: #333
+  color: #eee
+  
+pre.slush_poppies .OcamlPrefixFPOperators 
+  text-decoration: underline  
+  
+pre.slush_poppies .OcamlFloatingPointConstants 
+  text-decoration: underline  
+  
+pre.slush_poppies .LineNumberDirectives 
+  
+pre.slush_poppies .TagName 
+  color: #333
+pre.slush_poppies .StorageTypes 
+  color: #A08000  
+  
+pre.slush_poppies .Operators 
+  color: #2060A0  
+  
+pre.slush_poppies .LibraryConstant 
+  :font-style italic
+  
+pre.slush_poppies .VariantTypes 
+  color: #C08060  
+  
+pre.slush_poppies .FunctionArgument 
+  
+pre.slush_poppies .BuiltInConstant 
+  
+pre.slush_poppies .ClassTypeName 
+  color: #8000C0  
+  
+pre.slush_poppies .ModuleKeyword 
+  color: #0080FF  
+  
+pre.slush_poppies .Invalid 
+  
+pre.slush_poppies .LibraryClassType 
+  color: #db4500
+pre.slush_poppies .LibraryFunction 
+  
+pre.slush_poppies .TagAttribute 
+  
+pre.slush_poppies .Keyword 
+  color: #00699e  
+  
+pre.slush_poppies .UserDefinedConstant 
+  
+pre.slush_poppies .CharacterConstants 
+  color: #800000  
+  
+pre.slush_poppies .String 
+  color: #C03030  
+  
+pre.slush_poppies 
+  color: #212121
+  :line-height 18px
+  :padding 15px
+  
+pre.slush_poppies .FunctionName 
+  color: #800000  
+  
+pre.slush_poppies .Variable 
+  
+pre.slush_poppies .Comment 
+  color: #406040  
+  

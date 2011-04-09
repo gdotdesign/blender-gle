@@ -1,0 +1,146 @@
+.blue-gadient {
+  background-image: -moz-linear-gradient(100% 100% 90deg, #6188c6, #4b78be);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4b78be), to(#6188c6)); }
+
+.darker-gradient {
+  background-image: -moz-linear-gradient(100% 100% 90deg, #2e3945, #3e4d5e);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3e4d5e), to(#2e3945)); }
+  .darker-gradient:hover {
+    background-image: -moz-linear-gradient(100% 100% 90deg, #384555, #485a6d);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#485a6d), to(#384555)); }
+
+.darker-gradient-inverze {
+  background-image: -moz-linear-gradient(100% 100% 90deg, black, #2e3945 #3e4d5e);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2e3945 #3e4d5e), to(black)); }
+  .darker-gradient-inverze:hover {
+    background-image: -moz-linear-gradient(100% 100% 90deg, #485a6d, #384555);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#384555), to(#485a6d)); }
+
+.light-gadient {
+  background-image: -moz-linear-gradient(100% 100% 90deg, #778ca5, #95a6b9);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#95a6b9), to(#778ca5)); }
+  .light-gadient:hover {
+    background-image: -moz-linear-gradient(100% 100% 90deg, #8094ab, #9eaebf);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9eaebf), to(#8094ab)); }
+
+.light-gadient-inverze {
+  background-image: -moz-linear-gradient(100% 100% 90deg, #9eaebf, #8094ab);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#8094ab), to(#9eaebf)); }
+  .light-gadient-inverze:hover {
+    background-image: -moz-linear-gradient(100% 100% 90deg, #95a6b9, #778ca5);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#778ca5), to(#95a6b9)); }
+
+.disabled {
+  opacity: 0.4; }
+
+.basicSize {
+  width: 200px;
+  min-width: 85px;
+  height: 20px;
+  line-height: 20px; }
+
+.basic {
+  border: 1px solid #151b21;
+  font-size: 12px;
+  margin: 5px;
+  color: #666666;
+  background-color: #3e4d5e;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  -webkit-user-select: none;
+  -webkit-background-clip: padding-box; }
+
+.nobasic {
+  margin: 0;
+  border: none;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  -khtml-border-radius: 0;
+  border-radius: 0;
+  box-shadow: 0 0 0 transparent;
+  -moz-box-shadow: 0 0 0 transparent;
+  -webkit-box-shadow: 0 0 0 transparent; }
+
+.dark-on-light {
+  color: #fdfdfd;
+  background-color: #2e3945; }
+  .dark-on-light:hover {
+    background-color: #3e4d5e; }
+  .dark-on-light:active {
+    background-color: #778ca5;
+    color: #212121; }
+
+.light-on-dark {
+  color: #212121;
+  background-color: #778ca5; }
+  .light-on-dark:hover {
+    background-color: #95a6b9; }
+  .light-on-dark:active {
+    background-color: #3e4d5e;
+    color: #fdfdfd; }
+
+.blender-layout {
+  background-color: #555555;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0; }
+
+.blender-toolbar {
+  background-color: #888888;
+  z-index: 10; }
+
+.blender-view {
+  position: absolute;
+  min-height: 30px;
+  min-width: 30px;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #727272;
+  border-top: 1px solid #888888;
+  overflow: hidden; }
+  .blender-view .blender-toolbar {
+    position: absolute;
+    height: 30px;
+    right: 0;
+    left: 0;
+    bottom: 0; }
+  .blender-view .content {
+    width: 100%;
+    height: 100%; }
+  .blender-view .slider {
+    position: absolute !important;
+    top: 10px;
+    right: 0;
+    z-index: 11; }
+  .blender-view .topleft {
+    cursor: crosshair;
+    z-index: 99;
+    border-top: 7px solid #666666;
+    border-left: 7px solid transparent;
+    border-right: 7px solid #666666;
+    border-bottom: 7px solid transparent;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0; }
+  .blender-view .bottomleft {
+    z-index: 99;
+    border-top: 7px solid transparent;
+    border-left: 7px solid #666666;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #666666;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0; }

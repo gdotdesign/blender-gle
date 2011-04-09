@@ -20,13 +20,10 @@ Data.Number = new Class {
   Extends: Core.Slider
   Attributes: {
     class: {
-      value: GDotUI.Theme.Number.classes.base
-    }
-    bar: {
-      value: GDotUI.Theme.Number.classes.bar
+      value: 'blender-number'
     }
     text: {
-      value: GDotUI.Theme.Number.classes.text
+      value: 'blender-number-text'
       setter: (value, old) ->
         @textLabel.removeClass old
         @textLabel.addClass value

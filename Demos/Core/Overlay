@@ -1,0 +1,15 @@
+---JS
+window.addEvent('domready', function(){
+  overlay = new Core.Overlay()
+  
+  button = new Core.Button({label:'Show overlay!'})
+  button.addEvent('invoked', function(){
+    overlay.show();
+  });
+  
+  window.addEvent('keydown', function(){
+    overlay.hide();
+  });
+  document.body.grab(overlay)
+  $("options").adopt(button)
+});

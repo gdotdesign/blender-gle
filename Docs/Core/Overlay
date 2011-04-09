@@ -1,0 +1,19 @@
+---
+class: Core.Overlay
+description: Overlay for modal dialogs and alike.
+extends: Core.Abstract
+demo: false
+implements:
+  - Interfaces.Enabled
+  - Interfaces.Controls
+attributes:
+  zindex: 
+    type: Number
+    default: 1
+    description: Z-index CSS property of the element.
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+...
+

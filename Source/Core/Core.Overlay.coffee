@@ -3,7 +3,7 @@
 
 name: Core.Overlay
 
-description: Overlay for modal dialogs and stuff.
+description: Overlay for modal dialogs and alike.
 
 license: MIT-style license.
 
@@ -25,7 +25,7 @@ Core.Overlay = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Overlay.class
+      value: 'blender-overlay'
     }
     zindex: {
       value: 0
@@ -33,7 +33,7 @@ Core.Overlay = new Class {
         @base.setStyle 'z-index', value
         value
       validator: (value) ->
-        typeOf(Number.from(value)) is 'number'
+        Number.from(value) isnt null
     }
   }
   create: ->
@@ -45,5 +45,4 @@ Core.Overlay = new Class {
       bottom:0
     }
     @hide()
-    
 }

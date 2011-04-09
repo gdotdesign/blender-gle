@@ -1,0 +1,25 @@
+---
+class: 
+description: 
+extends: 
+implements:
+  - 
+attributes:
+  : 
+    type: 
+    description: 
+  class: 
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - :
+    description:
+functions:
+  - :
+    description:
+    arguments:
+      - :
+        description: 
+        type: 
+...
+
