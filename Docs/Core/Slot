@@ -1,0 +1,17 @@
+---
+class: Core.Slot
+description: iOs style slot element.
+extends: Core.Abstract
+implements:
+  - Interfaces.Enabled
+  - Interfaces.Size
+attributes:
+  class: 
+    type: String 
+    show: false
+    description: CSS Class of the element. 
+events:
+  - change:
+    description:
+...
+

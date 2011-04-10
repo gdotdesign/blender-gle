@@ -1,0 +1,18 @@
+---
+class: Iterable.ListItem
+description: 
+extends: Core.Abstract
+attributes:
+  label: 
+    type: String 
+    description:
+    default: 'Label of the list item...'
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - invoked:
+    description:
+...
+

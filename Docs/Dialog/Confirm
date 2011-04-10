@@ -1,0 +1,28 @@
+---
+class: Dialog.Confirm
+description: 
+extends: Dialog.Abstract
+attributes:
+  label: 
+    type: String
+    description: 
+    default: Write something!
+  okLabel: 
+    type: String 
+    description: 
+    default: OK
+  cancelLabel: 
+    type: String 
+    description: 
+    default: CANCEL
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - invoked:
+    description:
+  - cancelled:
+    description:
+...
+

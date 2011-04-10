@@ -1,0 +1,9 @@
+---
+class: Interfaces.Mux
+description: Initializes other Interfaces.
+demo: false
+functions:
+  mux:
+    description: Runs function which names start with _$ after initialization.
+...
+

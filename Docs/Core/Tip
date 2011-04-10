@@ -1,0 +1,37 @@
+---
+class: Core.Tip
+description: Tips.
+extends: Core.Abstract
+implements:
+  - Interfaces.Enabled
+attributes:
+  label: 
+    type: String
+    description:
+  zindex: 
+    type: Number
+    description:
+  delay: 
+    type: Number
+    description:
+  location: 
+    type: Object
+    description:
+  offset: 
+    type: Number
+    description:
+  class:
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+functions:
+  show:
+    description:
+  hide:
+    description:
+  attach:
+    description:
+  detach:
+    description:
+...
+

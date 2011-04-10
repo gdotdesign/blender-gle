@@ -1,0 +1,11 @@
+---
+class: Data.Date
+description: 
+extends: Data.DateTime
+attributes:
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+...
+

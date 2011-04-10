@@ -1,0 +1,18 @@
+---
+class: Data.ColorWheel
+description: 
+extends: Data.Abstract
+implements: 
+  - Interfaces.Enabled
+  - Interfaces.Children
+  - Interfaces.Size
+attributes:
+  class: 
+    type: String 
+    show: false
+    description: CSS Class of the element. 
+events:
+  - change:
+    description: Fires when the value (color) changes.
+...
+

@@ -1,0 +1,22 @@
+---
+class: Iterable.MenuListItem
+description: 
+extends: Iterable.ListItem
+attributes:
+  shortcut: 
+    type: String 
+    description:
+    default: 'ctrl s'
+  icon:
+    type: String
+    description: 
+    default: '/Themes/Chrome/images/add.png'
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - invoked:
+    description:
+...
+

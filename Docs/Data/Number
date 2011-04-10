@@ -1,0 +1,18 @@
+---
+class: Data.Number
+description: 
+extends: Core.Slider
+attributes:
+  label: 
+    type: String
+    default: Label
+    description: asd
+  class:
+    show: false 
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - change:
+    description:
+...
+

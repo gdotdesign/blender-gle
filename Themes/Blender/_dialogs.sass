@@ -1,0 +1,24 @@
+.dialog-alert
+  :width $width
+  :min-width $minWidth
+.dialog-confirm
+  :width $width
+  :min-width $minWidth
+.dialog-prompt
+  :width $width
+  :min-width $minWidth
+.dialog-alert
+  .blender-button
+    @extend .red-darker-gradient
+    :color $colorLight
+    &:hover
+      @extend .red-gradient
+    &:active
+      @extend .red-darker-igradient
+.dialog-prompt-label, .dialog-alert-label
+  :color $colorLight
+  :margin
+    :left 7px
+    :bottom 2px
+    :top 7px
+  :font-size 12px

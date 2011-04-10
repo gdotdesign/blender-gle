@@ -1,0 +1,22 @@
+---
+class: Dialog.Prompt
+description: 
+extends: Dialog.Abstract
+attributes:
+  label: 
+    type: String
+    description: 
+    default: Write something!
+  buttonLabel: 
+    type: String 
+    description: 
+    default: OK
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - invoked:
+    description:
+...
+

@@ -1,0 +1,12 @@
+---
+class: Data.Abstract
+description: Abstract base class.
+demo: false
+extends: Core.Abstract
+attributes:
+  value: 
+    show: false
+    type: Mixed
+    description: Sets the value of the element.
+...
+

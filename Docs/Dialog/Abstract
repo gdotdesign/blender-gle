@@ -1,0 +1,17 @@
+---
+class: Dialog.Abstract
+description: 
+extends: Core.Abstract
+implements:
+  - Interfaces.Size
+attributes:
+  overlay:
+    type: Boolean
+    description: 
+    default: false
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+...
+
