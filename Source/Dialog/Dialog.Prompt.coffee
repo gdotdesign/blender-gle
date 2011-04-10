@@ -9,17 +9,15 @@ license: MIT-style license.
 
 requires: 
   - G.UI/Core.Abstract
-  - Buttons.Button
+  - Dialog.Abstract
+  - Buttons.Abstract
 
 provides: Dialog.Prompt
 
 ...
 ###
 Dialog.Prompt = new Class {
-  Extends:Core.Abstract
-  Delegates: {
-    picker: ['show','hide','attach']
-  }
+  Extends: Dialog.Abstract
   Attributes: {
     class: {
       value: 'dialog-prompt'
@@ -43,16 +41,19 @@ Dialog.Prompt = new Class {
         value
     }
   }
-  initialize: (options) ->
-    @parent options
+  update: ->
+    update: ->
+    @labelDiv.setStyle 'width', @size
+    @button.set 'size', @size
+    @input.set 'size', @size
+    @base.setStyle 'width', 'auto'
   create: ->
+    @parent()
     @labelDiv = new Element 'div'
-    @input = new Element 'input',{type:'text'}
+    @input = new Data.Text()
     @button = new Buttons.Abstract()
     @base.adopt @labelDiv, @input, @button
-    @picker = new Core.Picker()
-    @picker.set 'content', @base
-    @button.addEvent 'invoked', ((el,e)->
+    @button.addEvent 'invoked', (el,e) =>
       @fireEvent 'invoked', @input.get('value')
-    ).bind @
+      @hide(e,true)
 }

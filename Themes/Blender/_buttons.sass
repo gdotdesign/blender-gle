@@ -10,30 +10,30 @@
   @extend .light-on-dark
 
 .blender-button
-  +linear_gradient($lighter, $light)
+  @extend .light-gradient
   &:hover
-    +linear_gradient(lighten($lighter,3%), lighten($light,3%))
+    @extend .lighter-gradient
   &:active
-    +linear_gradient(darken($darker,5%), darken($dark,5%))
+    @extend .darker-igradient
   
 .blender-button-push
   :background-color $darker
   :color $colorLight
-  +linear_gradient($dark, $darker)
+  @extend .darker-gradient
   &:hover:not(.pushed)
     :background-color $dark
-    +linear_gradient(lighten($dark,5%), lighten($darker,5%))
+    @extend .dark-gradient
   &.pushed
     :color $colorDark
     :background-color $blue
-    +linear_gradient(darken($blue,3%), lighten($blue,3%))
+    @extend .blue-igradient
 
 .blender-button-toggle
   :width $width
   :min-width $minWidth
   :height $height
   :line-height $height
-  +linear_gradient($dark, $darker)
+  @extend .darker-gradient
   .blender-button-toggle-on
     +round($borderRadius,0,$borderRadius,0)
   .blender-button-toggle-off
@@ -46,10 +46,15 @@
   .blender-button-toggle-separator
     +round_full($borderRadius)
     :background-color $light
-    +linear_gradient($lighter, $light)
+    @extend .light-gradient
 
-.blender-button-key.active
-  :background-color $darker
-  :color $colorLight
+.blender-button-key
+  @extend .light-igradient
+  &:hover
+    @extend .lighter-igradient
+  &.active
+    @extend .darker-igradient
+    :background-color $darker
+    :color $colorLight
       
 

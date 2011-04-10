@@ -28,7 +28,7 @@ Core.Picker = new Class {
       value: 'blender-picker'
     }
     offset: {
-      value: {x:0,y:0}
+      value: 0
       setter: (value) ->
         value
     }

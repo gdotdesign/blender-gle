@@ -27,6 +27,7 @@ Data.DateTime = new Class {
   Implements: [
     Interfaces.Enabled
     Interfaces.Children
+    Interfaces.Size
   ]
   Attributes: {
     class: {
@@ -116,15 +117,22 @@ Data.DateTime = new Class {
         i++
   update: ->
     @fireEvent 'change', @value
+    buttonwidth = Math.floor(@size / @children.length)
+    @children.each (btn) ->
+      btn.set 'size', buttonwidth
+    if last = @children.getLast()
+      last.set 'size', @size-buttonwidth*(@children.length-1)
   ready: ->
     if @get('date')
       @adoptChildren @years, @month, @days
     if @get('time')
       @adoptChildren @hours, @minutes
+    console.log @size
+    @update()
   updateSlots: ->
     if @get('date')
       cdays = @value.get 'lastdayofmonth'
-      listlength = @days.list.items.length
+      listlength = @days.list.children.length
       if cdays > listlength
         i = listlength+1
         while i <= cdays
@@ -135,14 +143,14 @@ Data.DateTime = new Class {
       else if cdays < listlength
         i = listlength
         while i > cdays
-          @days.list.removeItem @days.list.items[i-1]
+          @days.list.removeItem @days.list.children[i-1]
           i--
-      @days.list.set 'selected', @days.list.items[@value.get('date')-1]
-      @month.list.set 'selected', @month.list.items[@value.get('month')]
-      @years.list.set 'selected', @years.list.getItemFromTitle(@value.get('year'))
+      @days.list.set 'selected', @days.list.children[@value.get('date')-1]
+      @month.list.set 'selected', @month.list.children[@value.get('month')]
+      @years.list.set 'selected', @years.list.getItemFromLabel(@value.get('year'))
     if @get('time')
-      @hours.list.set 'selected', @hours.list.items[@value.get('hours')]
-      @minutes.list.set 'selected', @minutes.list.items[@value.get('minutes')]
+      @hours.list.set 'selected', @hours.list.children[@value.get('hours')]
+      @minutes.list.set 'selected', @minutes.list.children[@value.get('minutes')]
 }
 Data.Time = new Class {
   Extends:Data.DateTime

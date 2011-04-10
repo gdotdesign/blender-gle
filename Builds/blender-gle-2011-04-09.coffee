@@ -643,6 +643,8 @@ Interfaces.Size = new Class {
       value: null
       setter: (value,old) ->
         @base.setStyle 'min-width', value
+        if @size < value
+          @set 'size', value
         value      
     }
     @addAttribute 'size', {
@@ -2834,7 +2836,12 @@ Data.Color = new Class {
       ret.setType type
       @fireEvent 'change', new Hash(ret)
   create: ->
-    
+    @addEvent 'sizeChange', =>
+      @hueData.set 'size', @size
+      @saturationData.set 'size', @size
+      @lightnessData.set 'size', @size
+      @alphaData.set 'size', @size
+      @col.set 'size', @size
     @hueData = new Data.Number {range:[0,360],reset: off, steps: 360, label:'Hue'}
     @saturationData = new Data.Number {range:[0,100],reset: off, steps: 100 , label:'Saturation'}
     @lightnessData = new Data.Number {range:[0,100],reset: off, steps: 100, label:'Value'}
@@ -2842,7 +2849,7 @@ Data.Color = new Class {
     
     @col = new Core.PushGroup()
     ['rgb','rgba','hsl','hsla','hex'].each ((item) ->
-      @col.addItem new Core.Push({label:item})
+      @col.addItem new Buttons.Toggle({label:item})
     ).bind @
     
     @hueData.addEvent 'change',  @update

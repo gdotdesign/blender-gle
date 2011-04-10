@@ -142,7 +142,7 @@ class Gdotui < Sinatra::Application
   end
   
   get "/demos" do
-    haml :demoindex
+    haml ''
   end
   
   get "/demos/:package/:class" do
@@ -172,11 +172,11 @@ class Gdotui < Sinatra::Application
     @class.mergeAll
     haml :docs
   end
-  get '/build' do
+  get '/download' do
     haml :build
   end
   
-  post '/build' do
+  post '/download' do
     content_type 'application/octet-stream'
     response['Content-disposition'] = "attachment; filename=gdotui.js;"
     p = Packager.new("../package.yml")

@@ -73,11 +73,12 @@ Core.Tip = new Class {
       @over = false
       @hide()
   ready: ->
-    @base.position {
-      relativeTo: @attachedTo
-      position: @location
-      offset: @offset
-    }
+    if @attachedTo?
+      @base.position {
+        relativeTo: @attachedTo
+        position: @location
+        offset: @offset
+      }
   hide: ->
     @base.dispose()
   show: ->

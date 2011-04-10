@@ -14,51 +14,21 @@
     %link{:href => "blender.css", :rel => "stylesheet", :type => "text/css", :media=>"screen"}/
     %title
       - if request.path_info =~ /^\/home/
-        - title = "G.UI"
+        - title = "Lattice"
       - else
-        - title = "G.UI"+request.path_info.split("/").join(" :: ")
+        - title = "Lattice"+request.path_info.split("/").join(" :: ")
       = title
   %body
     .header
       .nav
         %ul.main
+          - items = ['home','docs','demos','themes', 'download']
           %li.first
             Lattice
-          - if request.path_info =~ /^\/home/
-            %a.current{:href=>"/home"}
+          - items.each do |item|
+            %a{:href=>"/#{item}", :class=>if request.path_info =~ Regexp.new("^/#{item}") then "current" end}
               %li.first
-                Home
-          - else
-            %a{:href=>"/home"}
-              %li.first
-                Home
-          - if request.path_info =~ /^\/docs/
-            %a.current{:href=>"/docs"}
-              %li.first
-                Docs
-          - else
-            %a{:href=>"/docs"}
-              %li.first
-                Docs
-          - if request.path_info =~ /^\/demos/
-            %a.current{:href=>"/demos"}
-              %li.first
-                Demos
-          - else
-            %a{:href=>"/demos"}
-              %li.first
-                Demos
-          %a{:href=>"/themes"}
-            %li.first
-              Themes
-          - if request.path_info =~ /^\/build/
-            %a.current{:href=>"/build"}
-              %li.first
-                Download
-          - else
-            %a{:href=>"/build"}
-              %li.first
-                Download
+                = item.capitalize
       .clear
     = yield
     

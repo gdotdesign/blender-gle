@@ -3,15 +3,17 @@ class: Core.Abstract
 description: Abstract base class.
 demo: false
 implements:
+  - Events
   - Interfaces.Mux
 functions:
   create:
-    description: 
+    description: Runs after the interfaces are initialized. This function is for creating the child elements and for general setup of the class. This should be used it istead of initialize().
   ready:
-    description: 
+    description: |
+      Runs after the base element insterted into the DOM. In this function the elements dimensions can be determined (i.e.: Element.getSize() won't return 0).
   update:
-    description: 
+    description: Runs each time one of the class attributes changes.
   toElement:
-    description: 
+    description: Returns the "base" (Element) property of the class. This is for Mootools so $() and document.id can work.
 ...
 

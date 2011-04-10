@@ -15,31 +15,11 @@ $blue: #FF7F00
 $blue: #059F00
 $blue: #5680c2
 
+$red: #cb4b16
+
 $border: darken($dark,8%)
 $border: darken($dark,20%)
 $borderRadius: 3px
-.blue-gadient
-  +linear_gradient(darken($blue,3%), lighten($blue,3%))
-
-.darker-gradient
-  +linear_gradient($dark, $darker)
-  &:hover
-    +linear_gradient(lighten($dark,5%), lighten($darker,5%))
-    
-.darker-gradient-inverze
-  +linear_gradient($darker $dark)
-  &:hover
-    +linear_gradient(lighten($darker,5%), lighten($dark,5%))
-
-.light-gadient
-  +linear_gradient($lighter, $light)
-  &:hover
-    +linear_gradient(lighten($lighter,3%), lighten($light,3%))
-
-.light-gadient-inverze
-  +linear_gradient(lighten($light,3%), lighten($lighter,3%))
-  &:hover
-    +linear_gradient($light, $lighter)
 
 .disabled
   :opacity 0.4    
@@ -84,4 +64,41 @@ $borderRadius: 3px
   &:active
     :background-color $dark
     :color $colorLight
+
+.blue-gradient
+  +linear_gradient(lighten($blue,3%), darken($blue,3%))
+.blue-igradient
+  +linear_gradient(darken($blue,3%), lighten($blue,3%))
+
+.red-gradient
+  +linear_gradient(lighten($red,3%), darken($red,3%))
+.red-darker-gradient
+  +linear_gradient(darken($red,6%), darken($red,12%))
+.red-darker-igradient
+  +linear_gradient(darken($red,12%), darken($red,6%))
+
+.light-gradient
+  +linear_gradient($lighter, $light)
+.lighter-gradient
+  +linear_gradient(lighten($lighter,3%), lighten($light,3%))
+
+.lighter-igradient
+  +linear_gradient(lighten($light,3%), lighten($lighter,3%))
+.light-igradient
+  +linear_gradient($light, $lighter)
+
+.middle-gradient
+  +linear_gradient(lighten($middle,3%), darken($middle,3%))
+.middle-igradient
+  +linear_gradient(darken($middle,3%), lighten($middle,3%))
+  
+.darker-gradient
+  +linear_gradient($dark, $darker)
+.dark-gradient
+  +linear_gradient(lighten($dark,5%), lighten($darker,5%))
+    
+.darker-igradient
+  +linear_gradient($darker, $dark)
+.dark-igradient
+  +linear_gradient(lighten($darker,5%), lighten($dark,5%))
 

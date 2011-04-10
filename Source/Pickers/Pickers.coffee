@@ -22,11 +22,8 @@ provides: [Pickers.Base, Pickers.Color, Pickers.Number, Pickers.Text, Pickers.Ti
 ...
 ###
 Pickers.Base = new Class {
+  Extends: Core.Picker
   Delegates:{
-    picker:['attach'
-            'detach'
-            'show'
-            ]
     data: ['set']
   }
   Attributes: {
@@ -34,13 +31,11 @@ Pickers.Base = new Class {
       value: null
     }
   }
-  update: ->
-  initialize: (options) ->
-    @setAttributes options
-    @picker = new Core.Picker()
-    @data = new Data[@type]()
-    @picker.set 'content', @data
-    @
+  show: (e,auto) ->
+    if @data is undefined
+      @data = new Data[@type]()
+      @set 'content', @data
+    @parent e, auto
 }
 Pickers.Color = new Pickers.Base {type:'ColorWheel'}
 Pickers.Number = new Pickers.Base {type:'Number'}

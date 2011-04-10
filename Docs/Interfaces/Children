@@ -19,7 +19,7 @@ functions:
         type: String
         description: The place to append the Element
   removeChild:
-    description:
+    description: Remove the child from the element.
     arguments:
       - child:
         description: The element to be removed.

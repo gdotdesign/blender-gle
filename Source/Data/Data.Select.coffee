@@ -22,43 +22,6 @@ provides: Data.Select
 
 ...
 ###
-Iterable.BlenderListItem = new Class {
-  Extends: Core.Abstract
-  Attributes: {
-    icon: {
-      value: null
-      setter: (value) ->
-        @icon.set 'image', value
-    }
-    shortcut: {
-      value: ''
-      setter: (value) ->
-        @sc.set 'text', value.toUpperCase()
-        value
-    }
-    label: {
-      value: ''
-      setter: (value) ->
-        @title.set 'text', value
-        value
-    }
-    class: {
-      value: GDotUI.Theme.ListItem.class
-    }
-  }
-  create: ->
-    @icon = new Core.Icon({class:'blender-list-item-icon'})
-    @sc = new Element 'div'
-    @title = new Element 'div'
-    @sc.setStyle 'float', 'right'
-    @title.setStyle 'float', 'left'
-    @icon.base.setStyle 'float', 'left'
-    @base.adopt @icon, @title, @sc
-    @base.addEvent 'click', (e) =>
-      @fireEvent 'select', [@,e]
-    @base.addEvent 'click', =>
-      @fireEvent 'invoked', @
-}
 Data.Select = new Class {
   Extends: Data.Abstract
   Implements:[
@@ -93,7 +56,7 @@ Data.Select = new Class {
     }
     value: {
       setter: (value) ->
-        @list.set 'selected', @list.getItemFromTitle(value)
+        @list.set 'selected', @list.getItemFromLabel(value)
       getter: ->
         li = @list.get('selected')
         if li?
@@ -186,7 +149,7 @@ Data.Select = new Class {
     @prompt.attach @base, false
     @prompt.addEvent 'invoked', ((value) ->
       if value
-        item = new Iterable.BlenderListItem {label:value,removeable:false,draggable:false}
+        item = new Iterable.ListItem {label:value,removeable:false,draggable:false}
         @addItem item
         @list.set 'selected', item
       @prompt.hide null, yes

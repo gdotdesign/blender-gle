@@ -119,62 +119,76 @@ Element.Properties.checked = {
     oldPosition: Element.prototype.position,
     position: function(options) {
       var asize, ofa, op, position, size, winscroll, winsize;
-      op = {
-        relativeTo: document.body,
-        position: {
+      if (options.relativeTo !== void 0) {
+        op = {
+          relativeTo: document.body,
+          position: {
+            x: 'center',
+            y: 'center'
+          }
+        };
+        options = Object.merge(op, options);
+        winsize = window.getSize();
+        winscroll = window.getScroll();
+        asize = options.relativeTo.getSize();
+        position = options.relativeTo.getPosition();
+        size = this.getSize();
+        if (options.position.x === 'auto') {
+          if ((position.x + size.x + asize.x) > (winsize.x - winscroll.x)) {
+            options.position.x = 'left';
+          } else {
+            options.position.x = 'right';
+          }
+        }
+        if (options.position.y === 'auto') {
+          if ((position.y + size.y + asize.y) > (winsize.y - winscroll.y)) {
+            options.position.y = 'top';
+          } else {
+            options.position.y = 'bottom';
+          }
+        }
+        ofa = {
+          x: 0,
+          y: 0
+        };
+        switch (options.position.x) {
+          case 'center':
+            if (options.position.y !== 'center') {
+              ofa.x = -size.x / 2;
+            }
+            break;
+          case 'left':
+            ofa.x = -(options.offset + size.x);
+            break;
+          case 'right':
+            ofa.x = options.offset;
+        }
+        switch (options.position.y) {
+          case 'center':
+            if (options.position.x !== 'center') {
+              ofa.y = -size.y / 2;
+            }
+            break;
+          case 'top':
+            ofa.y = -(options.offset + size.y);
+            break;
+          case 'bottom':
+            ofa.y = options.offset;
+        }
+        options.offset = ofa;
+      } else {
+        options.relativeTo = document.body;
+        options.position = {
           x: 'center',
           y: 'center'
-        }
-      };
-      options = Object.merge(op, options);
-      winsize = window.getSize();
-      winscroll = window.getScroll();
-      asize = options.relativeTo.getSize();
-      position = options.relativeTo.getPosition();
-      size = this.getSize();
-      if (options.position.x === 'auto') {
-        if ((position.x + size.x + asize.x) > (winsize.x - winscroll.x)) {
-          options.position.x = 'left';
-        } else {
-          options.position.x = 'right';
+        };
+        if (typeOf(options.offset !== 'object')) {
+          options.offset = {
+            x: 0,
+            y: 0
+          };
         }
       }
-      if (options.position.y === 'auto') {
-        if ((position.y + size.y + asize.y) > (winsize.y - winscroll.y)) {
-          options.position.y = 'top';
-        } else {
-          options.position.y = 'bottom';
-        }
-      }
-      ofa = {
-        x: 0,
-        y: 0
-      };
-      switch (options.position.x) {
-        case 'center':
-          if (options.position.y !== 'center') {
-            ofa.x = -size.x / 2;
-          }
-          break;
-        case 'left':
-          ofa.x = -(options.offset + size.x);
-          break;
-        case 'right':
-          ofa.x = options.offset;
-      }
-      switch (options.position.y) {
-        case 'center':
-          if (options.position.x !== 'center') {
-            ofa.y = -size.y / 2;
-          }
-          break;
-        case 'top':
-          ofa.y = -(options.offset + size.y);
-          break;
-        case 'bottom':
-          ofa.y = options.offset;
-      }
-      options.offset = ofa;
       return this.oldPosition.attempt(options, this);
     },
     removeTransition: function() {
@@ -492,6 +506,16 @@ Core.Abstract = new Class({
       }
     }
   },
+  getSize: function() {
+    var comp;
+    comp = this.base.getComputedSize({
+      styles: ['padding', 'border', 'margin']
+    });
+    return {
+      x: comp.totalWidth,
+      y: comp.totalHeight
+    };
+  },
   initialize: function(options) {
     this.base = new Element('div');
     this.base.addEvent('addedToDom', this.ready.bind(this));
@@ -769,6 +793,9 @@ Interfaces.Size = new Class({
       value: null,
       setter: function(value, old) {
         this.base.setStyle('min-width', value);
+        if (this.size < value) {
+          this.set('size', value);
+        }
         return value;
       }
     });
@@ -1561,11 +1588,13 @@ Core.Tip = new Class({
     }
   },
   ready: function() {
-    return this.base.position({
-      relativeTo: this.attachedTo,
-      position: this.location,
-      offset: this.offset
-    });
+    if (this.attachedTo != null) {
+      return this.base.position({
+        relativeTo: this.attachedTo,
+        position: this.location,
+        offset: this.offset
+      });
+    }
   },
   hide: function() {
     return this.base.dispose();
@@ -2040,10 +2069,7 @@ Core.Picker = new Class({
       value: 'blender-picker'
     },
     offset: {
-      value: {
-        x: 0,
-        y: 0
-      },
+      value: 0,
       setter: function(value) {
         return value;
       }
@@ -2158,16 +2184,18 @@ requires:
 */
 Iterable.List = new Class({
   Extends: Core.Abstract,
-  options: {
-    "class": 'blender-list',
-    selected: 'blender-list-selected',
-    search: false
-  },
+  Implements: [Interfaces.Children, Interfaces.Size],
   Attributes: {
+    "class": {
+      value: 'blender-list'
+    },
+    selectedClass: {
+      value: 'blender-list-selected'
+    },
     selected: {
       getter: function() {
-        return this.items.filter((function(item) {
-          if (item.base.hasClass(this.options.selected)) {
+        return this.children.filter((function(item) {
+          if (item.base.hasClass(this.selectedClass)) {
             return true;
           } else {
             return false;
@@ -2176,81 +2204,19 @@ Iterable.List = new Class({
       },
       setter: function(value, old) {
         if (old) {
-          old.base.removeClass(this.options.selected);
+          old.base.removeClass(this.selectedClass);
         }
         if (value != null) {
-          value.base.addClass(this.options.selected);
+          value.base.addClass(this.selectedClass);
         }
         return value;
       }
     }
   },
-  initialize: function(options) {
-    return this.parent(options);
-  },
-  create: function() {
-    this.base.addClass(this.options["class"]);
-    this.sortable = new Sortables(null);
-    this.editing = false;
-    if (this.options.search) {
-      this.sinput = new Element('input', {
-        "class": 'search'
-      });
-      this.base.grab(this.sinput);
-      this.sinput.addEvent('keyup', (function() {
-        return this.search();
-      }).bindWithEvent(this));
-    }
-    return this.items = [];
-  },
-  ready: function() {},
-  search: function() {
-    var svalue;
-    svalue = this.sinput.get('value');
-    return this.items.each((function(item) {
-      if (item.title.get('text').test(/#{svalue}/ig) || item.subtitle.get('text').test(/#{svalue}/ig)) {
-        return item.base.setStyle('display', 'block');
-      } else {
-        return item.base.setStyle('display', 'none');
-      }
-    }).bind(this));
-  },
-  removeItem: function(li) {
-    li.removeEvents('invoked', 'edit', 'delete');
-    this.items.erase(li);
-    return li.base.destroy();
-  },
-  removeAll: function() {
-    if (this.options.search) {
-      this.sinput.set('value', '');
-    }
-    this.selected = null;
-    this.base.empty();
-    return this.items.empty();
-  },
-  toggleEdit: function() {
-    var bases;
-    bases = this.items.map(function(item) {
-      return item.base;
-    });
-    if (this.editing) {
-      this.sortable.removeItems(bases);
-      this.items.each(function(item) {
-        return item.toggleEdit();
-      });
-      return this.editing = false;
-    } else {
-      this.sortable.addItems(bases);
-      this.items.each(function(item) {
-        return item.toggleEdit();
-      });
-      return this.editing = true;
-    }
-  },
-  getItemFromTitle: function(title) {
+  getItemFromLabel: function(label) {
     var filtered;
-    filtered = this.items.filter(function(item) {
-      if (String.from(item.title.get('text')).toLowerCase() === String(title).toLowerCase()) {
+    filtered = this.children.filter(function(item) {
+      if (String.from(item.label).toLowerCase() === String(label).toLowerCase()) {
         return true;
       } else {
         return false;
@@ -2259,20 +2225,13 @@ Iterable.List = new Class({
     return filtered[0];
   },
   addItem: function(li) {
-    this.items.push(li);
-    this.base.grab(li);
-    li.addEvent('select', (function(item, e) {
+    this.addChild(li);
+    li.addEvent('select', __bind(function(item, e) {
       return this.set('selected', item);
-    }).bindWithEvent(this));
-    li.addEvent('invoked', (function(item) {
+    }, this));
+    return li.addEvent('invoked', __bind(function(item) {
       return this.fireEvent('invoked', arguments);
-    }).bindWithEvent(this));
-    li.addEvent('edit', (function() {
-      return this.fireEvent('edit', arguments);
-    }).bindWithEvent(this));
-    return li.addEvent('delete', (function() {
-      return this.fireEvent('delete', arguments);
-    }).bindWithEvent(this));
+    }, this));
   }
 });
 /*
@@ -2296,7 +2255,7 @@ todo: horizontal/vertical, interfaces.size etc
 */
 Core.Slot = new Class({
   Extends: Core.Abstract,
-  Implements: Interfaces.Enabled,
+  Implements: [Interfaces.Enabled, Interfaces.Size],
   Attributes: {
     "class": {
       value: GDotUI.Theme.Slot["class"]
@@ -2357,7 +2316,7 @@ Core.Slot = new Class({
       this.dragging = true;
       lastDistance = 1000;
       lastOne = null;
-      return this.list.items.each((function(item, i) {
+      return this.list.children.each((function(item, i) {
         var distance;
         distance = -item.base.getPosition(this.base).y + this.base.getSize().y / 2;
         if (distance < lastDistance && distance > 0 && distance < this.base.getSize().y / 2) {
@@ -2373,7 +2332,7 @@ Core.Slot = new Class({
     if (this.enabled) {
       e.stop();
       if (this.list.selected != null) {
-        index = this.list.items.indexOf(this.list.selected);
+        index = this.list.children.indexOf(this.list.selected);
       } else {
         if (e.wheel === 1) {
           index = 0;
@@ -2381,14 +2340,14 @@ Core.Slot = new Class({
           index = 1;
         }
       }
-      if (index + e.wheel >= 0 && index + e.wheel < this.list.items.length) {
-        this.list.set('selected', this.list.items[index + e.wheel]);
+      if (index + e.wheel >= 0 && index + e.wheel < this.list.children.length) {
+        this.list.set('selected', this.list.children[index + e.wheel]);
       }
       if (index + e.wheel < 0) {
-        this.list.set('selected', this.list.items[this.list.items.length - 1]);
+        this.list.set('selected', this.list.children[this.list.children.length - 1]);
       }
-      if (index + e.wheel > this.list.items.length - 1) {
-        return this.list.set('selected', this.list.items[0]);
+      if (index + e.wheel > this.list.children.length - 1) {
+        return this.list.set('selected', this.list.children[0]);
       }
     }
   },
@@ -2811,6 +2770,64 @@ Core.PushGroup = new Class({
 /*
 ---
 
+name: Dialog.Abstract
+
+description: Select Element
+
+license: MIT-style license.
+
+requires:
+  - G.UI/Core.Abstract
+  - Buttons.Abstract
+
+provides: Dialog.Abstract
+
+...
+*/
+Dialog.Abstract = new Class({
+  Extends: Core.Abstract,
+  Implements: Interfaces.Size,
+  Delegates: {
+    picker: ['hide', 'attach']
+  },
+  Attributes: {
+    "class": {
+      value: 'dialog-prompt'
+    },
+    overlay: {
+      value: false
+    }
+  },
+  initialize: function(options) {
+    return this.parent(options);
+  },
+  create: function() {
+    this.picker = new Core.Picker();
+    return this.overlayEl = new Core.Overlay();
+  },
+  show: function() {
+    this.picker.set('content', this.base);
+    this.picker.show(void 0, false);
+    if (this.overlay) {
+      return document.body.grab(this.overlayEl);
+    }
+  },
+  hide: function(e, force) {
+    if (force != null) {
+      this.overlayEl.base.dispose();
+      this.picker.hide(e, true);
+    }
+    if (e != null) {
+      if (this.base.isVisible() && !this.base.hasChild(e.target) && e.target !== this.base) {
+        this.overlayEl.base.dispose();
+        return this.picker.hide(e);
+      }
+    }
+  }
+});
+/*
+---
+
 name: Dialog.Prompt
 
 description: Select Element
@@ -2819,17 +2836,15 @@ license: MIT-style license.
 
 requires:
   - G.UI/Core.Abstract
-  - Buttons.Button
+  - Dialog.Abstract
+  - Buttons.Abstract
 
 provides: Dialog.Prompt
 
 ...
 */
 Dialog.Prompt = new Class({
-  Extends: Core.Abstract,
-  Delegates: {
-    picker: ['show', 'hide', 'attach']
-  },
+  Extends: Dialog.Abstract,
   Attributes: {
     "class": {
       value: 'dialog-prompt'
@@ -2856,21 +2871,25 @@ Dialog.Prompt = new Class({
       }
     }
   },
-  initialize: function(options) {
-    return this.parent(options);
+  update: function() {
+    ({
+      update: function() {}
+    });
+    this.labelDiv.setStyle('width', this.size);
+    this.button.set('size', this.size);
+    this.input.set('size', this.size);
+    return this.base.setStyle('width', 'auto');
   },
   create: function() {
+    this.parent();
     this.labelDiv = new Element('div');
-    this.input = new Element('input', {
-      type: 'text'
-    });
+    this.input = new Data.Text();
     this.button = new Buttons.Abstract();
     this.base.adopt(this.labelDiv, this.input, this.button);
-    this.picker = new Core.Picker();
-    this.picker.set('content', this.base);
-    return this.button.addEvent('invoked', (function(el, e) {
-      return this.fireEvent('invoked', this.input.get('value'));
-    }).bind(this));
+    return this.button.addEvent('invoked', __bind(function(el, e) {
+      this.fireEvent('invoked', this.input.get('value'));
+      return this.hide(e, true);
+    }, this));
   }
 });
 /*
@@ -2897,51 +2916,6 @@ provides: Data.Select
 
 ...
 */
-Iterable.BlenderListItem = new Class({
-  Extends: Core.Abstract,
-  Attributes: {
-    icon: {
-      value: null,
-      setter: function(value) {
-        return this.icon.set('image', value);
-      }
-    },
-    shortcut: {
-      value: '',
-      setter: function(value) {
-        this.sc.set('text', value.toUpperCase());
-        return value;
-      }
-    },
-    label: {
-      value: '',
-      setter: function(value) {
-        this.title.set('text', value);
-        return value;
-      }
-    },
-    "class": {
-      value: GDotUI.Theme.ListItem["class"]
-    }
-  },
-  create: function() {
-    this.icon = new Core.Icon({
-      "class": 'blender-list-item-icon'
-    });
-    this.sc = new Element('div');
-    this.title = new Element('div');
-    this.sc.setStyle('float', 'right');
-    this.title.setStyle('float', 'left');
-    this.icon.base.setStyle('float', 'left');
-    this.base.adopt(this.icon, this.title, this.sc);
-    this.base.addEvent('click', __bind(function(e) {
-      return this.fireEvent('select', [this, e]);
-    }, this));
-    return this.base.addEvent('click', __bind(function() {
-      return this.fireEvent('invoked', this);
-    }, this));
-  }
-});
 Data.Select = new Class({
   Extends: Data.Abstract,
   Implements: [Interfaces.Controls, Interfaces.Enabled, Interfaces.Size, Interfaces.Children],
@@ -2977,7 +2951,7 @@ Data.Select = new Class({
     },
     value: {
       setter: function(value) {
-        return this.list.set('selected', this.list.getItemFromTitle(value));
+        return this.list.set('selected', this.list.getItemFromLabel(value));
       },
       getter: function() {
         var li;
@@ -3091,7 +3065,7 @@ Data.Select = new Class({
     this.prompt.addEvent('invoked', (function(value) {
       var item;
       if (value) {
-        item = new Iterable.BlenderListItem({
+        item = new Iterable.ListItem({
           label: value,
           removeable: false,
           draggable: false
@@ -3159,7 +3133,7 @@ Data.Text = new Class({
   },
   update: function() {
     this.fireEvent('change', this.get('value'));
-    return this.text.setStyle('width', this.size);
+    return this.text.setStyle('width', this.size - 10);
   },
   create: function() {
     this.text = new Element('textarea');
@@ -3346,6 +3320,13 @@ Data.Color = new Class({
     }
   },
   create: function() {
+    this.addEvent('sizeChange', __bind(function() {
+      this.hueData.set('size', this.size);
+      this.saturationData.set('size', this.size);
+      this.lightnessData.set('size', this.size);
+      this.alphaData.set('size', this.size);
+      return this.col.set('size', this.size);
+    }, this));
     this.hueData = new Data.Number({
       range: [0, 360],
       reset: false,
@@ -3372,7 +3353,7 @@ Data.Color = new Class({
     });
     this.col = new Core.PushGroup();
     ['rgb', 'rgba', 'hsl', 'hsla', 'hex'].each((function(item) {
-      return this.col.addItem(new Core.Push({
+      return this.col.addItem(new Buttons.Toggle({
         label: item
       }));
     }).bind(this));
@@ -3574,7 +3555,6 @@ requires:
 */
 Iterable.ListItem = new Class({
   Extends: Core.Abstract,
-  Implements: [Interfaces.Draggable, Interfaces.Enabled, Options],
   Attributes: {
     label: {
       value: '',
@@ -3587,86 +3567,15 @@ Iterable.ListItem = new Class({
       value: 'blender-list-item'
     }
   },
-  options: {
-    classes: {
-      title: GDotUI.Theme.ListItem.title,
-      subtitle: GDotUI.Theme.ListItem.subTitle
-    },
-    title: '',
-    subtitle: '',
-    draggable: false,
-    dragreset: true,
-    ghost: true,
-    removeClasses: '.' + GDotUI.Theme.Icon["class"],
-    invokeEvent: 'click',
-    selectEvent: 'click',
-    removeable: true,
-    sortable: false,
-    dropppables: ''
-  },
-  initialize: function(options) {
-    this.setOptions(options);
-    return this.parent(options);
-  },
   create: function() {
-    this.base.setStyle('position', 'relative');
-    this.title = new Element('div');
-    this.subtitle = new Element('div');
-    this.base.adopt(this.title, this.subtitle);
-    this.base.addEvent(this.options.selectEvent, (function(e) {
+    this.title = new Element('div.title');
+    this.base.grab(this.title);
+    this.base.addEvent('click', __bind(function(e) {
       return this.fireEvent('select', [this, e]);
-    }).bindWithEvent(this));
-    this.base.addEvent(this.options.invokeEvent, (function() {
-      if (this.enabled && !this.options.draggable && !this.editing) {
-        return this.fireEvent('invoked', this);
-      }
-    }).bindWithEvent(this));
-    this.addEvent('dropped', (function(el, drop, e) {
-      return this.fireEvent('invoked', [this, e, drop]);
-    }).bindWithEvent(this));
-    this.base.addEvent('dblclick', (function() {
-      if (this.enabled) {
-        if (this.editing) {
-          return this.fireEvent('edit', this);
-        }
-      }
-    }).bindWithEvent(this));
-    return this;
-  },
-  toggleEdit: function() {
-    if (this.editing) {
-      if (this.options.draggable) {
-        this.drag.attach();
-      }
-      this.remove.base.setStyle('right', -this.remove.base.getSize().x);
-      this.handles.base.setStyle('left', -this.handles.base.getSize().x);
-      this.base.setStyle('padding-left', this.base.retrieve('padding-left:old'));
-      this.base.setStyle('padding-right', this.base.retrieve('padding-right:old'));
-      return this.editing = false;
-    } else {
-      if (this.options.draggable) {
-        this.drag.detach();
-      }
-      this.remove.base.setStyle('right', this.options.offset);
-      this.handles.base.setStyle('left', this.options.offset);
-      this.base.store('padding-left:old', this.base.getStyle('padding-left'));
-      this.base.store('padding-right:old', this.base.getStyle('padding-left'));
-      this.base.setStyle('padding-left', Number(this.base.getStyle('padding-left').slice(0, -2)) + this.handles.base.getSize().x);
-      this.base.setStyle('padding-right', Number(this.base.getStyle('padding-right').slice(0, -2)) + this.remove.base.getSize().x);
-      return this.editing = true;
-    }
-  },
-  ready: function() {
-    var baseSize;
-    if (!this.editing) {
-      baseSize = this.base.getSize();
-      this.parent();
-      if (this.options.draggable) {
-        return this.drag.addEvent('beforeStart', (function() {
-          return this.fireEvent('select', this);
-        }).bindWithEvent(this));
-      }
-    }
+    }, this));
+    return this.base.addEvent('click', __bind(function() {
+      return this.fireEvent('invoked', this);
+    }, this));
   }
 });
 /*
@@ -3695,7 +3604,7 @@ provides:
 */
 Data.DateTime = new Class({
   Extends: Data.Abstract,
-  Implements: [Interfaces.Enabled, Interfaces.Children],
+  Implements: [Interfaces.Enabled, Interfaces.Children, Interfaces.Size],
   Attributes: {
     "class": {
       value: GDotUI.Theme.Date.DateTime["class"]
@@ -3815,21 +3724,31 @@ Data.DateTime = new Class({
     }
   },
   update: function() {
-    return this.fireEvent('change', this.value);
+    var buttonwidth, last;
+    this.fireEvent('change', this.value);
+    buttonwidth = Math.floor(this.size / this.children.length);
+    this.children.each(function(btn) {
+      return btn.set('size', buttonwidth);
+    });
+    if (last = this.children.getLast()) {
+      return last.set('size', this.size - buttonwidth * (this.children.length - 1));
+    }
   },
   ready: function() {
     if (this.get('date')) {
       this.adoptChildren(this.years, this.month, this.days);
     }
     if (this.get('time')) {
-      return this.adoptChildren(this.hours, this.minutes);
+      this.adoptChildren(this.hours, this.minutes);
     }
+    console.log(this.size);
+    return this.update();
   },
   updateSlots: function() {
     var cdays, i, item, listlength;
     if (this.get('date')) {
       cdays = this.value.get('lastdayofmonth');
-      listlength = this.days.list.items.length;
+      listlength = this.days.list.children.length;
       if (cdays > listlength) {
         i = listlength + 1;
         while (i <= cdays) {
@@ -3843,17 +3762,17 @@ Data.DateTime = new Class({
       } else if (cdays < listlength) {
         i = listlength;
         while (i > cdays) {
-          this.days.list.removeItem(this.days.list.items[i - 1]);
+          this.days.list.removeItem(this.days.list.children[i - 1]);
           i--;
         }
       }
-      this.days.list.set('selected', this.days.list.items[this.value.get('date') - 1]);
-      this.month.list.set('selected', this.month.list.items[this.value.get('month')]);
-      this.years.list.set('selected', this.years.list.getItemFromTitle(this.value.get('year')));
+      this.days.list.set('selected', this.days.list.children[this.value.get('date') - 1]);
+      this.month.list.set('selected', this.month.list.children[this.value.get('month')]);
+      this.years.list.set('selected', this.years.list.getItemFromLabel(this.value.get('year')));
     }
     if (this.get('time')) {
-      this.hours.list.set('selected', this.hours.list.items[this.value.get('hours')]);
-      return this.minutes.list.set('selected', this.minutes.list.items[this.value.get('minutes')]);
+      this.hours.list.set('selected', this.hours.list.children[this.value.get('hours')]);
+      return this.minutes.list.set('selected', this.minutes.list.children[this.value.get('minutes')]);
     }
   }
 });
@@ -4431,6 +4350,200 @@ Data.List = new Class({
     return value.each(function(item) {
       return self.add(item);
     });
+  }
+});
+/*
+---
+
+name: Dialog.Alert
+
+description: Select Element
+
+license: MIT-style license.
+
+requires:
+  - G.UI/Core.Abstract
+  - Dialog.Abstract
+  - Buttons.Abstract
+
+provides: Dialog.Alert
+
+...
+*/
+Dialog.Alert = new Class({
+  Extends: Dialog.Abstract,
+  Attributes: {
+    "class": {
+      value: 'dialog-alert'
+    },
+    label: {
+      value: '',
+      setter: function(value) {
+        return this.labelDiv.set('text', value);
+      }
+    },
+    buttonLabel: {
+      value: 'Ok',
+      setter: function(value) {
+        return this.button.set('label', value);
+      }
+    },
+    labelClass: {
+      value: 'dialog-alert-label',
+      setter: function(value, old) {
+        value = String.from(value);
+        this.labelDiv.removeClass(old);
+        this.labelDiv.addClass(value);
+        return value;
+      }
+    }
+  },
+  update: function() {
+    ({
+      update: function() {}
+    });
+    this.labelDiv.setStyle('width', this.size);
+    this.button.set('size', this.size);
+    return this.base.setStyle('width', 'auto');
+  },
+  create: function() {
+    this.parent();
+    this.labelDiv = new Element('div');
+    this.button = new Buttons.Abstract();
+    this.base.adopt(this.labelDiv, this.button);
+    return this.button.addEvent('invoked', __bind(function(el, e) {
+      this.fireEvent('invoked', [this, e]);
+      return this.hide(e, true);
+    }, this));
+  }
+});
+/*
+---
+
+name: Dialog.Confirm
+
+description: Select Element
+
+license: MIT-style license.
+
+requires:
+  - G.UI/Core.Abstract
+  - Dialog.Abstract
+  - Buttons.Abstract
+
+provides: Dialog.Confirm
+
+...
+*/
+Dialog.Confirm = new Class({
+  Extends: Dialog.Abstract,
+  Attributes: {
+    "class": {
+      value: 'dialog-confirm'
+    },
+    label: {
+      value: '',
+      setter: function(value) {
+        return this.labelDiv.set('text', value);
+      }
+    },
+    okLabel: {
+      value: 'Ok',
+      setter: function(value) {
+        return this.okButton.set('label', value);
+      }
+    },
+    cancelLabel: {
+      value: 'Cancel',
+      setter: function(value) {
+        return this.cancelButton.set('label', value);
+      }
+    },
+    labelClass: {
+      value: 'dialog-alert-label',
+      setter: function(value, old) {
+        value = String.from(value);
+        this.labelDiv.removeClass(old);
+        this.labelDiv.addClass(value);
+        return value;
+      }
+    }
+  },
+  update: function() {
+    var cancelsize, oksize;
+    this.labelDiv.setStyle('width', this.size);
+    this.okButton.set('size', this.size / 2);
+    this.cancelButton.set('size', this.size / 2);
+    oksize = this.okButton.getSize().x;
+    cancelsize = this.cancelButton.getSize().x;
+    return this.base.setStyle('width', oksize + cancelsize);
+  },
+  create: function() {
+    this.parent();
+    this.labelDiv = new Element('div');
+    this.okButton = new Buttons.Abstract();
+    this.cancelButton = new Buttons.Abstract();
+    $$(this.okButton.base, this.cancelButton.base).setStyle('float', 'left');
+    this.base.adopt(this.labelDiv, this.okButton, this.cancelButton, new Element('div', {
+      style: "clear: both"
+    }));
+    this.okButton.addEvent('invoked', __bind(function(el, e) {
+      this.fireEvent('invoked', [this, e]);
+      return this.hide(e, true);
+    }, this));
+    return this.cancelButton.addEvent('invoked', __bind(function(el, e) {
+      this.fireEvent('cancelled', [this, e]);
+      return this.hide(e, true);
+    }, this));
+  }
+});
+/*
+---
+
+name: Iterable.MenuListItem
+
+description: List items for Iterable.List.
+
+license: MIT-style license.
+
+requires: Core.Abstract
+
+provides: Iterable.MenuListItem
+
+requires:
+  - G.UI/GDotUI
+  - G.UI/Interfaces.Draggable
+...
+*/
+Iterable.MenuListItem = new Class({
+  Extends: Iterable.ListItem,
+  Attributes: {
+    icon: {
+      setter: function(value) {
+        return this.iconEl.set('image', value);
+      }
+    },
+    shortcut: {
+      setter: function(value) {
+        this.sc.set('text', value.toUpperCase());
+        return value;
+      }
+    },
+    "class": {
+      value: 'blender-menu-list-item'
+    }
+  },
+  create: function() {
+    this.parent();
+    this.iconEl = new Core.Icon({
+      "class": 'blender-menu-list-item-icon'
+    });
+    this.sc = new Element('div.shortcut');
+    this.sc.setStyle('float', 'right');
+    this.title.setStyle('float', 'left');
+    this.iconEl.base.setStyle('float', 'left');
+    this.base.grab(this.iconEl, 'top');
+    return this.base.grab(this.sc);
   }
 });
 /*
@@ -5189,8 +5302,8 @@ provides: [Pickers.Base, Pickers.Color, Pickers.Number, Pickers.Text, Pickers.Ti
 ...
 */
 Pickers.Base = new Class({
+  Extends: Core.Picker,
   Delegates: {
-    picker: ['attach', 'detach', 'show'],
     data: ['set']
   },
   Attributes: {
@@ -5198,13 +5311,12 @@ Pickers.Base = new Class({
       value: null
     }
   },
-  update: function() {},
-  initialize: function(options) {
-    this.setAttributes(options);
-    this.picker = new Core.Picker();
-    this.data = new Data[this.type]();
-    this.picker.set('content', this.data);
-    return this;
+  show: function(e, auto) {
+    if (this.data === void 0) {
+      this.data = new Data[this.type]();
+      this.set('content', this.data);
+    }
+    return this.parent(e, auto);
   }
 });
 Pickers.Color = new Pickers.Base({

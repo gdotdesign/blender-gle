@@ -6,12 +6,10 @@
 .color {
   color: #123457;
   width: 200px;
-  min-width: 85px;
-  margin: 5px;
-  padding: 10px; }
+  min-width: 85px; }
   .color .number {
     -webkit-transition-duration: 0; }
-  .color .pushgroup, .color .number {
+  .color .blender-number, .color .blender-push-group {
     margin: 5px 0; }
   .color .wrapper {
     position: relative;

@@ -34,7 +34,7 @@ Data.Text = new Class {
   }
   update: ->
     @fireEvent 'change', @get 'value'
-    @text.setStyle 'width', @size
+    @text.setStyle 'width', @size-10
   create: ->
     @text = new Element 'textarea'
     @base.grab @text

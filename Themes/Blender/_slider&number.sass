@@ -1,9 +1,12 @@
 .blender-slider
   :background-color $dark
   &.horizontal
+    @extend .darker-igradient
     :width $width
     :min-width $minWidth
     :height $height2
+    .blender-slider-progress
+      @extend .light-gradient
   &.vertical
     :width $height2
     :height $width
@@ -15,10 +18,13 @@
   .blender-slider-progress
     :background-color transparent
   :background-color $light
+  @extend .light-igradient
   &:hover
     :background-color $lighter
+    @extend .lighter-igradient
   &:active
     :background-color $middle
+    @extend .middle-igradient
   &:after
     :content ''
     :z-index 1

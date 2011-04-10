@@ -41,6 +41,12 @@ hr
 
 #demoleft
   :float left
+#demoleft, #demoright
+  h3
+    :font-size 18px
+    :margin-left 5px
+    :font-weight normal
+    :margin-bottom 15px
 #demoright
   :float right
 p.inherited
@@ -148,14 +154,14 @@ h1
   :margin-bottom 5px
 .dir
   span
-    :font-size 16px
-    :margin-bottom 5px
-    :padding-bottom 5px
+    :font-size 14px
+    :margin-bottom 2px
+    :padding-bottom 2px
   :clear both
   .file
     :vertical-align middle
     :float left
-    :margin 5px 5px
+    :margin 4px 5px
 .header
   +round(0,0,10px,10px)
   :border-top none
@@ -184,9 +190,9 @@ h1
     a
       :color #fdfdfd
     li
-      :padding 25px 15px 10px 0px
+      :padding 10px 15px 10px 0px
       :font-size 14px
-      :width 120px
+      :width 100px
       :text-align right
 
 .right
@@ -207,6 +213,32 @@ h1
   :width 920px
 .class
   :width 760px
+  
+.doci
+  :height 175px
+.explan
+  h3
+    :font-size 18px
+    :font-weight normal
+    :margin-bottom 10px
+  p
+    :padding 0
+    :margin 0
+  .extends
+    :color #E46300
+  .implements
+    :color #DDDC00
+  :position absolute
+  :top 0
+  :height 195px
+  :right 0
+  :font-size 14px
+  :padding 10px
+  :color #eee
+  :width 210px  
+  :background-color #3E4D5E
+  +round(0,10px,0,10px)  
+
 .extimp
   :margin-bottom -20px
   :margin-left -5px
@@ -224,7 +256,7 @@ h1
   :font-size 14px
   :padding 10px
   :color #eee
-  :width 150px  
+  :width 210px  
   :background-color #3E4D5E
   +round(0,10px,10px,0)
 .startup

@@ -1,4 +1,32 @@
-.box
+.box.doci
+  .explan
+    %h3
+      Legend
+    %p
+      %span.extends >
+      Extends
+    %p
+      %span.implements +
+      Implements
+    %p
+      %span.func ~
+      Function
+    %p
+      %span.at #
+      Attribute
+    %p
+      %span.ev ×
+      Event
+    %p.inherited
+      %span.func ~
+      Inherited Function
+    %p.inherited
+      %span.at #
+      Inherited Attribute
+    %p.inherited
+      %span.ev ×
+      Inherited Event
+      
   %ul
     - Dir.entries('../Docs').sort.each do |dir|
       - if not dir =~ /^\./ and File.directory? '../Docs/'+dir
@@ -13,3 +41,4 @@
                   %a{:href=>"/docs/#{dir}/#{file}"} 
                     = file
     .clear
+
