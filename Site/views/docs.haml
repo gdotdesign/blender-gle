@@ -19,7 +19,7 @@
           if(type == 'Select'){
             d = new Data.Select({editable:false})
             value.values.each(function(item){
-              d.addItem(new Iterable.MenuListItem({label:item,icon:'/Themes/Chrome/images/add.png',shortcut:'CTRL-S'}))
+              d.addItem(new Iterable.ListItem({label:item,icon:'/Themes/Chrome/images/add.png',shortcut:'CTRL-S'}))
             })
             d.addEvent('change',function(e,v){
               el.set(key,e);

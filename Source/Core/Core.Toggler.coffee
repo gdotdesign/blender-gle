@@ -27,7 +27,7 @@ Core.Toggler = new Class {
   ]
   Attributes: {
     class: {
-      value: 'blender-button-toggle'
+      value: Lattice.buildClass 'button-toggle'
     }
     onLabel: {
       value: 'ON'
@@ -40,24 +40,21 @@ Core.Toggler = new Class {
         @offDiv.set 'text', value
     }
     onClass: {
-      value: 'blender-button-toggle-on'
+      value: 'on'
       setter: (value, old) ->
-        @onDiv.removeClass old
-        @onDiv.addClass value
+        @onDiv.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value
     }
     offClass: {
-      value: 'blender-button-toggle-off'
+      value: 'off'
       setter: (value, old) ->
-        @offDiv.removeClass old
-        @offDiv.addClass value
+        @offDiv.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value
     }
     separatorClass: {
-      value: 'blender-button-toggle-separator'
+      value: 'separator'
       setter: (value, old) ->
-        @separator.removeClass old
-        @separator.addClass value
+        @separator.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value
     }
     checked: {

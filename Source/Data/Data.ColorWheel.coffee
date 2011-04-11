@@ -28,24 +28,22 @@ Data.ColorWheel = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Color.class
+      value: Lattice.buildClass 'color'
     }
     value: {
       setter: (value) ->
         @colorData.set 'value', value
     }
     wrapperClass: {
-      value: GDotUI.Theme.Color.wrapper
+      value: 'wrapper'
       setter: (value, old) ->
-        @wrapper.removeClass old
-        @wrapper.addClass value
+        @wrapper.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value
     }
     knobClass: {
       value: 'xyknob'
       setter: (value, old) ->
-        @knob.removeClass old
-        @knob.addClass value
+        @knob.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value
     }
   }

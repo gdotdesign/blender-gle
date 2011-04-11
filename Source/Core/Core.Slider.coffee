@@ -25,13 +25,12 @@ Core.Slider = new Class {
   ]
   Attributes: {
     class: {
-      value: 'blender-slider'
+      value: Lattice.buildClass 'slider'
     }
     bar: {
-      value: 'blender-slider-progress'
+      value: 'progress'
       setter: (value, old) ->
-        @progress.removeClass old
-        @progress.addClass value
+        @progress.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value
     }
     reset: {
@@ -52,12 +51,13 @@ Core.Slider = new Class {
         @base.setStyle 'position', 'relative'
         switch value
           when 'horizontal'
-            @minSize = Number.from GDotUI.selectors[".#{@get('class')}.horizontal"]['min-width']
+            console.log ".#{@class}.horizontal"
+            @minSize = Number.from GDotUI.selectors[".#{@class}.horizontal"]['min-width']
             @modifier = 'width'
             @drag.options.modifiers = {x: 'width',y:''}
             @drag.options.invert = false
             if not @size?
-              size = Number.from GDotUI.selectors[".#{@get('class')}.horizontal"]['width']
+              size = Number.from GDotUI.selectors[".#{@class}.horizontal"]['width']
             @set 'size', size
             @progress.set 'style', ''
             @progress.setStyles {
@@ -67,12 +67,12 @@ Core.Slider = new Class {
               left: 0
             } 
           when 'vertical'
-            @minSize = Number.from GDotUI.selectors[".#{@get('class')}.vertical"]['min-height']
+            @minSize = Number.from GDotUI.selectors[".#{@class}.vertical"]['min-height']
             @modifier = 'height'
             @drag.options.modifiers = {x: '',y: 'height'}
             @drag.options.invert = true
             if not @size?
-              size = Number.from GDotUI.selectors[".#{@get('class')}.vertical"]['height']
+              size = Number.from GDotUI.selectors[".#{@class}.vertical"]['height']
             @set 'size', size
             @progress.set 'style', ''
             @progress.setStyles {

@@ -16,7 +16,7 @@
       - if request.path_info =~ /^\/home/
         - title = "Lattice"
       - else
-        - title = "Lattice"+request.path_info.split("/").join(" :: ")
+        - title = "Lattice"+request.path_info.split("/").each{|item| item.capitalize!}.join(" :: ")
       = title
   %body
     .header

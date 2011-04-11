@@ -10,7 +10,7 @@ license: MIT-style license.
 provides: Element.Extras
 
 ...
-*/var Blender, Buttons, Core, Data, Dialog, Forms, GDotUI, Interfaces, Iterable, Layout, Pickers, UnitList, checkForKey, mergeOneNew;
+*/var Blender, Buttons, Core, Data, Dialog, Forms, GDotUI, Interfaces, Iterable, Lattice, Layout, Pickers, UnitList, checkForKey, mergeOneNew;
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 Element.Properties.checked = {
   get: function() {
@@ -113,6 +113,10 @@ Element.Properties.checked = {
     }
   };
   return Element.implement({
+    replaceClass: function(newClass, oldClass) {
+      this.removeClass(oldClass);
+      return this.addClass(newClass);
+    },
     oldGrab: Element.prototype.grab,
     oldInject: Element.prototype.inject,
     oldAdopt: Element.prototype.adopt,
@@ -494,14 +498,29 @@ provides: Core.Abstract
 
 ...
 */
+Lattice = {};
+Lattice.Elements = [];
+Lattice.changePrefix = function(newPrefix) {
+  this.Elements.each(__bind(function(el) {
+    var a, cls;
+    a = el["class"].split('-');
+    cls = a.erase(a[0]).join('-');
+    this.Prefix = newPrefix;
+    return el.set('class', this.buildClass(cls));
+  }, this));
+  return null;
+};
+Lattice.Prefix = 'blender';
+Lattice.buildClass = function(cls) {
+  return Lattice.Prefix + "-" + cls;
+};
 Core.Abstract = new Class({
   Implements: [Events, Interfaces.Mux],
   Attributes: {
     "class": {
       setter: function(value, old) {
         value = String.from(value);
-        this.base.removeClass(old);
-        this.base.addClass(value);
+        this.base.replaceClass(value, old);
         return value;
       }
     }
@@ -516,12 +535,13 @@ Core.Abstract = new Class({
       y: comp.totalHeight
     };
   },
-  initialize: function(options) {
+  initialize: function(attributes) {
     this.base = new Element('div');
     this.base.addEvent('addedToDom', this.ready.bind(this));
     this.mux();
     this.create();
-    this.setAttributes(options);
+    this.setAttributes(attributes);
+    Lattice.Elements.push(this);
     return this;
   },
   create: function() {},
@@ -1158,7 +1178,7 @@ Core.Checkbox = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Size],
   Attributes: {
     "class": {
-      value: 'blender-checkbox'
+      value: Lattice.buildClass('checkbox')
     },
     state: {
       value: true,
@@ -1184,7 +1204,7 @@ Core.Checkbox = new Class({
   },
   create: function() {
     this.sign = new Element('div');
-    this.sign.addClass(this.get('class') + "-sign");
+    this.sign.addClass("" + (this.get('class')) + "-sign");
     this.textNode = document.createTextNode('');
     this.base.adopt(this.sign, this.textNode);
     return this.base.addEvent('click', __bind(function() {
@@ -1228,7 +1248,7 @@ Core.Icon = new Class({
       }
     },
     "class": {
-      value: 'blender-icon'
+      value: Lattice.buildClass('icon')
     }
   },
   create: function() {
@@ -1524,7 +1544,7 @@ Core.Tip = new Class({
   Binds: ['enter', 'leave'],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Tip["class"]
+      value: Lattice.buildClass('tip')
     },
     label: {
       value: '',
@@ -1627,13 +1647,12 @@ Core.Slider = new Class({
   Implements: [Interfaces.Controls, Interfaces.Enabled],
   Attributes: {
     "class": {
-      value: 'blender-slider'
+      value: Lattice.buildClass('slider')
     },
     bar: {
-      value: 'blender-slider-progress',
+      value: 'progress',
       setter: function(value, old) {
-        this.progress.removeClass(old);
-        this.progress.addClass(value);
+        this.progress.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     },
@@ -1656,7 +1675,8 @@ Core.Slider = new Class({
         this.base.setStyle('position', 'relative');
         switch (value) {
           case 'horizontal':
-            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['min-width']);
+            console.log("." + this["class"] + ".horizontal");
+            this.minSize = Number.from(GDotUI.selectors["." + this["class"] + ".horizontal"]['min-width']);
             this.modifier = 'width';
             this.drag.options.modifiers = {
               x: 'width',
@@ -1664,7 +1684,7 @@ Core.Slider = new Class({
             };
             this.drag.options.invert = false;
             if (!(this.size != null)) {
-              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".horizontal"]['width']);
+              size = Number.from(GDotUI.selectors["." + this["class"] + ".horizontal"]['width']);
             }
             this.set('size', size);
             this.progress.set('style', '');
@@ -1676,7 +1696,7 @@ Core.Slider = new Class({
             });
             break;
           case 'vertical':
-            this.minSize = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['min-height']);
+            this.minSize = Number.from(GDotUI.selectors["." + this["class"] + ".vertical"]['min-height']);
             this.modifier = 'height';
             this.drag.options.modifiers = {
               x: '',
@@ -1684,7 +1704,7 @@ Core.Slider = new Class({
             };
             this.drag.options.invert = true;
             if (!(this.size != null)) {
-              size = Number.from(GDotUI.selectors["." + (this.get('class')) + ".vertical"]['height']);
+              size = Number.from(GDotUI.selectors["." + this["class"] + ".vertical"]['height']);
             }
             this.set('size', size);
             this.progress.set('style', '');
@@ -1942,7 +1962,7 @@ Buttons.Abstract = new Class({
       }
     },
     "class": {
-      value: 'blender-button'
+      value: Lattice.buildClass('button')
     }
   },
   create: function() {
@@ -1973,7 +1993,7 @@ Buttons.Key = new Class({
   Extends: Buttons.Abstract,
   Attributes: {
     "class": {
-      value: 'blender-button-key'
+      value: Lattice.buildClass('button-key')
     }
   },
   getShortcut: function(e) {
@@ -2066,7 +2086,7 @@ Core.Picker = new Class({
   Binds: ['show', 'hide', 'delegate'],
   Attributes: {
     "class": {
-      value: 'blender-picker'
+      value: Lattice.buildClass('picker')
     },
     offset: {
       value: 0,
@@ -2258,7 +2278,7 @@ Core.Slot = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Size],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Slot["class"]
+      value: Lattice.buildClass('slot')
     }
   },
   Binds: ['check', 'complete'],
@@ -2385,7 +2405,7 @@ Core.Toggler = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Controls, Interfaces.Size],
   Attributes: {
     "class": {
-      value: 'blender-button-toggle'
+      value: Lattice.buildClass('button-toggle')
     },
     onLabel: {
       value: 'ON',
@@ -2400,26 +2420,23 @@ Core.Toggler = new Class({
       }
     },
     onClass: {
-      value: 'blender-button-toggle-on',
+      value: 'on',
       setter: function(value, old) {
-        this.onDiv.removeClass(old);
-        this.onDiv.addClass(value);
+        this.onDiv.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     },
     offClass: {
-      value: 'blender-button-toggle-off',
+      value: 'off',
       setter: function(value, old) {
-        this.offDiv.removeClass(old);
-        this.offDiv.addClass(value);
+        this.offDiv.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     },
     separatorClass: {
-      value: 'blender-button-toggle-separator',
+      value: 'separator',
       setter: function(value, old) {
-        this.separator.removeClass(old);
-        this.separator.addClass(value);
+        this.separator.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     },
@@ -2493,7 +2510,7 @@ Core.Overlay = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Controls],
   Attributes: {
     "class": {
-      value: 'blender-overlay'
+      value: Lattice.buildClass('overlay')
     },
     zindex: {
       value: 0,
@@ -2538,7 +2555,7 @@ Core.Tab = new Class({
   Extends: Core.Abstract,
   Attributes: {
     "class": {
-      value: 'blender-tab'
+      value: Lattice.buildClass('tab')
     },
     label: {
       value: '',
@@ -2594,7 +2611,7 @@ Core.Tabs = new Class({
   Binds: ['change'],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Tabs["class"]
+      value: 'blender-group-tab'
     },
     active: {
       setter: function(value, old) {
@@ -2671,7 +2688,7 @@ Buttons.Toggle = new Class({
       }
     },
     "class": {
-      value: 'blender-button-push'
+      value: Lattice.buildClass('button-push')
     }
   },
   create: function() {
@@ -2921,7 +2938,7 @@ Data.Select = new Class({
   Implements: [Interfaces.Controls, Interfaces.Enabled, Interfaces.Size, Interfaces.Children],
   Attributes: {
     "class": {
-      value: 'blender-select'
+      value: Lattice.buildClass('select')
     },
     "default": {
       value: '',
@@ -2962,26 +2979,23 @@ Data.Select = new Class({
       }
     },
     textClass: {
-      value: GDotUI.Theme.Select.textClass,
+      value: 'text',
       setter: function(value, old) {
-        this.text.removeClass(old);
-        this.text.addClass(value);
+        this.text.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     },
     removeClass: {
-      value: GDotUI.Theme.Select.removeClass,
+      value: 'remove',
       setter: function(value, old) {
-        this.removeIcon.base.removeClass(old);
-        this.removeIcon.base.addClass(value);
+        this.removeIcon.set('class', this["class"] + "-" + value);
         return value;
       }
     },
     addClass: {
-      value: GDotUI.Theme.Select.addClass,
+      value: 'add',
       setter: function(value, old) {
-        this.addIcon.base.removeClass(old);
-        this.addIcon.base.addClass(value);
+        this.addIcon.set('class', this["class"] + "-" + value);
         return value;
       }
     },
@@ -3163,13 +3177,12 @@ Data.Number = new Class({
   Extends: Core.Slider,
   Attributes: {
     "class": {
-      value: 'blender-number'
+      value: Lattice.buildClass('number')
     },
     text: {
-      value: 'blender-number-text',
+      value: 'text',
       setter: function(value, old) {
-        this.textLabel.removeClass(old);
-        this.textLabel.addClass(value);
+        this.textLabel.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     },
@@ -3232,7 +3245,7 @@ Data.Color = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Children, Interfaces.Size],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Color.controls["class"]
+      value: Lattice.buildClass('color')
     },
     hue: {
       value: 0,
@@ -3391,7 +3404,7 @@ Data.ColorWheel = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Children, Interfaces.Size],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Color["class"]
+      value: Lattice.buildClass('color')
     },
     value: {
       setter: function(value) {
@@ -3399,18 +3412,16 @@ Data.ColorWheel = new Class({
       }
     },
     wrapperClass: {
-      value: GDotUI.Theme.Color.wrapper,
+      value: 'wrapper',
       setter: function(value, old) {
-        this.wrapper.removeClass(old);
-        this.wrapper.addClass(value);
+        this.wrapper.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     },
     knobClass: {
       value: 'xyknob',
       setter: function(value, old) {
-        this.knob.removeClass(old);
-        this.knob.addClass(value);
+        this.knob.replaceClass("" + this["class"] + "-" + value, "" + this["class"] + "-" + old);
         return value;
       }
     }
@@ -3607,7 +3618,7 @@ Data.DateTime = new Class({
   Implements: [Interfaces.Enabled, Interfaces.Children, Interfaces.Size],
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Date.DateTime["class"]
+      value: Lattice.buildClass('date-time')
     },
     value: {
       value: new Date(),
@@ -3780,7 +3791,7 @@ Data.Time = new Class({
   Extends: Data.DateTime,
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Date.Time["class"]
+      value: Lattice.buildClass('time')
     },
     date: {
       value: false
@@ -3791,7 +3802,7 @@ Data.Date = new Class({
   Extends: Data.DateTime,
   Attributes: {
     "class": {
-      value: GDotUI.Theme.Date["class"]
+      value: Lattice.buildClass('date')
     },
     time: {
       value: false

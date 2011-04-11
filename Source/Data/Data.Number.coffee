@@ -20,13 +20,12 @@ Data.Number = new Class {
   Extends: Core.Slider
   Attributes: {
     class: {
-      value: 'blender-number'
+      value: Lattice.buildClass 'number'
     }
     text: {
-      value: 'blender-number-text'
+      value: 'text'
       setter: (value, old) ->
-        @textLabel.removeClass old
-        @textLabel.addClass value
+        @textLabel.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value
     }
     range: {

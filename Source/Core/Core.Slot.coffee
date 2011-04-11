@@ -25,7 +25,7 @@ Core.Slot = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Slot.class
+      value: Lattice.buildClass 'slot'
     }
   }
   Binds:[

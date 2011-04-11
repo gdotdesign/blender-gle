@@ -18,7 +18,7 @@ Buttons.Key = new Class {
   Extends: Buttons.Abstract
   Attributes: {
     class: {
-      value: 'blender-button-key'
+      value: Lattice.buildClass 'button-key'
     }
   }
   getShortcut: (e) ->

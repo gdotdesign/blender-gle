@@ -25,7 +25,7 @@ Core.Picker = new Class {
   Binds: ['show','hide','delegate']
   Attributes: {
     class: {
-      value: 'blender-picker'
+      value: Lattice.buildClass 'picker'
     }
     offset: {
       value: 0

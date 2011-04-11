@@ -31,7 +31,7 @@ Data.Select = new Class {
     Interfaces.Children]
   Attributes: {
     class: {
-      value: 'blender-select'
+      value: Lattice.buildClass 'select'
     }
     default: {
       value: ''
@@ -63,24 +63,21 @@ Data.Select = new Class {
           li.label
     }
     textClass: {
-      value: GDotUI.Theme.Select.textClass
+      value: 'text'
       setter: (value, old) ->
-        @text.removeClass old
-        @text.addClass value
+        @text.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
         value 
     }
     removeClass: {
-      value: GDotUI.Theme.Select.removeClass
+      value: 'remove'
       setter: (value, old) ->
-        @removeIcon.base.removeClass old
-        @removeIcon.base.addClass value
+        @removeIcon.set 'class', @class+"-"+value
         value 
     }
     addClass: {
-      value: GDotUI.Theme.Select.addClass
+      value: 'add'
       setter: (value, old) ->
-        @addIcon.base.removeClass old
-        @addIcon.base.addClass value
+        @addIcon.set 'class', @class+"-"+value
         value 
     }
     listClass: {

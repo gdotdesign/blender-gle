@@ -22,7 +22,7 @@ Core.Tabs = new Class {
   Binds:['change']
   Attributes: {
     class: {
-      value:  GDotUI.Theme.Tabs.class
+      value:  'blender-group-tab'
     }
     active: {
       setter: (value, old) ->

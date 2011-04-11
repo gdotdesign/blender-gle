@@ -7,7 +7,7 @@
   height: 20px;
   line-height: 20px; }
 
-.basic, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle, .blender-slider, .blender-number, .time, .date, .date-time, .slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-list, .blender-textarea, .blender-push-group, .blender-unit, .blender-select {
+.basic, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle, .blender-slider, .blender-number, .time, .date, .date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-push-group, .blender-unit, .blender-select {
   border: 1px solid #151b21;
   font-size: 12px;
   margin: 5px;
@@ -23,7 +23,7 @@
   -webkit-user-select: none;
   -webkit-background-clip: padding-box; }
 
-.nobasic, .time .slot, .date .slot, .date-time .slot, .slot .blender-list, .blender-picker > *:first-child, .blender-push-group .blender-button-push, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-icon {
+.nobasic, .time .blender-slot, .date .blender-slot, .date-time .blender-slot, .blender-slot .blender-list, .blender-picker > *:first-child, .blender-push-group .blender-button-push, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   margin: 0;
   border: none;
   -moz-border-radius: 0;
@@ -43,16 +43,16 @@
     background-color: #778ca5;
     color: #212121; }
 
-.light-on-dark, .blender-button-key, .blender-button, .blender-icon {
+.light-on-dark, .blender-button-key, .blender-button, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   color: #212121;
   background-color: #778ca5; }
-  .light-on-dark:hover, .blender-button-key:hover, .blender-button:hover, .blender-icon:hover {
+  .light-on-dark:hover, .blender-button-key:hover, .blender-button:hover, .blender-icon:hover, .blender-select .blender-select-add:hover, .blender-select .blender-select-remove:hover {
     background-color: #95a6b9; }
-  .light-on-dark:active, .blender-button-key:active, .blender-button:active, .blender-icon:active {
+  .light-on-dark:active, .blender-button-key:active, .blender-button:active, .blender-icon:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active {
     background-color: #3e4d5e;
     color: #fdfdfd; }
 
-.blue-gradient, .slot .blender-list-selected, .blender-list-item:hover, .blender-menu-list-item:hover {
+.blue-gradient, .blender-slot .blender-list-selected, .blender-list-item:hover, .blender-menu-list-item:hover {
   background-image: -moz-linear-gradient(100% 100% 90deg, #4b78be, #6188c6);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#6188c6), to(#4b78be)); }
 
@@ -72,11 +72,11 @@
   background-image: -moz-linear-gradient(100% 100% 90deg, #af4113, #943710);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#943710), to(#af4113)); }
 
-.light-gradient, .blender-button, .blender-button-toggle .blender-button-toggle-separator, .blender-slider.horizontal .blender-slider-progress, .blender-icon {
+.light-gradient, .blender-button, .blender-button-toggle .blender-button-toggle-separator, .blender-slider.horizontal .blender-slider-progress, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   background-image: -moz-linear-gradient(100% 100% 90deg, #778ca5, #95a6b9);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#95a6b9), to(#778ca5)); }
 
-.lighter-gradient, .blender-button:hover, .blender-icon:hover {
+.lighter-gradient, .blender-button:hover, .blender-icon:hover, .blender-select .blender-select-add:hover, .blender-select .blender-select-remove:hover {
   background-image: -moz-linear-gradient(100% 100% 90deg, #8094ab, #9eaebf);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9eaebf), to(#8094ab)); }
 
@@ -96,7 +96,7 @@
   background-image: -moz-linear-gradient(100% 100% 90deg, #627a95, #566b83);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#566b83), to(#627a95)); }
 
-.darker-gradient, .blender-button-push, .blender-button-toggle, .blender-icon:active, .blender-select {
+.darker-gradient, .blender-button-push, .blender-button-toggle, .blender-icon:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active, .blender-select {
   background-image: -moz-linear-gradient(100% 100% 90deg, #2e3945, #3e4d5e);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3e4d5e), to(#2e3945)); }
 
@@ -231,17 +231,9 @@
     -webkit-background-clip: padding-box;
     background-color: rgba(0, 0, 0, 0.5); }
 
-.picker .color .number, .picker .color .pushgroup {
-  box-shadow: 0 0 0 0;
-  -moz-box-shadow: 0 0 0 0;
-  -webkit-box-shadow: 0 0 0 0; }
-
 .color {
-  color: #123457;
   width: 200px;
   min-width: 85px; }
-  .color .number {
-    -webkit-transition-duration: 0; }
   .color .blender-number, .color .blender-push-group {
     margin: 5px 0; }
   .color .wrapper {
@@ -295,22 +287,22 @@
 .time, .date, .date-time {
   height: 100px;
   cursor: pointer; }
-  .time .slot, .date .slot, .date-time .slot {
+  .time .blender-slot, .date .blender-slot, .date-time .blender-slot {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     -khtml-border-radius: 3px;
     border-radius: 3px;
     float: left; }
 
-.slot {
+.blender-slot {
   height: 100px;
   width: 200px; }
-  .slot .blender-list {
+  .blender-slot .blender-list {
     -webkit-transition-duration: 0.3s; }
-    .slot .blender-list .blender-list-item {
+    .blender-slot .blender-list .blender-list-item {
       color: #212121;
       text-align: center; }
-  .slot .blender-list-selected {
+  .blender-slot .blender-list-selected {
     background-color: #5680c2;
     border-top: 1px solid #151b21;
     border-bottom: 1px solid #151b21;
@@ -342,7 +334,7 @@
       left: -2px;
       color: #fdfdfd; }
 
-.blender-icon {
+.blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   width: 20px;
   height: 20px;
   background-repeat: no-repeat;
@@ -382,6 +374,8 @@
   width: 200px;
   min-width: 85px; }
   .blender-textarea textarea {
+    font-size: 12px;
+    font-family: Ubuntu;
     padding: 5px;
     border: none;
     background-color: transparent;
@@ -514,13 +508,13 @@
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 4px solid #fdfdfd; }
-  .blender-select .text {
+  .blender-select .blender-select-text {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     -khtml-border-radius: 3px;
     border-radius: 3px;
     padding-left: 15px; }
-  .blender-select .blender-icon {
+  .blender-select .blender-select-add, .blender-select .blender-select-remove {
     line-height: 15px;
     text-align: center;
     font-size: 22px;
@@ -530,7 +524,7 @@
     height: 20px;
     border: none;
     border-left: 1px solid #151b21; }
-    .blender-select .blender-icon.remove {
+    .blender-select .blender-select-add.blender-select-remove, .blender-select .blender-select-remove.blender-select-remove {
       -moz-border-radius: 0 3px 3px 0;
       -webkit-border-radius: 0 3px 3px 0;
       -khtml-border-radius: 0 3px 3px 0;

@@ -19,7 +19,7 @@ Core.Tab = new Class {
   Extends: Core.Abstract
   Attributes: {
     class: {
-      value: 'blender-tab'
+      value: Lattice.buildClass 'tab'
     }
     label: {
       value: ''

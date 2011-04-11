@@ -25,7 +25,7 @@ Core.Overlay = new Class {
   ]
   Attributes: {
     class: {
-      value: 'blender-overlay'
+      value: Lattice.buildClass 'overlay'
     }
     zindex: {
       value: 0

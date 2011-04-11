@@ -29,7 +29,7 @@ Buttons.Toggle = new Class {
         @base.hasClass 'pushed' 
     }
     class: {
-      value: 'blender-button-push'
+      value: Lattice.buildClass 'button-push'
     }
   }
   create: ->

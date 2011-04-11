@@ -29,7 +29,7 @@ Data.Color = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Color.controls.class
+      value: Lattice.buildClass 'color'
     }
     hue: {
       value: 0

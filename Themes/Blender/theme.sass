@@ -2,7 +2,7 @@
 @import _rules.sass
 @import _buttons.sass
 @import _slider&number.sass
-@import color.sass
+@import _color.sass
 @import _dialogs.sass
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
 
@@ -17,12 +17,12 @@
   @extend .basic
   :height 100px
   :cursor pointer
-  .slot
+  .blender-slot
     @extend .nobasic
     +round_full($borderRadius)
     :float left
 
-.slot
+.blender-slot
   @extend .basic
   :height 100px
   :width $width
@@ -121,6 +121,8 @@
   :background-color $light
   :color $colorDark
   textarea
+    :font-size 12px
+    :font-family Ubuntu
     :padding 5px
     :border none
     :background-color transparent
@@ -230,19 +232,20 @@
     border-left: 4px solid transparent
     border-right: 4px solid transparent
     border-top: 4px solid $colorLight
-  .text
+  .blender-select-text
     +round_full($borderRadius)
     :padding-left 15px
   :cursor pointer
   :line-height 21px
   :color $colorLight
-  .blender-icon
+  .blender-select-add, .blender-select-remove
+    @extend .blender-icon
     @extend .nobasic
     :line-height 15px
     :text-align center
     :font-size 22px
     :color $colorLight
-    &.remove
+    &.blender-select-remove
       +round(0,$borderRadius,0,$borderRadius)   
     :float right
     :width $height

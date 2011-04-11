@@ -15,7 +15,7 @@ load 'include/packager.rb'
 
 class Gdotui < Sinatra::Application
   
-  class Clas
+  class Class
     attr_accessor :attributes, :functions, :events, :extends, :name, :description, :implements, :demo
     def initialize
       @name = ''
@@ -63,7 +63,7 @@ class Gdotui < Sinatra::Application
     def mergeString(str)
       cls = str.split '.'
        if File.exists?("../Docs/#{cls[0]}/#{cls[1]}")
-         class2 = Clas.new()
+         class2 = Class.new()
          class2.parse YAML::load(File.new("../Docs/#{cls[0]}/#{cls[1]}"))
          class2.mergeAll()
          merge class2
@@ -167,7 +167,7 @@ class Gdotui < Sinatra::Application
     #@parent.
   end
   get "/docs/:package/:class" do
-    @class = Clas.new()
+    @class = Class.new()
     @class.parse YAML::load(File.new("../Docs/#{params[:package]}/#{params[:class]}"))
     @class.mergeAll
     haml :docs

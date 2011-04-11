@@ -31,7 +31,7 @@ Data.DateTime = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Date.DateTime.class
+      value: Lattice.buildClass 'date-time'
     }
     value: {
       value: new Date()
@@ -156,7 +156,7 @@ Data.Time = new Class {
   Extends:Data.DateTime
   Attributes: {
     class: {
-      value: GDotUI.Theme.Date.Time.class
+      value: Lattice.buildClass 'time'
     }
     date: {
       value: no
@@ -167,7 +167,7 @@ Data.Date = new Class {
   Extends:Data.DateTime
   Attributes: {
     class: {
-      value: GDotUI.Theme.Date.class
+      value: Lattice.buildClass 'date'
     }
     time: {
       value: no

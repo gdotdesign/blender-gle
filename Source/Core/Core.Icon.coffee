@@ -30,7 +30,7 @@ Core.Icon = new Class {
         value
     }
     class: {
-      value: 'blender-icon'
+      value: Lattice.buildClass 'icon'
     }
   }
   create: ->

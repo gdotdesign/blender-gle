@@ -24,7 +24,7 @@ Core.Tip = new Class {
   ]
   Attributes: {
     class: {
-      value: GDotUI.Theme.Tip.class
+      value: Lattice.buildClass 'tip'
     }
     label: {
       value: ''

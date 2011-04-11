@@ -25,7 +25,7 @@ Core.Checkbox = new Class {
   ]
   Attributes: {
     class: {
-      value: 'blender-checkbox'
+      value: Lattice.buildClass 'checkbox'
     }
     state: {
       value: on
@@ -47,7 +47,7 @@ Core.Checkbox = new Class {
   }
   create: ->
     @sign = new Element 'div'
-    @sign.addClass @get('class')+"-sign"
+    @sign.addClass "#{@get('class')}-sign"
     @textNode = document.createTextNode ''
     @base.adopt @sign, @textNode
     @base.addEvent 'click', =>

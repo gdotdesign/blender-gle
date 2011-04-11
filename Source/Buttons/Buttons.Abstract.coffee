@@ -34,7 +34,7 @@ Buttons.Abstract = new Class {
         value
     }
     class: {
-      value: 'blender-button'
+      value: Lattice.buildClass 'button'
     }
   }
   create: ->

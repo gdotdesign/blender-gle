@@ -1,0 +1,22 @@
+---
+class: Iterable.List
+description: 
+extends: Core.Abstract
+implements:
+  - Interfaces.Children
+  - Interfaces.Size
+attributes:
+  selected:
+    type: 
+    show: false
+    description:
+  selectedClass: 
+    type: 
+    show: false
+    description: 
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+...
+
