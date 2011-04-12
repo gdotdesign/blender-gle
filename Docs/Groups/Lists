@@ -1,0 +1,21 @@
+---
+class: Groups.Lists
+description: 
+extends: Groups.Abstract
+demo:
+  children:
+    - Iterable.List:
+      - label: 1
+    - Iterable.List:
+      - label: 2
+    - Iterable.List:
+      - label: 3
+implements:
+  - Interfaces.Size
+attributes:
+  class: 
+    show: off
+    type: String 
+    description: CSS Class of the element. 
+...
+

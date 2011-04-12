@@ -1,0 +1,30 @@
+---
+class: Groups.Abstract
+description: 
+extends: Core.Abstract
+demo: false
+implements:
+  - Interfaces.Children
+attributes:
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+functions:
+  removeItem:
+    description:
+    arguments:
+      - el:
+        description: 
+        type: 
+  addItem:
+    description:
+    arguments:
+      - el:
+        description: 
+        type: 
+      - where:
+        description: 
+        type: 
+...
+
