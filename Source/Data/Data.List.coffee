@@ -6,8 +6,7 @@ name: Data.List
 description: Text data element.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Data.Abstract
+  - Data.Abstract
 
 provides: Data.List
 
@@ -18,7 +17,7 @@ Data.List = new Class {
   Binds: ['update']
   Attributes: {
     class: {
-      value: GDotUI.Theme.DataList.class
+      value: 'list'
     }
   }
   create: ->

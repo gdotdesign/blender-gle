@@ -1,6 +1,6 @@
 ---
 class: Data.Unit
-description: 
+description: Unit picker, with a Data.Number for a number value and a Data.Select for the unit.
 extends: Data.Abstract
 implements:
   - Interfaces.Enabled
@@ -13,6 +13,10 @@ attributes:
     description: CSS Class of the element. 
 events:
   - change:
-    description:
+    description: Fires when the value changes.
+    arguments:
+      - unit:
+        type: String
+        description: The current value of the number followed by the selected unit. (20px, 10%, etc.)
 ...
 

@@ -134,7 +134,7 @@ class Gdotui < Sinatra::Application
   end
 
   get /\/builds\/(.*)/ do
-    send_file "../Builds/#{params[:captures].first}"
+    send_file "../Build/#{params[:captures].first}"
   end
 
   get "/docs" do

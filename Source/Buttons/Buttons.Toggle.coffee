@@ -3,7 +3,7 @@
 
 name: Buttons.Toggle
 
-description: Toggle button 'push' element.
+description: Toggle button element.
 
 license: MIT-style license.
 
@@ -29,7 +29,7 @@ Buttons.Toggle = new Class {
         @base.hasClass 'pushed' 
     }
     class: {
-      value: Lattice.buildClass 'button-push'
+      value: Lattice.buildClass 'button-toggle'
     }
   }
   create: ->

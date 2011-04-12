@@ -3,27 +3,25 @@
 
 name: Buttons.Abstract
 
-description: Basic button element.
+description: Button element.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Controls
-  - G.UI/Interfaces.Enabled
-  - G.UI/Interfaces.Size
+  - Core.Abstract
+  - Interfaces.Controls
+  - Interfaces.Enabled
+  - Interfaces.Size
 
 provides: Buttons.Abstract
 
 ...
 ###
-Buttons = {}
 Buttons.Abstract = new Class {
   Extends: Core.Abstract
   Implements:[
-    Interfaces.Enabled
     Interfaces.Controls
+    Interfaces.Enabled
     Interfaces.Size
   ]
   Attributes: {

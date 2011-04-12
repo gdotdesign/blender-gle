@@ -3,15 +3,14 @@
 
 name: Core.Picker
 
-description: Data picker class.
+description: Generic Picker.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Children
-  - G.UI/Interfaces.Enabled
+  - Core.Abstract
+  - Interfaces.Children
+  - Interfaces.Enabled
 
 provides: Core.Picker
 ...
@@ -19,8 +18,8 @@ provides: Core.Picker
 Core.Picker = new Class {
   Extends: Core.Abstract
   Implements: [
-    Interfaces.Enabled
     Interfaces.Children
+    Interfaces.Enabled
   ]
   Binds: ['show','hide','delegate']
   Attributes: {
@@ -76,21 +75,23 @@ Core.Picker = new Class {
     if @attachedTo?
       @attachedTo.fireEvent 'change', arguments
   show: (e,auto) ->
-    auto = if auto? then auto else true
-    document.body.grab @base
-    if @attachedTo?
-      @attachedTo.addClass @picking
-    if e? then if e.stop? then e.stop()
-    if auto
-      @base.addEvent 'outerClick', @hide
-  hide: (e,force) ->
-    if force?
+    if @enabled
+      auto = if auto? then auto else true
+      document.body.grab @base
       if @attachedTo?
-          @attachedTo.removeClass @picking
-        @base.dispose()
-    else if e?
-      if @base.isVisible() and not @base.hasChild(e.target)
+        @attachedTo.addClass @picking
+      if e? then if e.stop? then e.stop()
+      if auto
+        @base.addEvent 'outerClick', @hide
+  hide: (e,force) ->
+    if @enabled
+      if force?
         if @attachedTo?
-          @attachedTo.removeClass @picking
-        @base.dispose()
+            @attachedTo.removeClass @picking
+          @base.dispose()
+      else if e?
+        if @base.isVisible() and not @base.hasChild(e.target)
+          if @attachedTo?
+            @attachedTo.removeClass @picking
+          @base.dispose()
 }

@@ -103,7 +103,7 @@
   :font-size 12px
   :line-height 20px
   :cursor pointer 
-  .title
+  .#{$prefix}-list-item-title, .#{$prefix}-menu-list-item-title
     :margin-left 5px
   &:hover
     :background-color $blue
@@ -150,24 +150,24 @@
 .#{$prefix}-overlay
   :background-color rgba(0,0,0,0.3)
 
-.#{$prefix}-push-group
+.#{$prefix}-toggle-group
   @extend .basic
   :width $width
   :min-width $minWidth
   :height $height
   :line-height $height
-  .#{$prefix}-button-push:first-child
+  .#{$prefix}-button-toggle:first-child
     +round($borderRadius,0,$borderRadius,0)
-  .#{$prefix}-button-push:last-child
+  .#{$prefix}-button-toggle:last-child
     +round(0,$borderRadius,0,$borderRadius)
-  .#{$prefix}-button-push:last-child
+  .#{$prefix}-button-toggle:last-child
     :border-right none
-  .#{$prefix}-button-push
+  .#{$prefix}-button-toggle
     @extend .nobasic
     :float left
     +round_full(0)
   
-.#{$prefix}-push-group
+.#{$prefix}-toggle-group
   @extend .basic
   :width $width
   :min-width $minWidth

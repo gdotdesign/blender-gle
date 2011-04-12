@@ -1,6 +1,6 @@
 ---
 class: Data.Abstract
-description: Abstract base class.
+description: Abstract base class for data elements. Every data element must have the value attribute and change event.
 demo: false
 extends: Core.Abstract
 attributes:

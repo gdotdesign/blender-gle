@@ -1,2 +1,0 @@
-Lattice = {}
-Lattice.Prefix = 'blender'

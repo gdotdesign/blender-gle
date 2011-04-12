@@ -9,22 +9,29 @@ implements:
 attributes:
   onLabel: 
     type: String
-    description: 
+    description: The label corresponding to the on state.
     default: 'ON'
   offLabel:
     type: String
-    description:
+    description: The label corresponding to the off state.
     default: 'OFF'
   checked: 
     type: Boolean
-    description:
+    description: State of the element (i.e. checked (true) or unchecked (false)).
     default: false
   class: 
     show: false
     type: String 
     description: CSS Class of the element. 
 events:
-  - change:
-    description: Fires when checked changes.
+  - invoked:
+    description: Fires when the state attribute changes.
+    arguments:
+      - element:
+        description: The element.
+        type: Core.Checkbox
+      - state:
+        description: The state of the element.
+        type: Boolean
 ...
 

@@ -1,6 +1,6 @@
 ---
 class: Buttons.Key
-description: Button for shortcut editing. Click on it then press a key combination to change the keymap on the button.
+description: Button for shortcut editing. Click on it then press a key combination to change the keymap. When the keymap changes the invoked event fires.
 extends: Buttons.Abstract
 attributes:
   class: 

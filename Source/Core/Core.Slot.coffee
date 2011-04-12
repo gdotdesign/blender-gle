@@ -8,13 +8,12 @@ description: iOs style slot control.
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
+  - Core.Abstract
   - Iterable.List
 
 provides: Core.Slot
 
-todo: horizontal/vertical, interfaces.size etc
+todo: horizontal/vertical
 ...
 ###
 Core.Slot = new Class {
@@ -31,27 +30,24 @@ Core.Slot = new Class {
   Binds:[
     'check'
     'complete'
+    'update'
+    'mouseWheel'
   ]
   Delegates:{
     'list':[
       'addItem'
       'removeAll'
-      'select'
+      'removeItem'
     ]
   }
   create: ->
-    @overlay = new Element 'div', {'text':' '}
-    @overlay.addClass 'over'
-    @list = new Iterable.List()
-    @list.base.addEvent 'addedToDom', @update.bind @
-    @list.addEvent 'selectedChange', ((item) ->
-      @update()
-      @fireEvent 'change', item.newVal
-    ).bind @
     @base.setStyle 'overflow', 'hidden'
     @base.setStyle 'position', 'relative'
-    @list.base.setStyle 'position', 'relative'
-    @list.base.setStyle 'top', '0'
+    
+    @overlay = new Element 'div', {'text':' '}
+    @overlay.addClass 'over'
+    @overlay.addEvent 'mousewheel',@mouseWheel
+    
     @overlay.setStyles {
       'position': 'absolute'
       'top': 0
@@ -59,18 +55,24 @@ Core.Slot = new Class {
       'right': 0
       'bottom': 0
     }
-    @overlay.addEvent 'mousewheel',@mouseWheel.bind @
+    
+    @list = new Iterable.List()
+    @list.base.addEvent 'addedToDom', @update
+    @list.addEvent 'selectedChange', (item) =>
+      @update()
+      @fireEvent 'change', item.newVal
+    @list.base.setStyle 'position', 'relative'
+    @list.base.setStyle 'top', '0'
+    
     @drag = new Drag @list.base, {modifiers:{x:'',y:'top'},handle:@overlay}
     @drag.addEvent 'drag', @check
-    @drag.addEvent 'beforeStart',( ->
+    @drag.addEvent 'beforeStart', =>
       if not @enabled
         @disabledTop = @list.base.getStyle 'top' 
       @list.base.removeTransition()
-    ).bind @
-    @drag.addEvent 'complete', ( ->
+    @drag.addEvent 'complete', =>
       @dragging = off
       @update()
-    ).bind @
   ready: ->
     @base.adopt @list, @overlay
   check: (el,e) ->
@@ -78,11 +80,10 @@ Core.Slot = new Class {
       @dragging = on
       lastDistance = 1000
       lastOne = null
-      @list.children.each ((item,i) ->
+      @list.children.each (item,i) =>
         distance = -item.base.getPosition(@base).y + @base.getSize().y/2
         if distance < lastDistance and distance > 0 and distance < @base.getSize().y/2
           @list.set 'selected', item
-      ).bind @
     else
       el.setStyle 'top', @disabledTop
   mouseWheel: (e) ->

@@ -3,12 +3,11 @@
 
 name: Core.Scrollbar
 
-description: Slider element for other elements.
+description: Scrollbar element.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
   - Core.Slider
   
 provides: Core.Scrollbar
@@ -43,7 +42,7 @@ Core.Scrollbar = new Class {
           @value
         else
           width = @size-@progressSize
-          Number.from(@progress.getStyle(@smodif))/width*@steps
+          Number.from(@progress.getStyle(@smodif)) / width * @steps
       setter: (value) ->
         value = Number.from value
         width = @size-@progressSize

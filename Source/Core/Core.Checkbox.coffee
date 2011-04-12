@@ -3,15 +3,14 @@
 
 name: Core.Checkbox
 
-description: Blender style checkboxes
+description: Checkbox element.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Enabled
-  - G.UI/Interfaces.Size
+  - Core.Abstract
+  - Interfaces.Enabled
+  - Interfaces.Size
 
 provides: Core.Checkbox
 
@@ -51,9 +50,6 @@ Core.Checkbox = new Class {
     @textNode = document.createTextNode ''
     @base.adopt @sign, @textNode
     @base.addEvent 'click', =>
-       if @enabled
-         if @state
-          @set 'state', no
-         else
-          @set 'state', yes
+      if @enabled
+        @set 'state', if @state then false else true
 }

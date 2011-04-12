@@ -3,17 +3,18 @@
 
 name: Data.Color
 
-description: Color data element. ( color picker )
+description: Color data element.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Data.Abstract
+  - Data.Abstract
   - Data.Number
-  - G.UI/Interfaces.Enabled
-  - G.UI/Interfaces.Children
-  - G.UI/Interfaces.Size
+  - Buttons.Toggle
+  - Groups.Toggles
+  - Interfaces.Children
+  - Interfaces.Enabled
+  - Interfaces.Size
 
 provides: Data.Color
 
@@ -23,8 +24,8 @@ Data.Color = new Class {
   Extends:Data.Abstract
   Binds: ['update']
   Implements: [
-    Interfaces.Enabled
     Interfaces.Children
+    Interfaces.Enabled
     Interfaces.Size
   ]
   Attributes: {
@@ -112,9 +113,8 @@ Data.Color = new Class {
     @alphaData = new Data.Number {range:[0,100],reset: off, steps: 100, label:'Alpha'}
     
     @col = new Groups.Toggles()
-    ['rgb','rgba','hsl','hsla','hex'].each ((item) ->
+    ['rgb','rgba','hsl','hsla','hex'].each (item) =>
       @col.addItem new Buttons.Toggle({label:item})
-    ).bind @
     
     @hueData.addEvent 'change',  @update
     @saturationData.addEvent 'change',  @update

@@ -8,7 +8,6 @@ description: Select Element
 license: MIT-style license.
 
 requires: 
-  - G.UI/Core.Abstract
   - Dialog.Abstract
   - Buttons.Abstract
 
@@ -20,7 +19,7 @@ Dialog.Alert = new Class {
   Extends: Dialog.Abstract
   Attributes: {
     class: {
-      value: 'dialog-alert'
+      value: Lattice.buildClass 'dialog-alert'
     }
     label: {
       value: ''
@@ -33,7 +32,7 @@ Dialog.Alert = new Class {
         @button.set 'label', value
     }
     labelClass: {
-      value: 'dialog-alert-label'
+      value: Lattice.buildClass 'dialog-alert-label'
       setter: (value, old) ->
         value = String.from value
         @labelDiv.removeClass old

@@ -1,11 +1,18 @@
 ---
 class: Data.Time
-description: 
+description: Time picker with Core.Slots.
 extends: Data.DateTime
 attributes:
   class: 
     show: false
     type: String 
     description: CSS Class of the element. 
+events:
+  - change:
+    description: Fires when the value changes.
+    arguments:
+      - time:
+        type: Date
+        description: The selected time.
 ...
 

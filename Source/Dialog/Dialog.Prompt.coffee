@@ -8,9 +8,9 @@ description: Select Element
 license: MIT-style license.
 
 requires: 
-  - G.UI/Core.Abstract
   - Dialog.Abstract
   - Buttons.Abstract
+  - Data.Text
 
 provides: Dialog.Prompt
 
@@ -20,7 +20,7 @@ Dialog.Prompt = new Class {
   Extends: Dialog.Abstract
   Attributes: {
     class: {
-      value: 'dialog-prompt'
+      value: Lattice.buildClass 'dialog-prompt'
     }
     label: {
       value: ''
@@ -33,7 +33,7 @@ Dialog.Prompt = new Class {
         @button.set 'label', value
     }
     labelClass: {
-      value: 'dialog-prompt-label'
+      value: Lattice.buildClass 'dialog-prompt-label'
       setter: (value, old) ->
         value = String.from value
         @labelDiv.removeClass old

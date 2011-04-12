@@ -1,6 +1,6 @@
 ---
 class: Data.DateTime
-description: 
+description: Date and Time picker with Core.Slots.
 extends: Data.Abstract
 implements:
   - Interfaces.Enabled
@@ -13,6 +13,10 @@ attributes:
     description: CSS Class of the element. 
 events:
   - change:
-    description:
+    description: Fires when the value changes.
+    arguments:
+      - date:
+        type: Date
+        description: The selected date and time.
 ...
 

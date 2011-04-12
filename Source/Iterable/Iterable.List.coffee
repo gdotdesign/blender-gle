@@ -7,12 +7,13 @@ description: List element.
 
 license: MIT-style license.
 
-requires: Core.Abstract
+requires:
+  - Core.Abstract
+  - Interfaces.Children
+  - Interfaces.Size
 
 provides: Iterable.List
 
-requires: 
-  - G.UI/GDotUI
 ...
 ###
 Iterable.List = new Class {
@@ -54,4 +55,9 @@ Iterable.List = new Class {
       @set 'selected', item 
     li.addEvent 'invoked', (item) =>
       @fireEvent 'invoked', arguments
+  removeItem: (li) ->
+    if @hasChild li
+      li.removeEvents 'select'
+      li.removeEvents 'invoked'
+      @removeChild li
 }

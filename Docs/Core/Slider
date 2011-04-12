@@ -1,6 +1,6 @@
 ---
 class: Core.Slider
-description: Slider element.
+description: Slider element, with a bar.
 extends: Core.Abstract
 implements: 
   - Interfaces.Controls
@@ -30,10 +30,6 @@ attributes:
     default: false
     type: Boolean
     description: Wether or not reset the sliders position to the center after dragging is finished.
-  bar: 
-    type: String 
-    show: false
-    description: CSS Class of the bar.
   class: 
     show: false
     type: String 
@@ -43,7 +39,7 @@ events:
     description: Fires when the value changes.
     arguments:
       - step:
-        description: Fires when the value changes
+        description: The current value
         type: Number
 ...
 

@@ -8,8 +8,7 @@ description: Tab element for Core.Tabs.
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
+  - Core.Abstract
 
 provides: Core.Tab
 

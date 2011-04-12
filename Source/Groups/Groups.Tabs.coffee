@@ -19,7 +19,7 @@ Groups.Tabs = new Class {
   Binds:['change']
   Attributes: {
     class: {
-      value:  'blender-group-tab'
+      value:  Lattice.buildClass 'group-tab'
     }
     active: {
       setter: (value, old) ->

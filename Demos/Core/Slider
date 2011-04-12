@@ -1,8 +1,0 @@
----JS
-window.addEvent('domready', function(){
-  slider = new Core.Scrollbar({mode:'vertical'});
-  $$(".demo").grab(slider);
-  slider.addEvent('step',function(step){
-    console.log(step)
-  });
-});

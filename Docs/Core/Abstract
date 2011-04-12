@@ -1,6 +1,6 @@
 ---
 class: Core.Abstract
-description: Abstract base class.
+description: Abstract base class for elements. This can be used by itself, but it should be extended.
 demo: false
 implements:
   - Events
@@ -10,7 +10,7 @@ functions:
     description: Runs after the interfaces are initialized. This function is for creating the child elements and for general setup of the class. This should be used it istead of initialize().
   ready:
     description: |
-      Runs after the base element insterted into the DOM. In this function the elements dimensions can be determined (i.e.: Element.getSize() won't return 0).
+      Runs after the base element insterted into the DOM. In this function the elements dimensions can be determined (i.e.: Element.getSize() won't return 0). It removes the domReady event from the element, this can be overriden by not calling parent().
   update:
     description: Runs each time one of the class attributes changes.
   toElement:

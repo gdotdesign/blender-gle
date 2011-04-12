@@ -1,18 +1,50 @@
 ---
 class: Data.ColorWheel
-description: 
+description: Same as Data.Color but with a hsl color wheel.
 extends: Data.Abstract
 implements: 
   - Interfaces.Enabled
   - Interfaces.Children
   - Interfaces.Size
 attributes:
+  hue: 
+    type: Number
+    description: Hue of the color.
+    default: 0 
+  saturation: 
+    type: Number
+    description: Saturation of the color.
+    default: 0
+  lightness: 
+    type: Number
+    description: Lightness of the color.
+    default: 0
+  alpha: 
+    type: Number
+    description: Alpha of the color.
+    default: 0
+  type: 
+    type: String
+    dtype: Select
+    description: Format of the resulting string. Can be hex, rgb, rgba, hsl, hsla.
+    default: hex
+    values: 
+      - hex
+      - rgba
+      - rgb
+      - hsla
+      - hsl
   class: 
     type: String 
     show: false
     description: CSS Class of the element. 
 events:
   - change:
-    description: Fires when the value (color) changes.
+    description: Fires when the value (color) changes. String representation can be obtained by calling color.format().
+    arguments: 
+      - color:
+        type: Color
+        description: The current color.
 ...
+
 

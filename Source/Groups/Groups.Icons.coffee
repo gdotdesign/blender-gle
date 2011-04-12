@@ -9,8 +9,8 @@ license: MIT-style license.
 
 requires: 
   - Groups.Abstract
-  - G.UI/Interfaces.Controls
-  - G.UI/Interfaces.Enabled
+  - Interfaces.Controls
+  - Interfaces.Enabled
   
 provides: Groups.Icons
 
@@ -81,7 +81,7 @@ Groups.Icons = new Class {
         else no
     }
     class: {
-      value: 'blender-icon-group'
+      value: Lattice.buildClass 'icon-group'
     }
   }
   create: ->

@@ -8,10 +8,9 @@ description: Overlay for modal dialogs and alike.
 license: MIT-style license.
 
 requires:
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Controls
-  - G.UI/Interfaces.Enabled
+  - Core.Abstract
+  - Interfaces.Controls
+  - Interfaces.Enabled
 
 provides: Core.Overlay
 
@@ -20,8 +19,8 @@ provides: Core.Overlay
 Core.Overlay = new Class {
   Extends: Core.Abstract
   Implements: [
-    Interfaces.Enabled
     Interfaces.Controls
+    Interfaces.Enabled
   ]
   Attributes: {
     class: {

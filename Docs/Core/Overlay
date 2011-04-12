@@ -1,6 +1,7 @@
 ---
 class: Core.Overlay
-description: Overlay for modal dialogs and alike.
+description: | 
+  Overlay for modal dialogs and alike. When this element iserted into an other element, it will fill it (i.e.: top,left,bottom and right css properties will be 0)
 extends: Core.Abstract
 demo: false
 implements:

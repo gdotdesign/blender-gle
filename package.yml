@@ -1,4 +1,4 @@
-name: "Blender GLE"
+name: "Lattice"
 
 exports: "blender-gle.coffee"
 
@@ -13,6 +13,17 @@ copyright: ""
 authors: ""
 
 sources:
+  - "Source/Extras/Element.Extras.coffee"
+  - "Source/Extras/Class.Extras.coffee"
+  - "Source/Lattice.coffee"
+  - "Source/Core/Core.Abstract.coffee"
+  - "Source/Data/Data.Abstract.coffee"
+  - "Source/Interfaces/Interfaces.Children.coffee" 
+  - "Source/Interfaces/Interfaces.Mux.coffee" 
+  - "Source/Interfaces/Interfaces.Enabled.coffee"
+  - "Source/Interfaces/Interfaces.Draggable.coffee"
+  - "Source/Interfaces/Interfaces.Size.coffee"
+  - "Source/Interfaces/Interfaces.Controls.coffee"
   - "Source/Core/Core.Checkbox.coffee"
   - "Source/Core/Core.Icon.coffee"
   - "Source/Core/Core.Tip.coffee"

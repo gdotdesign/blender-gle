@@ -3,13 +3,13 @@
 
 name: Core.Tip
 
-description: Tip class
+description: Tip.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
+  - Core.Abstract
+  - Interfaces.Enabled
 
 provides: Core.Tip
 

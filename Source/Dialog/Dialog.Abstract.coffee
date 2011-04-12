@@ -3,12 +3,12 @@
 
 name: Dialog.Abstract
 
-description: Select Element
+description: Dialog abstract base class.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/Core.Abstract
+  - Core.Abstract
   - Buttons.Abstract
 
 provides: Dialog.Abstract
@@ -19,11 +19,11 @@ Dialog.Abstract = new Class {
   Extends:Core.Abstract
   Implements: Interfaces.Size
   Delegates: {
-    picker: ['hide','attach']
+    picker: ['attach']
   }
   Attributes: {
     class: {
-      value: 'dialog-prompt'
+      value: ''
     }
     overlay: {
       value: false
@@ -39,8 +39,6 @@ Dialog.Abstract = new Class {
     @picker.show undefined, false
     if @overlay
       document.body.grab @overlayEl
-    #todo presistent
-    #@base.addEvent 'outerClick', @hide.bind @
   hide: (e,force)->
     if force?
       @overlayEl.base.dispose()

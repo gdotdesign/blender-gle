@@ -1,5 +1,7 @@
 .disabled {
   opacity: 0.4; }
+  .disabled *.disabled {
+    opacity: 1; }
 
 .basicSize {
   width: 200px;

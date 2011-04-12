@@ -1,6 +1,6 @@
 ---
 class: Data.Color
-description: 
+description: Color piceker element, with controls for Hue, Saturation, Value, Alpha and type.
 extends: Data.Abstract
 implements: 
   - Interfaces.Enabled
@@ -26,7 +26,7 @@ attributes:
   type: 
     type: String
     dtype: Select
-    description: Format of the resulting string.
+    description: Format of the resulting string. Can be hex, rgb, rgba, hsl, hsla.
     default: hex
     values: 
       - hex
@@ -40,6 +40,10 @@ attributes:
     description: CSS Class of the element. 
 events:
   - change:
-    description: Fires when the value (color) changes.
+    description: Fires when the value (color) changes. String representation can be obtained by calling color.format().
+    arguments: 
+      - color:
+        type: Color
+        description: The current color.
 ...
 

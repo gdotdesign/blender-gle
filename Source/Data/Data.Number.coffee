@@ -8,8 +8,7 @@ description: Number data element.
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Data.Abstract
+  - Data.Abstract
   - Core.Slider
 
 provides: Data.Number
@@ -29,13 +28,13 @@ Data.Number = new Class {
         value
     }
     range: {
-      value: GDotUI.Theme.Number.range
+      value: 0
     }
     reset: {
-      value: GDotUI.Theme.Number.reset
+      value: true
     }
     steps: {
-      value: GDotUI.Theme.Number.steps
+      value: 100
     }
     label: {
       value: null
@@ -52,9 +51,8 @@ Data.Number = new Class {
       top: 0
     }
     @base.grab @textLabel
-    @addEvent 'step',( (e) ->
+    @addEvent 'step', (e) =>
       @fireEvent 'change', e
-    ).bind @
   update: ->
     @textLabel.set 'text', if @label? then @label + " : " + @value else @value
 }

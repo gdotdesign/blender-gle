@@ -8,8 +8,8 @@ description:
 license: MIT-style license.
 
 requires: 
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Children
+  - Core.Abstract
+  - Interfaces.Children
   
 provides: Groups.Abstract
 ...

@@ -8,14 +8,13 @@ description: Select Element
 license: MIT-style license.
 
 requires:
-  - G.UI/GDotUI
   - Core.Picker
-  - G.UI/Data.Abstract
+  - Data.Abstract
   - Dialog.Prompt
-  - G.UI/Interfaces.Controls
-  - G.UI/Interfaces.Children
-  - G.UI/Interfaces.Enabled
-  - G.UI/Interfaces.Size
+  - Interfaces.Controls
+  - Interfaces.Children
+  - Interfaces.Enabled
+  - Interfaces.Size
   - Iterable.List
 
 provides: Data.Select
@@ -26,9 +25,10 @@ Data.Select = new Class {
   Extends: Data.Abstract
   Implements:[
     Interfaces.Controls
+    Interfaces.Children
     Interfaces.Enabled
     Interfaces.Size
-    Interfaces.Children]
+  ]
   Attributes: {
     class: {
       value: Lattice.buildClass 'select'
@@ -50,8 +50,8 @@ Data.Select = new Class {
         if value
           @adoptChildren  @removeIcon, @addIcon
         else
-          document.id(@removeIcon).dispose()
-          document.id(@addIcon).dispose()
+          @removeChild @removeIcon
+          @removeChild @addIcon
         value
     }
     value: {
@@ -89,9 +89,8 @@ Data.Select = new Class {
   ready: ->
     @set 'size', @size
   create: ->
-    @addEvent 'sizeChange', ( ->
+    @addEvent 'sizeChange', =>
       @list.base.setStyle 'width', if @size < @minSize then @minSize else @size
-    ).bind @
     
     @base.setStyle 'position', 'relative'
     @text = new Element 'div'
@@ -104,13 +103,13 @@ Data.Select = new Class {
       'z-index': 0
       overflow: 'hidden'
     }
-    @text.addEvent 'mousewheel', ((e)->
+    @text.addEvent 'mousewheel', (e) =>
       e.stop()
       index = @list.items.indexOf(@list.selected)+e.wheel
       if index < 0 then index = @list.items.length-1
       if index is @list.items.length then index = 0
       @list.set 'selected', @list.items[index]
-    ).bind @
+
     @addIcon = new Core.Icon()
     @addIcon.base.set 'text', '+'
     @removeIcon = new Core.Icon()
@@ -119,24 +118,21 @@ Data.Select = new Class {
       'z-index': '1'
       'position': 'relative'
     }
-    @removeIcon.addEvent 'invoked',( (el,e)->
+    @removeIcon.addEvent 'invoked', (el,e) =>
       e.stop()
       if @enabled
         @removeItem @list.get('selected')
         @text.set 'text', @default or ''
-    ).bind @
-    @addIcon.addEvent 'invoked',( (el,e)->
+    @addIcon.addEvent 'invoked', (el,e) =>
       e.stop()
       if @enabled
         @prompt.show()
-    ).bind @
     
     @picker = new Core.Picker({offset:0,position:{x:'center',y:'auto'}})
     @picker.attach @base, false
-    @base.addEvent 'click', ((e) ->
+    @base.addEvent 'click', (e) =>
       if @enabled
         @picker.show e
-    ).bind @
     @list = new Iterable.List({class:Lattice.buildClass 'select-list'})
     @picker.set 'content', @list
     @base.adopt @text
@@ -144,15 +140,14 @@ Data.Select = new Class {
     @prompt = new Dialog.Prompt();
     @prompt.set 'label', 'Add item:'
     @prompt.attach @base, false
-    @prompt.addEvent 'invoked', ((value) ->
+    @prompt.addEvent 'invoked', (value) =>
       if value
         item = new Iterable.ListItem {label:value,removeable:false,draggable:false}
         @addItem item
         @list.set 'selected', item
       @prompt.hide null, yes
-    ).bind @
     
-    @list.addEvent 'selectedChange', ( ->
+    @list.addEvent 'selectedChange', =>
       item = @list.selected
       if item?
         @text.set 'text', item.label
@@ -160,7 +155,7 @@ Data.Select = new Class {
       else
         @text.set 'text', ''
       @picker.hide null, yes
-    ).bind @
+
     @update()
     
   addItem: (item) ->

@@ -9,7 +9,7 @@ license: MIT-style license.
 
 requires: 
   - Groups.Abstract
-  - G.UI/Interfaces.Size
+  - Interfaces.Size
   
 provides: Groups.Lists
 

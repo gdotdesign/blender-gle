@@ -8,11 +8,10 @@ description:  Date & Time picker elements with Core.Slot-s
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
   - Core.Slot
-  - G.UI/Data.Abstract
-  - G.UI/Interfaces.Children
-  - G.UI/Interfaces.Enabled
+  - Data.Abstract
+  - Interfaces.Children
+  - Interfaces.Enabled
   - Iterable.ListItem
 
 provides: 
@@ -25,8 +24,8 @@ provides:
 Data.DateTime = new Class {
   Extends:Data.Abstract
   Implements: [
-    Interfaces.Enabled
     Interfaces.Children
+    Interfaces.Enabled
     Interfaces.Size
   ]
   Attributes: {
@@ -50,7 +49,7 @@ Data.DateTime = new Class {
     }
   }
   create: ->
-    @yearFrom = GDotUI.Theme.Date.yearFrom
+    @yearFrom = 1950
     if @get('date')
       @days = new Core.Slot()
       @month = new Core.Slot()
@@ -60,27 +59,22 @@ Data.DateTime = new Class {
       @minutes = new Core.Slot()
     @populate()
     if @get('time')
-      @hours.addEvent 'change', ( (item) ->
+      @hours.addEvent 'change', (item) =>
         @value.set 'hours', item.value
         @update()
-      ).bind @
-      @minutes.addEvent 'change', ( (item) ->
+      @minutes.addEvent 'change', (item) =>
         @value.set 'minutes', item.value
         @update()
-      ).bind @
     if @get('date')
-      @years.addEvent 'change', ( (item) ->
+      @years.addEvent 'change', (item) =>
         @value.set 'year', item.value
         @update()
-      ).bind @
-      @month.addEvent 'change', ( (item) ->
+      @month.addEvent 'change', (item) =>
         @value.set 'month', item.value
         @update()
-      ).bind @
-      @days.addEvent 'change', ( (item) ->
+      @days.addEvent 'change', (item) =>
         @value.set 'date', item.value
         @update()
-      ).bind @
     @
   populate: ->
     if @get('time')
@@ -127,7 +121,6 @@ Data.DateTime = new Class {
       @adoptChildren @years, @month, @days
     if @get('time')
       @adoptChildren @hours, @minutes
-    console.log @size
     @update()
   updateSlots: ->
     if @get('date')

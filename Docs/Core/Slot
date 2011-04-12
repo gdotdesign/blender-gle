@@ -1,6 +1,6 @@
 ---
 class: Core.Slot
-description: iOs style slot element.
+description: iOs style slot element. The selected item can be changed by mouseWheel or by dragging.
 extends: Core.Abstract
 demo:
   children:
@@ -22,8 +22,25 @@ attributes:
     type: String 
     show: false
     description: CSS Class of the element. 
+functions:
+  removeItem:
+    description: Removes an item from the list.
+    arguments:
+      - item: 
+        description: The item to be removed.
+        type: Iterable.ListItem
+  addItem:
+    description:
+    arguments:
+      - item: Adds an item to the list.
+        description: The item to be added.
+        type: Iterable.ListItem
 events:
   - change:
-    description:
+    description: Fires when the selected item changes.
+    arguments:
+      - item:
+        description: The selected item.
+        type: Iterable.ListItem
 ...
 

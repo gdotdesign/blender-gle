@@ -1,13 +1,13 @@
-.dialog-alert
+.#{$prefix}-dialog-alert
   :width $width
   :min-width $minWidth
-.dialog-confirm
+.#{$prefix}-dialog-confirm
   :width $width
   :min-width $minWidth
-.dialog-prompt
+.#{$prefix}-dialog-prompt
   :width $width
   :min-width $minWidth
-.dialog-alert
+.#{$prefix}-dialog-alert
   .#{$prefix}-button
     @extend .red-darker-gradient
     :color $colorLight
@@ -15,7 +15,7 @@
       @extend .red-gradient
     &:active
       @extend .red-darker-igradient
-.dialog-prompt-label, .dialog-alert-label
+.#{$prefix}-dialog-prompt-label, .#{$prefix}-dialog-alert-label
   :color $colorLight
   :margin
     :left 7px

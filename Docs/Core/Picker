@@ -2,7 +2,7 @@
 class: Core.Picker
 demo: false
 description: |
-  A picker element, with a content element.
+  A picker element, with a content element. This uses Element.position() to position the element around an other element (attached element).
 extends: Core.Abstract
 implements:
   - Interfaces.Children
@@ -13,9 +13,10 @@ attributes:
     description: |
       x and y coordinates for the offset (i.e. {x: 10, y:100} will move it down 100 and to the right 10). Negative values are allowed.
   position: 
-    description: The pickers position relative to the attach element.
+    description: |
+      The pickers position relative to the attach element.
+      An object with x and y values. Acceptable values for the x axis are "auto", "left", "right", and "center", and for y you can use "auto", "top", "bottom" and "center".
     type: Object
-    value: An object with x and y values. Acceptable values for the x axis are "auto", "left", "right", and "center", and for y you can use "auto", "top", "bottom" and "center".
   content: 
     type: Element
     description: Either a Class with toElement() method or an Element.
@@ -45,7 +46,7 @@ functions:
         description: Wether or not attach the hide event.
         type: Boolean
   hide:
-    description: Hides the picker.
+    description: Hides the picker, but only if the force argument is true or the events target isn't the element or any of its children.
     arguments:
       - event:
         description: An Event.

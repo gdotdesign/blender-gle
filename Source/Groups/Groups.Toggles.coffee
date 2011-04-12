@@ -9,8 +9,8 @@ license: MIT-style license.
 
 requires: 
   - Groups.Abstract
-  - G.UI/Interfaces.Enabled
-  - G.UI/Interfaces.Size
+  - Interfaces.Enabled
+  - Interfaces.Size
 
 provides: Groups.Toggles
 ...
@@ -20,12 +20,11 @@ Groups.Toggles = new Class {
   Binds: ['change']
   Implements:[
     Interfaces.Enabled
-    Interfaces.Children
     Interfaces.Size
   ]
   Attributes: {
     class: {
-      value: 'blender-push-group'
+      value: Lattice.buildClass 'toggle-group'
     }
     active: {
       setter: (value, old) ->
@@ -58,12 +57,12 @@ Groups.Toggles = new Class {
   removeItem: (item) ->
     if @hasChild item
       item.removeEvents 'invoked'
-      @removeChild item
+      @parent item
     @update()
   addItem: (item) ->
     if not @hasChild item
       item.set 'minSize', 0
       item.addEvent 'invoked', @change
-      @addChild item
+      @parent item
     @update()
 }

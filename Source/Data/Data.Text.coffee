@@ -8,9 +8,8 @@ description: Text data element.
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Data.Abstract
-  - G.UI/Interfaces.Size
+  - Data.Abstract
+  - Interfaces.Size
   
 provides: Data.Text
 
@@ -22,7 +21,7 @@ Data.Text = new Class {
   Binds: ['update']  
   Attributes: {
     class: {
-      value: 'blender-textarea'
+      value: Lattice.buildClass 'textarea'
     }
     value: {
       setter: (value) ->

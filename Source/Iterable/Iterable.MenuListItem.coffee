@@ -12,8 +12,7 @@ requires: Core.Abstract
 provides: Iterable.MenuListItem
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Interfaces.Draggable
+  - Iterable.ListItem
 ...
 ###
 Iterable.MenuListItem = new Class {
@@ -29,13 +28,13 @@ Iterable.MenuListItem = new Class {
         value
     }
     class: {
-      value: 'blender-menu-list-item'
+      value: Lattice.buildClass 'menu-list-item'
     }
   }
   create: ->
     @parent()
-    @iconEl = new Core.Icon({class:'blender-menu-list-item-icon'})
-    @sc = new Element 'div.shortcut'
+    @iconEl = new Core.Icon({class:@get('class')+'-icon'})
+    @sc = new Element 'div'
     @sc.setStyle 'float', 'right'
     @title.setStyle 'float', 'left'
     @iconEl.base.setStyle 'float', 'left'

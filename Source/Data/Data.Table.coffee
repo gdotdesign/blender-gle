@@ -6,8 +6,7 @@ name: Data.Table
 description: Text data element.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Data.Abstract
+  - Data.Abstract
 
 provides: Data.Table
 
@@ -28,7 +27,7 @@ Data.Table = new Class {
   Binds: ['update']
   options: {
     columns: 1
-    class: GDotUI.Theme.Table.class
+    class: 'table'
   }
   initialize: (options) ->
     @parent options

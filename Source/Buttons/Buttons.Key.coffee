@@ -47,14 +47,15 @@ Buttons.Key = new Class {
     stop = (e) ->
       e.stop()
     @base.addEvent 'click', (e) =>
-      @set 'label', 'Press any key!'
-      @base.addClass 'active'
-      window.addEvent 'keydown', stop
-      window.addEvent 'keyup:once', (e) =>
-        @base.removeClass 'active'
-        shortcut = @getShortcut(e).toUpperCase()
-        if shortcut isnt "ESC"
-          @set 'label', shortcut
-          @fireEvent 'invoked', [@,shortcut]
-        window.removeEvent 'keydown', stop
+      if @enabled
+        @set 'label', 'Press any key!'
+        @base.addClass 'active'
+        window.addEvent 'keydown', stop
+        window.addEvent 'keyup:once', (e) =>
+          @base.removeClass 'active'
+          shortcut = @getShortcut(e).toUpperCase()
+          if shortcut isnt "ESC"
+            @set 'label', shortcut
+            @fireEvent 'invoked', [@,shortcut]
+          window.removeEvent 'keydown', stop
 }

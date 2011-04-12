@@ -1,37 +1,44 @@
 ---
 class: Core.Tip
-description: Tips.
+description: Tip element with a single label.
+demo: false
 extends: Core.Abstract
 implements:
   - Interfaces.Enabled
 attributes:
   label: 
     type: String
-    description:
+    description: The label of the element.
   zindex: 
     type: Number
-    description:
+    description: The CSS z-index property of the element.
   delay: 
     type: Number
-    description:
+    description: The delay in milliseconds before the element is shown. Only applies when shown on mouseover.
   location: 
     type: Object
-    description:
+    description: The tips position relative to the attach element.
+      An object with x and y values. Acceptable values for the x axis are "auto", "left", "right", and "center", and for y you can use "auto", "top", "bottom" and "center".
   offset: 
     type: Number
-    description:
+    description: |
+      x and y coordinates for the offset (i.e. {x: 10, y:100} will move it down 100 and to the right 10). Negative values are allowed.
   class:
     show: false
     type: String 
     description: CSS Class of the element. 
 functions:
   show:
-    description:
+    description: Shows the element.
   hide:
-    description:
+    description: Hides the element.
   attach:
-    description:
+    description: Attaches the tip to an element.
+    arguments:
+      - element:
+        description: The Element to attach to.
+        type: Element
   detach:
-    description:
+    description: Detaches the tip from the attached element.
 ...
 

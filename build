@@ -1,3 +1,3 @@
 #!/bin/bash
-packager build G.UI/* "Blender GLE/*" > Builds/blender-gle-$(date +%Y-%m-%d).coffee
-coffee --print --bare Builds/blender-gle-$(date +%Y-%m-%d).coffee > Builds/blender-gle-latest.js
+packager build Lattice/* > Build/blender-gle-latest.coffee
+coffee --print --bare Build/blender-gle-latest.coffee > Build/blender-gle-latest.js

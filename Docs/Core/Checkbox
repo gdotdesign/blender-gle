@@ -1,6 +1,6 @@
 ---
 class: Core.Checkbox
-description: Blender style checkbox.
+description: Checkbox element.
 extends: Core.Abstract
 implements:
   - Interfaces.Enabled

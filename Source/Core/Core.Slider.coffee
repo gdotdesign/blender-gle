@@ -3,15 +3,14 @@
 
 name: Core.Slider
 
-description: Slider element for other elements.
+description: Slider element.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Controls
-  - G.UI/Interfaces.Enabled
+  - Core.Abstract
+  - Interfaces.Controls
+  - Interfaces.Enabled
 
 provides: Core.Slider
 
@@ -26,11 +25,9 @@ Core.Slider = new Class {
   Attributes: {
     class: {
       value: Lattice.buildClass 'slider'
-    }
-    bar: {
-      value: 'progress'
-      setter: (value, old) ->
-        @progress.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
+      setter: (value, old, self) ->
+        self::parent.call @, value, old
+        @progress.replaceClass "#{value}-progress", "#{old}-progress"
         value
     }
     reset: {
@@ -51,13 +48,12 @@ Core.Slider = new Class {
         @base.setStyle 'position', 'relative'
         switch value
           when 'horizontal'
-            console.log ".#{@class}.horizontal"
-            @minSize = Number.from GDotUI.selectors[".#{@class}.horizontal"]['min-width']
+            @minSize = Number.from Lattice.getCSS ".#{@class}.horizontal", 'min-width'
             @modifier = 'width'
             @drag.options.modifiers = {x: 'width',y:''}
             @drag.options.invert = false
             if not @size?
-              size = Number.from GDotUI.selectors[".#{@class}.horizontal"]['width']
+              size = Number.from Lattice.getCSS ".#{@class}.horizontal", 'width'
             @set 'size', size
             @progress.set 'style', ''
             @progress.setStyles {
@@ -67,12 +63,12 @@ Core.Slider = new Class {
               left: 0
             } 
           when 'vertical'
-            @minSize = Number.from GDotUI.selectors[".#{@class}.vertical"]['min-height']
+            @minSize = Number.from Lattice.getCSS ".#{@class}.vertical", 'min-height'
             @modifier = 'height'
             @drag.options.modifiers = {x: '',y: 'height'}
             @drag.options.invert = true
             if not @size?
-              size = Number.from GDotUI.selectors[".#{@class}.vertical"]['height']
+              size = Number.from Lattice.getCSS ".#{@class}.vertical", 'height'
             @set 'size', size
             @progress.set 'style', ''
             @progress.setStyles {

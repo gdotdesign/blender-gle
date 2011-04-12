@@ -1,6 +1,6 @@
 ---
 class: Core.Icon
-description: Generic icon element.
+description: Icon element.
 extends: Core.Abstract
 implements:
   - Interfaces.Enabled
@@ -19,7 +19,7 @@ events:
     arguments:
       - element:
         description: The element.
-        type: Buttons.Abstract
+        type: Core.Icon
       - event:
         description: The event.
         type: Event

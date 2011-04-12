@@ -16,7 +16,7 @@
   &:active
     @extend .darker-igradient
   
-.#{$prefix}-button-push
+.#{$prefix}-button-toggle
   :background-color $darker
   :color $colorLight
   @extend .darker-gradient
@@ -28,22 +28,23 @@
     :background-color $blue
     @extend .blue-igradient
 
-.#{$prefix}-button-toggle
+.#{$prefix}-toggler
+  @extend .basic
   :width $width
   :min-width $minWidth
   :height $height
   :line-height $height
   @extend .darker-gradient
-  .#{$prefix}-button-toggle-on
+  .#{$prefix}-toggler-on
     +round($borderRadius,0,$borderRadius,0)
-  .#{$prefix}-button-toggle-off
+  .#{$prefix}-toggler-off
     +round(0,$borderRadius,0,$borderRadius)
-  .#{$prefix}-button-toggle-on, .#{$prefix}-button-toggle-off, .#{$prefix}-button-toggle-sep
+  .#{$prefix}-toggler-on, .#{$prefix}-toggler-off, .#{$prefix}-toggler-sep
     :font-size 12px
     :text-align center
     :width $width/2
     :color $colorLight
-  .#{$prefix}-button-toggle-separator
+  .#{$prefix}-toggler-separator
     +round_full($borderRadius)
     :background-color $light
     @extend .light-gradient

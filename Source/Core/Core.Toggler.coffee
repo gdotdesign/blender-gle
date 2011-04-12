@@ -3,16 +3,15 @@
 
 name: Core.Toggler
 
-description: iOs style checkboxes
+description: iOs style checkbox element.
 
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Controls
-  - G.UI/Interfaces.Enabled
-  - G.UI/Interfaces.Size
+  - Core.Abstract
+  - Interfaces.Controls
+  - Interfaces.Enabled
+  - Interfaces.Size
 
 provides: Core.Toggler
 
@@ -27,7 +26,13 @@ Core.Toggler = new Class {
   ]
   Attributes: {
     class: {
-      value: Lattice.buildClass 'button-toggle'
+      value: Lattice.buildClass 'toggler'
+      setter: (value, old, self) ->
+        self::parent.call @, value, old
+        @onDiv.replaceClass "#{value}-on", "#{old}-on"
+        @offDiv.replaceClass "#{value}-off", "#{old}-off"
+        @separator.replaceClass "#{value}-separator", "#{old}-separator"
+        value
     }
     onLabel: {
       value: 'ON'
@@ -39,28 +44,10 @@ Core.Toggler = new Class {
       setter: (value) ->
         @offDiv.set 'text', value
     }
-    onClass: {
-      value: 'on'
-      setter: (value, old) ->
-        @onDiv.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
-        value
-    }
-    offClass: {
-      value: 'off'
-      setter: (value, old) ->
-        @offDiv.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
-        value
-    }
-    separatorClass: {
-      value: 'separator'
-      setter: (value, old) ->
-        @separator.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
-        value
-    }
     checked: {
       value: on
       setter: (value) ->
-        @fireEvent 'change', value
+        @fireEvent 'invoked', [@,value]
         value
     }
   }

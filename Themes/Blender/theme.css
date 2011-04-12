@@ -1,5 +1,7 @@
 .disabled {
   opacity: 0.4; }
+  .disabled *.disabled {
+    opacity: 1; }
 
 .basicSize, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle {
   width: 200px;
@@ -7,7 +9,7 @@
   height: 20px;
   line-height: 20px; }
 
-.basic, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle, .blender-slider, .blender-number, .blender-list-group, .blender-time, .blender-date, .blender-date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-push-group, .blender-unit, .blender-select {
+.basic, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle, .blender-toggler, .blender-slider, .blender-number, .blender-list-group, .blender-time, .blender-date, .blender-date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-toggle-group, .blender-unit, .blender-select {
   border: 1px solid #151b21;
   font-size: 12px;
   margin: 5px;
@@ -23,7 +25,7 @@
   -webkit-user-select: none;
   -webkit-background-clip: padding-box; }
 
-.nobasic, .blender-list-group .blender-list, .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot, .blender-slot .blender-list, .blender-picker > *:first-child, .blender-push-group .blender-button-push, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-select-add, .blender-select .blender-select-remove {
+.nobasic, .blender-list-group .blender-list, .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot, .blender-slot .blender-list, .blender-picker > *:first-child, .blender-toggle-group .blender-button-toggle, .blender-toggle-group .blender-button-push, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   margin: 0;
   border: none;
   -moz-border-radius: 0;
@@ -56,23 +58,23 @@
   background-image: -moz-linear-gradient(100% 100% 90deg, #4b78be, #6188c6);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#6188c6), to(#4b78be)); }
 
-.blue-igradient, .blender-button-push.pushed {
+.blue-igradient, .blender-button-toggle.pushed {
   background-image: -moz-linear-gradient(100% 100% 90deg, #6188c6, #4b78be);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4b78be), to(#6188c6)); }
 
-.red-gradient, .dialog-alert .blender-button:hover {
+.red-gradient, .blender-dialog-alert .blender-button:hover {
   background-image: -moz-linear-gradient(100% 100% 90deg, #bd4615, #d95017);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d95017), to(#bd4615)); }
 
-.red-darker-gradient, .dialog-alert .blender-button {
+.red-darker-gradient, .blender-dialog-alert .blender-button {
   background-image: -moz-linear-gradient(100% 100% 90deg, #943710, #af4113);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#af4113), to(#943710)); }
 
-.red-darker-igradient, .dialog-alert .blender-button:active {
+.red-darker-igradient, .blender-dialog-alert .blender-button:active {
   background-image: -moz-linear-gradient(100% 100% 90deg, #af4113, #943710);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#943710), to(#af4113)); }
 
-.light-gradient, .blender-button, .blender-button-toggle .blender-button-toggle-separator, .blender-slider.horizontal .blender-slider-progress, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
+.light-gradient, .blender-button, .blender-toggler .blender-toggler-separator, .blender-slider.horizontal .blender-slider-progress, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   background-image: -moz-linear-gradient(100% 100% 90deg, #778ca5, #95a6b9);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#95a6b9), to(#778ca5)); }
 
@@ -96,11 +98,11 @@
   background-image: -moz-linear-gradient(100% 100% 90deg, #627a95, #566b83);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#566b83), to(#627a95)); }
 
-.darker-gradient, .blender-button-push, .blender-button-toggle, .blender-icon:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active, .blender-select {
+.darker-gradient, .blender-button-toggle, .blender-toggler, .blender-icon:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active, .blender-select {
   background-image: -moz-linear-gradient(100% 100% 90deg, #2e3945, #3e4d5e);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3e4d5e), to(#2e3945)); }
 
-.dark-gradient, .blender-button-push:hover:not(.pushed), .blender-select:hover {
+.dark-gradient, .blender-button-toggle:hover:not(.pushed), .blender-select:hover {
   background-image: -moz-linear-gradient(100% 100% 90deg, #384555, #485a6d);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#485a6d), to(#384555)); }
 
@@ -118,36 +120,36 @@
   text-align: center;
   cursor: pointer; }
 
-.blender-button-push {
+.blender-button-toggle {
   background-color: #2e3945;
   color: #fdfdfd; }
-  .blender-button-push:hover:not(.pushed) {
+  .blender-button-toggle:hover:not(.pushed) {
     background-color: #3e4d5e; }
-  .blender-button-push.pushed {
+  .blender-button-toggle.pushed {
     color: #212121;
     background-color: #5680c2; }
 
-.blender-button-toggle {
+.blender-toggler {
   width: 200px;
   min-width: 85px;
   height: 20px;
   line-height: 20px; }
-  .blender-button-toggle .blender-button-toggle-on {
+  .blender-toggler .blender-toggler-on {
     -moz-border-radius: 3px 0 0 3px;
     -webkit-border-radius: 3px 0 0 3px;
     -khtml-border-radius: 3px 0 0 3px;
     border-radius: 3px 0 0 3px; }
-  .blender-button-toggle .blender-button-toggle-off {
+  .blender-toggler .blender-toggler-off {
     -moz-border-radius: 0 3px 3px 0;
     -webkit-border-radius: 0 3px 3px 0;
     -khtml-border-radius: 0 3px 3px 0;
     border-radius: 0 3px 3px 0; }
-  .blender-button-toggle .blender-button-toggle-on, .blender-button-toggle .blender-button-toggle-off, .blender-button-toggle .blender-button-toggle-sep {
+  .blender-toggler .blender-toggler-on, .blender-toggler .blender-toggler-off, .blender-toggler .blender-toggler-sep {
     font-size: 12px;
     text-align: center;
     width: 100px;
     color: #fdfdfd; }
-  .blender-button-toggle .blender-button-toggle-separator {
+  .blender-toggler .blender-toggler-separator {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     -khtml-border-radius: 3px;
@@ -237,7 +239,7 @@
 .blender-color {
   width: 200px;
   min-width: 85px; }
-  .blender-color .blender-number, .blender-color .blender-push-group {
+  .blender-color .blender-number, .blender-color .blender-toggle-group {
     margin: 5px 0; }
   .blender-color .blender-color-wrapper {
     position: relative;
@@ -255,22 +257,22 @@
     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4); }
 
-.dialog-alert {
+.blender-dialog-alert {
   width: 200px;
   min-width: 85px; }
 
-.dialog-confirm {
+.blender-dialog-confirm {
   width: 200px;
   min-width: 85px; }
 
-.dialog-prompt {
+.blender-dialog-prompt {
   width: 200px;
   min-width: 85px; }
 
-.dialog-alert .blender-button {
+.blender-dialog-alert .blender-button {
   color: #fdfdfd; }
 
-.dialog-prompt-label, .dialog-alert-label {
+.blender-dialog-prompt-label, .blender-dialog-alert-label {
   color: #fdfdfd;
   margin-left: 7px;
   margin-bottom: 2px;
@@ -368,7 +370,7 @@
   font-size: 12px;
   line-height: 20px;
   cursor: pointer; }
-  .blender-list-item .title, .blender-menu-list-item .title {
+  .blender-list-item .blender-list-item-title, .blender-list-item .blender-menu-list-item-title, .blender-menu-list-item .blender-list-item-title, .blender-menu-list-item .blender-menu-list-item-title {
     margin-left: 5px; }
   .blender-list-item:hover, .blender-menu-list-item:hover {
     background-color: #5680c2;
@@ -408,48 +410,48 @@
 .blender-overlay {
   background-color: rgba(0, 0, 0, 0.3); }
 
-.blender-push-group {
+.blender-toggle-group {
   width: 200px;
   min-width: 85px;
   height: 20px;
   line-height: 20px; }
-  .blender-push-group .blender-button-push:first-child {
+  .blender-toggle-group .blender-button-toggle:first-child {
     -moz-border-radius: 3px 0 0 3px;
     -webkit-border-radius: 3px 0 0 3px;
     -khtml-border-radius: 3px 0 0 3px;
     border-radius: 3px 0 0 3px; }
-  .blender-push-group .blender-button-push:last-child {
+  .blender-toggle-group .blender-button-toggle:last-child {
     -moz-border-radius: 0 3px 3px 0;
     -webkit-border-radius: 0 3px 3px 0;
     -khtml-border-radius: 0 3px 3px 0;
     border-radius: 0 3px 3px 0; }
-  .blender-push-group .blender-button-push:last-child {
+  .blender-toggle-group .blender-button-toggle:last-child {
     border-right: none; }
-  .blender-push-group .blender-button-push {
+  .blender-toggle-group .blender-button-toggle {
     float: left;
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     -khtml-border-radius: 0;
     border-radius: 0; }
 
-.blender-push-group {
+.blender-toggle-group {
   width: 200px;
   min-width: 85px;
   height: 20px;
   line-height: 20px; }
-  .blender-push-group .blender-button-push:first-child {
+  .blender-toggle-group .blender-button-push:first-child {
     -moz-border-radius: 3px 0 0 3px;
     -webkit-border-radius: 3px 0 0 3px;
     -khtml-border-radius: 3px 0 0 3px;
     border-radius: 3px 0 0 3px; }
-  .blender-push-group .blender-button-push:last-child {
+  .blender-toggle-group .blender-button-push:last-child {
     -moz-border-radius: 0 3px 3px 0;
     -webkit-border-radius: 0 3px 3px 0;
     -khtml-border-radius: 0 3px 3px 0;
     border-radius: 0 3px 3px 0; }
-  .blender-push-group .blender-button-push:last-child {
+  .blender-toggle-group .blender-button-push:last-child {
     border-right: none; }
-  .blender-push-group .blender-button-push {
+  .blender-toggle-group .blender-button-push {
     float: left;
     -moz-border-radius: 0;
     -webkit-border-radius: 0;

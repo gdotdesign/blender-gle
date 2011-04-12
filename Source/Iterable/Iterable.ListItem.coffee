@@ -12,8 +12,7 @@ requires: Core.Abstract
 provides: Iterable.ListItem
 
 requires: 
-  - G.UI/GDotUI
-  - G.UI/Interfaces.Draggable
+  - Core.Abstract
 ...
 ###
 Iterable.ListItem = new Class {
@@ -26,11 +25,11 @@ Iterable.ListItem = new Class {
         value
     }
     class: {
-      value: 'blender-list-item'
+      value: Lattice.buildClass 'list-item'
     }
   }
   create: ->
-    @title = new Element 'div.title'
+    @title = new Element('div').addClass(@get('class')+'-title')
     @base.grab @title
     @base.addEvent 'click', (e) =>
       @fireEvent 'select', [@,e]

@@ -8,7 +8,6 @@ description: Pickers for Data classes.
 license: MIT-style license.
 
 requires: 
-  - G.UI/GDotUI
   - Core.Picker
   - Data.Color
   - Data.Number
