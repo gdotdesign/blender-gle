@@ -2,6 +2,7 @@
 class: Dialog.Abstract
 description: 
 extends: Core.Abstract
+demo: false
 implements:
   - Interfaces.Size
 attributes:

@@ -1,4 +1,4 @@
-.blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle
+.#{$prefix}-button-key, .#{$prefix}-button, .#{$prefix}-button-push, .#{$prefix}-button-toggle
   @extend .basic
   @extend .basicSize
   :overflow hidden
@@ -6,17 +6,17 @@
   :text-align center
   :cursor pointer
 
-.blender-button-key, .blender-button
+.#{$prefix}-button-key, .#{$prefix}-button
   @extend .light-on-dark
 
-.blender-button
+.#{$prefix}-button
   @extend .light-gradient
   &:hover
     @extend .lighter-gradient
   &:active
     @extend .darker-igradient
   
-.blender-button-push
+.#{$prefix}-button-push
   :background-color $darker
   :color $colorLight
   @extend .darker-gradient
@@ -28,27 +28,27 @@
     :background-color $blue
     @extend .blue-igradient
 
-.blender-button-toggle
+.#{$prefix}-button-toggle
   :width $width
   :min-width $minWidth
   :height $height
   :line-height $height
   @extend .darker-gradient
-  .blender-button-toggle-on
+  .#{$prefix}-button-toggle-on
     +round($borderRadius,0,$borderRadius,0)
-  .blender-button-toggle-off
+  .#{$prefix}-button-toggle-off
     +round(0,$borderRadius,0,$borderRadius)
-  .blender-button-toggle-on, .blender-button-toggle-off, .blender-button-toggle-sep
+  .#{$prefix}-button-toggle-on, .#{$prefix}-button-toggle-off, .#{$prefix}-button-toggle-sep
     :font-size 12px
     :text-align center
     :width $width/2
     :color $colorLight
-  .blender-button-toggle-separator
+  .#{$prefix}-button-toggle-separator
     +round_full($borderRadius)
     :background-color $light
     @extend .light-gradient
 
-.blender-button-key
+.#{$prefix}-button-key
   @extend .light-igradient
   &:hover
     @extend .lighter-igradient

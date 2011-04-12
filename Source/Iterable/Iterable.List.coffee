@@ -3,7 +3,7 @@
 
 name: Iterable.List
 
-description: List element, with editing and sorting.
+description: List element.
 
 license: MIT-style license.
 
@@ -16,17 +16,17 @@ requires:
 ...
 ###
 Iterable.List = new Class {
-  Extends:Core.Abstract
+  Extends: Core.Abstract
   Implements: [
     Interfaces.Children
     Interfaces.Size
   ]
   Attributes: {
     class: {
-      value: 'blender-list'
+      value: Lattice.buildClass 'list'
     }
     selectedClass: {
-      value: 'blender-list-selected'
+      value: Lattice.buildClass 'list-selected'
     }
     selected: {
       getter: ->

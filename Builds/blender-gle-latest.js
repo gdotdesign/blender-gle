@@ -10,7 +10,7 @@ license: MIT-style license.
 provides: Element.Extras
 
 ...
-*/var Blender, Buttons, Core, Data, Dialog, Forms, GDotUI, Interfaces, Iterable, Lattice, Layout, Pickers, UnitList, checkForKey, mergeOneNew;
+*/var Blender, Buttons, Core, Data, Dialog, Forms, GDotUI, Groups, Interfaces, Iterable, Lattice, Layout, Pickers, UnitList, checkForKey, mergeOneNew;
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 Element.Properties.checked = {
   get: function() {
@@ -1262,268 +1262,6 @@ Core.Icon = new Class({
 /*
 ---
 
-name: Core.IconGroup
-
-description: Icon group with 5 types of layout.
-
-license: MIT-style license.
-
-requires:
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Controls
-  - G.UI/Interfaces.Children
-  - G.UI/Interfaces.Enabled
-
-provides: Core.IconGroup
-
-todo: Circular center position and size
-...
-*/
-Core.IconGroup = new Class({
-  Extends: Core.Abstract,
-  Implements: [Interfaces.Children, Interfaces.Controls, Interfaces.Enabled],
-  Binds: ['delegate'],
-  Attributes: {
-    mode: {
-      value: "horizontal",
-      validator: function(value) {
-        if (['horizontal', 'vertical', 'circular', 'grid', 'linear'].indexOf(value) > -1) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
-    spacing: {
-      value: {
-        x: 0,
-        y: 0
-      },
-      validator: function(value) {
-        if (typeOf(value) === 'object') {
-          if ((value.x != null) && (value.y != null)) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      }
-    },
-    startAngle: {
-      value: 0,
-      setter: function(value) {
-        return Number.from(value);
-      },
-      validator: function(value) {
-        var a;
-        if ((a = Number.from(value)) != null) {
-          return a >= 0 && a <= 360;
-        } else {
-          return false;
-        }
-      }
-    },
-    radius: {
-      value: 0,
-      setter: function(value) {
-        return Number.from(value);
-      },
-      validator: function(value) {
-        var a;
-        return (a = Number.from(value)) != null;
-      }
-    },
-    degree: {
-      value: 360,
-      setter: function(value) {
-        return Number.from(value);
-      },
-      validator: function(value) {
-        var a;
-        if ((a = Number.from(value)) != null) {
-          return a >= 0 && a <= 360;
-        } else {
-          return false;
-        }
-      }
-    },
-    rows: {
-      value: 1,
-      setter: function(value) {
-        return Number.from(value);
-      },
-      validator: function(value) {
-        var a;
-        if ((a = Number.from(value)) != null) {
-          return a > 0;
-        } else {
-          return false;
-        }
-      }
-    },
-    columns: {
-      value: 1,
-      setter: function(value) {
-        return Number.from(value);
-      },
-      validator: function(value) {
-        var a;
-        if ((a = Number.from(value)) != null) {
-          return a > 0;
-        } else {
-          return false;
-        }
-      }
-    },
-    "class": {
-      value: 'blender-icon-group'
-    }
-  },
-  create: function() {
-    return this.base.setStyle('position', 'relative');
-  },
-  delegate: function() {
-    return this.fireEvent('invoked', arguments);
-  },
-  addIcon: function(icon) {
-    if (!this.hasChild(icon)) {
-      icon.addEvent('invoked', this.delegate);
-      this.addChild(icon);
-      return this.update();
-    }
-  },
-  removeIcon: function(icon) {
-    if (this.hasChild(icon)) {
-      icon.removeEvent('invoked', this.delegate);
-      this.removeChild(icon);
-      return this.update();
-    }
-  },
-  ready: function() {
-    return this.update();
-  },
-  update: function() {
-    var columns, fok, icpos, ker, n, radius, rows, spacing, startAngle, x, y;
-    if (this.children.length > 0 && (this.mode != null)) {
-      x = 0;
-      y = 0;
-      this.size = {
-        x: 0,
-        y: 0
-      };
-      spacing = this.spacing;
-      switch (this.mode) {
-        case 'grid':
-          if ((this.rows != null) && (this.columns != null)) {
-            if (this.rows < this.columns) {
-              rows = null;
-              columns = this.columns;
-            } else {
-              columns = null;
-              rows = this.rows;
-            }
-          }
-          icpos = this.children.map(__bind(function(item, i) {
-            if (rows != null) {
-              if (i % rows === 0) {
-                y = 0;
-                x = i === 0 ? x : x + item.base.getSize().x + spacing.x;
-              } else {
-                y = i === 0 ? y : y + item.base.getSize().y + spacing.y;
-              }
-            }
-            if (columns != null) {
-              if (i % columns === 0) {
-                x = 0;
-                y = i === 0 ? y : y + item.base.getSize().y + spacing.y;
-              } else {
-                x = i === 0 ? x : x + item.base.getSize().x + spacing.x;
-              }
-            }
-            this.size.x = x + item.base.getSize().x;
-            this.size.y = y + item.base.getSize().y;
-            return {
-              x: x,
-              y: y
-            };
-          }, this));
-          break;
-        case 'linear':
-          icpos = this.children.map(__bind(function(item, i) {
-            x = i === 0 ? x + x : x + spacing.x + item.base.getSize().x;
-            y = i === 0 ? y + y : y + spacing.y + item.base.getSize().y;
-            this.size.x = x + item.base.getSize().x;
-            this.size.y = y + item.base.getSize().y;
-            return {
-              x: x,
-              y: y
-            };
-          }, this));
-          break;
-        case 'horizontal':
-          icpos = this.children.map(__bind(function(item, i) {
-            x = i === 0 ? x + x : x + item.base.getSize().x + spacing.x;
-            y = i === 0 ? y : y;
-            this.size.x = x + item.base.getSize().x;
-            this.size.y = item.base.getSize().y;
-            return {
-              x: x,
-              y: y
-            };
-          }, this));
-          break;
-        case 'vertical':
-          icpos = this.children.map(__bind(function(item, i) {
-            x = i === 0 ? x : x;
-            y = i === 0 ? y + y : y + item.base.getSize().y + spacing.y;
-            this.size.x = item.base.getSize().x;
-            this.size.y = y + item.base.getSize().y;
-            return {
-              x: x,
-              y: y
-            };
-          }, this));
-          break;
-        case 'circular':
-          n = this.children.length;
-          radius = this.radius;
-          startAngle = this.startAngle;
-          ker = 2 * this.radius * Math.PI;
-          fok = this.degree / n;
-          icpos = this.children.map(function(item, i) {
-            var foks;
-            if (i === 0) {
-              foks = startAngle * (Math.PI / 180);
-              x = Math.round(radius * Math.sin(foks)) + radius / 2 + item.base.getSize().x;
-              y = -Math.round(radius * Math.cos(foks)) + radius / 2 + item.base.getSize().y;
-            } else {
-              x = Math.round(radius * Math.sin(((fok * i) + startAngle) * (Math.PI / 180))) + radius / 2 + item.base.getSize().x;
-              y = -Math.round(radius * Math.cos(((fok * i) + startAngle) * (Math.PI / 180))) + radius / 2 + item.base.getSize().y;
-            }
-            return {
-              x: x,
-              y: y
-            };
-          });
-      }
-      this.base.setStyles({
-        width: this.size.x,
-        height: this.size.y
-      });
-      return this.children.each(function(item, i) {
-        item.base.setStyle('top', icpos[i].y);
-        item.base.setStyle('left', icpos[i].x);
-        return item.base.setStyle('position', 'absolute');
-      });
-    }
-  }
-});
-/*
----
-
 name: Core.Tip
 
 description: Tip class
@@ -2065,6 +1803,54 @@ Buttons.Key = new Class({
 /*
 ---
 
+name: Buttons.Toggle
+
+description: Toggle button 'push' element.
+
+license: MIT-style license.
+
+requires:
+  - Buttons.Abstract
+
+provides: Buttons.Toggle
+
+...
+*/
+Buttons.Toggle = new Class({
+  Extends: Buttons.Abstract,
+  Attributes: {
+    state: {
+      value: false,
+      setter: function(value, old) {
+        if (value) {
+          this.base.addClass('pushed');
+        } else {
+          this.base.removeClass('pushed');
+        }
+        return value;
+      },
+      getter: function() {
+        return this.base.hasClass('pushed');
+      }
+    },
+    "class": {
+      value: Lattice.buildClass('button-push')
+    }
+  },
+  create: function() {
+    this.addEvent('stateChange', function() {
+      return this.fireEvent('invoked', [this, this.state]);
+    });
+    return this.base.addEvent('click', __bind(function() {
+      if (this.enabled) {
+        return this.set('state', this.state ? false : true);
+      }
+    }, this));
+  }
+});
+/*
+---
+
 name: Core.Picker
 
 description: Data picker class.
@@ -2190,7 +1976,7 @@ Core.Picker = new Class({
 
 name: Iterable.List
 
-description: List element, with editing and sorting.
+description: List element.
 
 license: MIT-style license.
 
@@ -2207,10 +1993,10 @@ Iterable.List = new Class({
   Implements: [Interfaces.Children, Interfaces.Size],
   Attributes: {
     "class": {
-      value: 'blender-list'
+      value: Lattice.buildClass('list')
     },
     selectedClass: {
-      value: 'blender-list-selected'
+      value: Lattice.buildClass('list-selected')
     },
     selected: {
       getter: function() {
@@ -2590,24 +2376,48 @@ Core.Tab = new Class({
 /*
 ---
 
-name: Core.Tabs
+name: Groups.Abstract
+
+description:
+
+license: MIT-style license.
+
+requires:
+  - G.UI/Core.Abstract
+  - G.UI/Interfaces.Children
+
+provides: Groups.Abstract
+...
+*/
+Groups = {};
+Groups.Abstract = new Class({
+  Extends: Core.Abstract,
+  Implements: Interfaces.Children,
+  addItem: function(el, where) {
+    return this.addChild(el, where);
+  },
+  removeItem: function(el) {
+    return this.removeChild(el);
+  }
+});
+/*
+---
+
+name: Groups.Tabs
 
 description: Tab navigation element.
 
 license: MIT-style license.
 
 requires:
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - Core.Tab
+  - Groups.Abstract
 
-provides: Core.Tabs
+provides: Groups.Tabs
 
 ...
 */
-Core.Tabs = new Class({
-  Extends: Core.Abstract,
-  Implements: Interfaces.Children,
+Groups.Tabs = new Class({
+  Extends: Groups.Abstract,
   Binds: ['change'],
   Attributes: {
     "class": {
@@ -2657,72 +2467,282 @@ Core.Tabs = new Class({
 /*
 ---
 
-name: Buttons.Toggle
+name: Groups.Icons
 
-description: Toggle button 'push' element.
+description: Icon group with 5 types of layout.
 
 license: MIT-style license.
 
 requires:
-  - Buttons.Abstract
+  - Groups.Abstract
+  - G.UI/Interfaces.Controls
+  - G.UI/Interfaces.Enabled
 
-provides: Buttons.Toggle
+provides: Groups.Icons
 
+todo: Circular center position and size
 ...
 */
-Buttons.Toggle = new Class({
-  Extends: Buttons.Abstract,
+Groups.Icons = new Class({
+  Extends: Groups.Abstract,
+  Implements: [Interfaces.Controls, Interfaces.Enabled],
+  Binds: ['delegate'],
   Attributes: {
-    state: {
-      value: false,
-      setter: function(value, old) {
-        if (value) {
-          this.base.addClass('pushed');
+    mode: {
+      value: "horizontal",
+      validator: function(value) {
+        if (['horizontal', 'vertical', 'circular', 'grid', 'linear'].indexOf(value) > -1) {
+          return true;
         } else {
-          this.base.removeClass('pushed');
+          return false;
         }
-        return value;
+      }
+    },
+    spacing: {
+      value: {
+        x: 0,
+        y: 0
       },
-      getter: function() {
-        return this.base.hasClass('pushed');
+      validator: function(value) {
+        if (typeOf(value) === 'object') {
+          if ((value.x != null) && (value.y != null)) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+    },
+    startAngle: {
+      value: 0,
+      setter: function(value) {
+        return Number.from(value);
+      },
+      validator: function(value) {
+        var a;
+        if ((a = Number.from(value)) != null) {
+          return a >= 0 && a <= 360;
+        } else {
+          return false;
+        }
+      }
+    },
+    radius: {
+      value: 0,
+      setter: function(value) {
+        return Number.from(value);
+      },
+      validator: function(value) {
+        var a;
+        return (a = Number.from(value)) != null;
+      }
+    },
+    degree: {
+      value: 360,
+      setter: function(value) {
+        return Number.from(value);
+      },
+      validator: function(value) {
+        var a;
+        if ((a = Number.from(value)) != null) {
+          return a >= 0 && a <= 360;
+        } else {
+          return false;
+        }
+      }
+    },
+    rows: {
+      value: 1,
+      setter: function(value) {
+        return Number.from(value);
+      },
+      validator: function(value) {
+        var a;
+        if ((a = Number.from(value)) != null) {
+          return a > 0;
+        } else {
+          return false;
+        }
+      }
+    },
+    columns: {
+      value: 1,
+      setter: function(value) {
+        return Number.from(value);
+      },
+      validator: function(value) {
+        var a;
+        if ((a = Number.from(value)) != null) {
+          return a > 0;
+        } else {
+          return false;
+        }
       }
     },
     "class": {
-      value: Lattice.buildClass('button-push')
+      value: 'blender-icon-group'
     }
   },
   create: function() {
-    this.addEvent('stateChange', function() {
-      return this.fireEvent('invoked', [this, this.state]);
-    });
-    return this.base.addEvent('click', __bind(function() {
-      if (this.enabled) {
-        return this.set('state', this.state ? false : true);
+    return this.base.setStyle('position', 'relative');
+  },
+  delegate: function() {
+    return this.fireEvent('invoked', arguments);
+  },
+  addItem: function(icon) {
+    if (!this.hasChild(icon)) {
+      icon.addEvent('invoked', this.delegate);
+      this.parent(icon);
+      return this.update();
+    }
+  },
+  removeItem: function(icon) {
+    if (this.hasChild(icon)) {
+      icon.removeEvent('invoked', this.delegate);
+      this.removeChild(icon);
+      return this.update();
+    }
+  },
+  ready: function() {
+    return this.update();
+  },
+  update: function() {
+    var columns, fok, icpos, ker, n, radius, rows, spacing, startAngle, x, y;
+    if (this.children.length > 0 && (this.mode != null)) {
+      x = 0;
+      y = 0;
+      this.size = {
+        x: 0,
+        y: 0
+      };
+      spacing = this.spacing;
+      switch (this.mode) {
+        case 'grid':
+          if ((this.rows != null) && (this.columns != null)) {
+            if (this.rows < this.columns) {
+              rows = null;
+              columns = this.columns;
+            } else {
+              columns = null;
+              rows = this.rows;
+            }
+          }
+          icpos = this.children.map(__bind(function(item, i) {
+            if (rows != null) {
+              if (i % rows === 0) {
+                y = 0;
+                x = i === 0 ? x : x + item.base.getSize().x + spacing.x;
+              } else {
+                y = i === 0 ? y : y + item.base.getSize().y + spacing.y;
+              }
+            }
+            if (columns != null) {
+              if (i % columns === 0) {
+                x = 0;
+                y = i === 0 ? y : y + item.base.getSize().y + spacing.y;
+              } else {
+                x = i === 0 ? x : x + item.base.getSize().x + spacing.x;
+              }
+            }
+            this.size.x = x + item.base.getSize().x;
+            this.size.y = y + item.base.getSize().y;
+            return {
+              x: x,
+              y: y
+            };
+          }, this));
+          break;
+        case 'linear':
+          icpos = this.children.map(__bind(function(item, i) {
+            x = i === 0 ? x + x : x + spacing.x + item.base.getSize().x;
+            y = i === 0 ? y + y : y + spacing.y + item.base.getSize().y;
+            this.size.x = x + item.base.getSize().x;
+            this.size.y = y + item.base.getSize().y;
+            return {
+              x: x,
+              y: y
+            };
+          }, this));
+          break;
+        case 'horizontal':
+          icpos = this.children.map(__bind(function(item, i) {
+            x = i === 0 ? x + x : x + item.base.getSize().x + spacing.x;
+            y = i === 0 ? y : y;
+            this.size.x = x + item.base.getSize().x;
+            this.size.y = item.base.getSize().y;
+            return {
+              x: x,
+              y: y
+            };
+          }, this));
+          break;
+        case 'vertical':
+          icpos = this.children.map(__bind(function(item, i) {
+            x = i === 0 ? x : x;
+            y = i === 0 ? y + y : y + item.base.getSize().y + spacing.y;
+            this.size.x = item.base.getSize().x;
+            this.size.y = y + item.base.getSize().y;
+            return {
+              x: x,
+              y: y
+            };
+          }, this));
+          break;
+        case 'circular':
+          n = this.children.length;
+          radius = this.radius;
+          startAngle = this.startAngle;
+          ker = 2 * this.radius * Math.PI;
+          fok = this.degree / n;
+          icpos = this.children.map(function(item, i) {
+            var foks;
+            if (i === 0) {
+              foks = startAngle * (Math.PI / 180);
+              x = Math.round(radius * Math.sin(foks)) + radius / 2 + item.base.getSize().x;
+              y = -Math.round(radius * Math.cos(foks)) + radius / 2 + item.base.getSize().y;
+            } else {
+              x = Math.round(radius * Math.sin(((fok * i) + startAngle) * (Math.PI / 180))) + radius / 2 + item.base.getSize().x;
+              y = -Math.round(radius * Math.cos(((fok * i) + startAngle) * (Math.PI / 180))) + radius / 2 + item.base.getSize().y;
+            }
+            return {
+              x: x,
+              y: y
+            };
+          });
       }
-    }, this));
+      this.base.setStyles({
+        width: this.size.x,
+        height: this.size.y
+      });
+      return this.children.each(function(item, i) {
+        item.base.setStyle('top', icpos[i].y);
+        item.base.setStyle('left', icpos[i].x);
+        return item.base.setStyle('position', 'absolute');
+      });
+    }
   }
 });
 /*
 ---
 
-name: Core.PushGroup
+name: Groups.Toggles
 
 description: PushGroup element.
 
 license: MIT-style license.
 
 requires:
-  - G.UI/GDotUI
-  - G.UI/Core.Abstract
-  - G.UI/Interfaces.Children
+  - Groups.Abstract
   - G.UI/Interfaces.Enabled
   - G.UI/Interfaces.Size
 
-provides: Core.PushGroup
+provides: Groups.Toggles
 ...
 */
-Core.PushGroup = new Class({
-  Extends: Core.Abstract,
+Groups.Toggles = new Class({
+  Extends: Groups.Abstract,
   Binds: ['change'],
   Implements: [Interfaces.Enabled, Interfaces.Children, Interfaces.Size],
   Attributes: {
@@ -2782,6 +2802,51 @@ Core.PushGroup = new Class({
       this.addChild(item);
     }
     return this.update();
+  }
+});
+/*
+---
+
+name: Groups.Lists
+
+description:
+
+license: MIT-style license.
+
+requires:
+  - Groups.Abstract
+  - G.UI/Interfaces.Size
+
+provides: Groups.Lists
+
+...
+*/
+Groups.Lists = new Class({
+  Extends: Groups.Abstract,
+  Implements: [Interfaces.Size],
+  Attributes: {
+    "class": {
+      value: Lattice.buildClass('list-group')
+    }
+  },
+  create: function() {
+    this.parent();
+    return this.base.setStyle('position', 'relative');
+  },
+  update: function() {
+    var cSize, lastSize, length;
+    length = this.children.length;
+    if (length > 0) {
+      cSize = this.size / length;
+      lastSize = Math.floor(this.size - (cSize * (length - 1)));
+      this.children.each(function(child, i) {
+        child.base.setStyle('position', 'absolute');
+        child.base.setStyle('top', 0);
+        child.base.setStyle('left', cSize * i - 1);
+        return child.set('size', cSize);
+      });
+      return this.children.getLast().set('size', lastSize);
+    }
   }
 });
 /*
@@ -3000,7 +3065,7 @@ Data.Select = new Class({
       }
     },
     listClass: {
-      value: 'blender-list',
+      value: Lattice.buildClass('select-list'),
       setter: function(value) {
         return this.list.set('class', value);
       }
@@ -3070,7 +3135,9 @@ Data.Select = new Class({
         return this.picker.show(e);
       }
     }).bind(this));
-    this.list = new Iterable.List();
+    this.list = new Iterable.List({
+      "class": Lattice.buildClass('select-list')
+    });
     this.picker.set('content', this.list);
     this.base.adopt(this.text);
     this.prompt = new Dialog.Prompt();
@@ -3364,7 +3431,7 @@ Data.Color = new Class({
       steps: 100,
       label: 'Alpha'
     });
-    this.col = new Core.PushGroup();
+    this.col = new Groups.Toggles();
     ['rgb', 'rgba', 'hsl', 'hsla', 'hex'].each((function(item) {
       return this.col.addItem(new Buttons.Toggle({
         label: item

@@ -111,7 +111,7 @@ Data.Color = new Class {
     @lightnessData = new Data.Number {range:[0,100],reset: off, steps: 100, label:'Value'}
     @alphaData = new Data.Number {range:[0,100],reset: off, steps: 100, label:'Alpha'}
     
-    @col = new Core.PushGroup()
+    @col = new Groups.Toggles()
     ['rgb','rgba','hsl','hsla','hex'].each ((item) ->
       @col.addItem new Buttons.Toggle({label:item})
     ).bind @

@@ -81,7 +81,7 @@ Data.Select = new Class {
         value 
     }
     listClass: {
-      value: 'blender-list'
+      value: Lattice.buildClass 'select-list'
       setter: (value) ->
         @list.set 'class', value
     }
@@ -137,7 +137,7 @@ Data.Select = new Class {
       if @enabled
         @picker.show e
     ).bind @
-    @list = new Iterable.List()
+    @list = new Iterable.List({class:Lattice.buildClass 'select-list'})
     @picker.set 'content', @list
     @base.adopt @text
     

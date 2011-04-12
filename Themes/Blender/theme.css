@@ -7,7 +7,7 @@
   height: 20px;
   line-height: 20px; }
 
-.basic, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle, .blender-slider, .blender-number, .time, .date, .date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-push-group, .blender-unit, .blender-select {
+.basic, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle, .blender-slider, .blender-number, .blender-list-group, .blender-time, .blender-date, .blender-date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-push-group, .blender-unit, .blender-select {
   border: 1px solid #151b21;
   font-size: 12px;
   margin: 5px;
@@ -23,7 +23,7 @@
   -webkit-user-select: none;
   -webkit-background-clip: padding-box; }
 
-.nobasic, .time .blender-slot, .date .blender-slot, .date-time .blender-slot, .blender-slot .blender-list, .blender-picker > *:first-child, .blender-push-group .blender-button-push, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-select-add, .blender-select .blender-select-remove {
+.nobasic, .blender-list-group .blender-list, .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot, .blender-slot .blender-list, .blender-picker > *:first-child, .blender-push-group .blender-button-push, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   margin: 0;
   border: none;
   -moz-border-radius: 0;
@@ -52,7 +52,7 @@
     background-color: #3e4d5e;
     color: #fdfdfd; }
 
-.blue-gradient, .blender-slot .blender-list-selected, .blender-list-item:hover, .blender-menu-list-item:hover {
+.blue-gradient, .blender-list-selected, .blender-list-item:hover, .blender-menu-list-item:hover {
   background-image: -moz-linear-gradient(100% 100% 90deg, #4b78be, #6188c6);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#6188c6), to(#4b78be)); }
 
@@ -169,7 +169,10 @@
     height: 200px;
     min-height: 85px; }
   .blender-slider .blender-slider-progress {
-    background-color: #778ca5; }
+    background-color: #778ca5;
+    box-shadow: 0 0 14px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 14px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 14px rgba(0, 0, 0, 0.5); }
 
 .blender-number {
   background-color: #778ca5; }
@@ -231,15 +234,15 @@
     -webkit-background-clip: padding-box;
     background-color: rgba(0, 0, 0, 0.5); }
 
-.color {
+.blender-color {
   width: 200px;
   min-width: 85px; }
-  .color .blender-number, .color .blender-push-group {
+  .blender-color .blender-number, .blender-color .blender-push-group {
     margin: 5px 0; }
-  .color .wrapper {
+  .blender-color .blender-color-wrapper {
     position: relative;
     margin: 10px 0; }
-  .color .xyknob {
+  .blender-color .blender-color-xyknob {
     width: 10px;
     cursor: crosshair;
     height: 10px;
@@ -275,19 +278,34 @@
   font-size: 12px; }
 
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic);
-.date-time {
+.blender-list-group {
+  height: 20px;
+  width: 200px; }
+  .blender-list-group .blender-list:first-child {
+    border: none;
+    -moz-border-radius: 5px 0 0 5px;
+    -webkit-border-radius: 5px 0 0 5px;
+    -khtml-border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px; }
+  .blender-list-group .blender-list:last-child {
+    -moz-border-radius: 0 5px 5px 0;
+    -webkit-border-radius: 0 5px 5px 0;
+    -khtml-border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 5px 0; }
+
+.blender-date-time {
   width: 200px; }
 
-.time {
+.blender-time {
   width: 200px; }
 
-.date {
+.blender-date {
   width: 200px; }
 
-.time, .date, .date-time {
+.blender-time, .blender-date, .blender-date-time {
   height: 100px;
   cursor: pointer; }
-  .time .blender-slot, .date .blender-slot, .date-time .blender-slot {
+  .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     -khtml-border-radius: 3px;
@@ -298,15 +316,17 @@
   height: 100px;
   width: 200px; }
   .blender-slot .blender-list {
+    width: auto;
     -webkit-transition-duration: 0.3s; }
     .blender-slot .blender-list .blender-list-item {
       color: #212121;
       text-align: center; }
-  .blender-slot .blender-list-selected {
-    background-color: #5680c2;
-    border-top: 1px solid #151b21;
-    border-bottom: 1px solid #151b21;
-    color: #fdfdfd !important; }
+
+.blender-list-selected {
+  background-color: #5680c2;
+  border-top: 1px solid #151b21;
+  border-bottom: 1px solid #151b21;
+  color: #fdfdfd !important; }
 
 .blender-checkbox {
   width: 200px;
@@ -366,7 +386,7 @@
   background-position: center center; }
 
 .blender-list {
-  background-color: transparent; }
+  width: 200px; }
 
 .blender-textarea {
   background-color: #778ca5;

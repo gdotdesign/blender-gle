@@ -3,11 +3,6 @@
   .clear
 :javascript
   window.addEvent('domready', function(){
-    icon = new Core.Icon({image:'/home.png'});
-    icon1 = new Core.Icon({image:'/idea-inv.png'});
-    icon2 = new Core.Icon({image:'/layers-inv.png'}); 
-    icon3 = new Core.Icon({image:'/layers-inv.png'}); 
-    icon4 = new Core.Icon({image:'/layers-inv.png'});    
     
     pushButton = new Buttons.Toggle({label:'Push Button!'});
     button = new Buttons.Abstract({label:"Default Button!"});
@@ -29,11 +24,21 @@
       texta.set('size',e);
     });
     
-    group = new Core.PushGroup();
+    group = new Groups.Toggles();
     for(i=0;i<5;i++){
       group.addItem(new Buttons.Toggle({label:i}));  
     }
-    
+    group1 = new Groups.Icons({spacing:{x:8,y:0}});
+    for(i=0;i<7;i++){
+      group1.addItem(new Core.Icon({image:'/Themes/Chrome/images/add.png'}));  
+    }
+    group2 = new Iterable.List({spacing:{x:8,y:0}});
+    for(i=0;i<7;i++){
+      group2.addItem(new Iterable.ListItem({label:"List item "+i}));  
+    }
+    date = new Data.Date();
+    time = new Data.Time();
+    dateTime = new Data.DateTime();
     
     
     unit = new Data.Unit();
@@ -44,5 +49,5 @@
       select.addItem(new Iterable.ListItem({label:item,removeable:false,draggable:false}))
     });
     
-    $("box").adopt( button,pushButton, horizontalSlider,scroller, toggler, number, select, unit,group,checkbox,texta, icon );
+    $("box").adopt( button,pushButton, horizontalSlider,scroller, toggler, number, select, unit,group,checkbox,texta, group2,date,time,dateTime,group1 );
   });

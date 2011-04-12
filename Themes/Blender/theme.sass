@@ -6,41 +6,54 @@
 @import _dialogs.sass
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
 
-.date-time
+.#{$prefix}-list-group
+  :height $height
   :width $width
-.time
+  @extend .basic
+  .#{$prefix}-list
+    @extend .nobasic
+  .#{$prefix}-list:first-child
+    :border none
+    +round(5px,0,5px,0)
+  .#{$prefix}-list:last-child
+    +round(0,5px,0,5px)
+
+.#{$prefix}-date-time
   :width $width
-.date
+.#{$prefix}-time
+  :width $width
+.#{$prefix}-date
   :width $width
   
-.time, .date, .date-time
+.#{$prefix}-time, .#{$prefix}-date, .#{$prefix}-date-time
   @extend .basic
   :height 100px
   :cursor pointer
-  .blender-slot
+  .#{$prefix}-slot
     @extend .nobasic
     +round_full($borderRadius)
     :float left
 
-.blender-slot
+.#{$prefix}-slot
   @extend .basic
   :height 100px
   :width $width
-  .blender-list
-    .blender-list-item
+  .#{$prefix}-list
+    :width auto
+    .#{$prefix}-list-item
       :color $colorDark
       :text-align center
     @extend .nobasic
     :-webkit-transition-duration 0.3s
-  .blender-list-selected
-    @extend .blue-gradient
-    :background-color $blue
-    :border
-      :top 1px solid $border
-      :bottom 1px solid $border
-    :color $colorLight !important
+.#{$prefix}-list-selected
+  @extend .blue-gradient
+  :background-color $blue
+  :border
+    :top 1px solid $border
+    :bottom 1px solid $border
+  :color $colorLight !important
 
-.blender-checkbox
+.#{$prefix}-checkbox
   :width $width
   :min-width $minWidth
   :line-height $height
@@ -50,10 +63,10 @@
   :-webkit-user-select none
   &.checked
     :color $colorLight
-    .blender-checkbox-sign
+    .#{$prefix}-checkbox-sign
       &:before
         :content '\00A0\221A'
-  .blender-checkbox-sign
+  .#{$prefix}-checkbox-sign
     :width $height - 7px
     :height $height - 7px
     @extend .basic
@@ -69,7 +82,7 @@
       :left -2px
       :color $colorLight
       
-.blender-icon
+.#{$prefix}-icon
   @extend .basic
   @extend .light-on-dark
   @extend .light-gradient
@@ -83,7 +96,7 @@
   :background-position center center
   :cursor pointer
 
-.blender-list-item, .blender-menu-list-item
+.#{$prefix}-list-item, .#{$prefix}-menu-list-item
   :clear both
   :height 20px
   :color $colorLight
@@ -96,26 +109,26 @@
     :background-color $blue
     @extend .blue-gradient
     :color $colorDark
-.blender-menu-list-item  
+.#{$prefix}-menu-list-item  
   .title
     :margin-right 10px
   .shortcut
     :margin-right 5px
 
-.blender-menu-list-item-icon
+.#{$prefix}-menu-list-item-icon
   :width 18px
   :height 22px
   :background-repeat no-repeat
   :background-position center center
     
-.blender-list
+.#{$prefix}-list
   @extend .basic
-  :background-color transparent
+  :width $width
   
-.blender-picker > *:first-child
+.#{$prefix}-picker > *:first-child
   @extend .nobasic
 
-.blender-textarea
+.#{$prefix}-textarea
   @extend .basic
   @extend .light-igradient
   :background-color $light
@@ -134,73 +147,73 @@
   :width $width 
   :min-width $minWidth
 
-.blender-overlay
+.#{$prefix}-overlay
   :background-color rgba(0,0,0,0.3)
 
-.blender-push-group
+.#{$prefix}-push-group
   @extend .basic
   :width $width
   :min-width $minWidth
   :height $height
   :line-height $height
-  .blender-button-push:first-child
+  .#{$prefix}-button-push:first-child
     +round($borderRadius,0,$borderRadius,0)
-  .blender-button-push:last-child
+  .#{$prefix}-button-push:last-child
     +round(0,$borderRadius,0,$borderRadius)
-  .blender-button-push:last-child
+  .#{$prefix}-button-push:last-child
     :border-right none
-  .blender-button-push
+  .#{$prefix}-button-push
     @extend .nobasic
     :float left
     +round_full(0)
   
-.blender-push-group
+.#{$prefix}-push-group
   @extend .basic
   :width $width
   :min-width $minWidth
   :height $height
   :line-height $height
-  .blender-button-push:first-child
+  .#{$prefix}-button-push:first-child
     +round($borderRadius,0,$borderRadius,0)
-  .blender-button-push:last-child
+  .#{$prefix}-button-push:last-child
     +round(0,$borderRadius,0,$borderRadius)
-  .blender-button-push:last-child
+  .#{$prefix}-button-push:last-child
     :border-right none
-  .blender-button-push
+  .#{$prefix}-button-push
     @extend .nobasic
     :float left
     +round_full(0)
 
-.blender-picker
+.#{$prefix}-picker
   :z-index 99
   :padding 1px
   :background-color $darker
   +box_shadow(0,0,8px,rgba(0,0,0,0.6))
   :background-color rgba(0,0,0,0.8)
 
-.blender-unit
+.#{$prefix}-unit
   @extend .basic
   :width $width
   :min-width 170px
   :height $height
-  .blender-number, .blender-select
+  .#{$prefix}-number, .#{$prefix}-select
     :float left
     :height $height
-  .blender-number
+  .#{$prefix}-number
     @extend .nobasic
     +round($borderRadius,0,$borderRadius,0)
-    .blender-number-text
+    .#{$prefix}-number-text
       @extend .nobasic
     +box_shadow(0,0,0,transparent)
-    .blender-slider-progress
+    .#{$prefix}-slider-progress
       +round($borderRadius,0,$borderRadius,0)
-  .blender-select
+  .#{$prefix}-select
     @extend .nobasic
     +round(0,$borderRadius,0,$borderRadius)
-    .blender-select-text
+    .#{$prefix}-select-text
       +round(0,$borderRadius,0,$borderRadius)
 
-.blender-select
+.#{$prefix}-select
   @extend .basic
   @extend .dark-on-light
   @extend .darker-gradient
@@ -232,20 +245,20 @@
     border-left: 4px solid transparent
     border-right: 4px solid transparent
     border-top: 4px solid $colorLight
-  .blender-select-text
+  .#{$prefix}-select-text
     +round_full($borderRadius)
     :padding-left 15px
   :cursor pointer
   :line-height 21px
   :color $colorLight
-  .blender-select-add, .blender-select-remove
-    @extend .blender-icon
+  .#{$prefix}-select-add, .#{$prefix}-select-remove
+    @extend .#{$prefix}-icon
     @extend .nobasic
     :line-height 15px
     :text-align center
     :font-size 22px
     :color $colorLight
-    &.blender-select-remove
+    &.#{$prefix}-select-remove
       +round(0,$borderRadius,0,$borderRadius)   
     :float right
     :width $height

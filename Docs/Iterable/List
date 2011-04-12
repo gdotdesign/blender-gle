@@ -2,6 +2,22 @@
 class: Iterable.List
 description: 
 extends: Core.Abstract
+demo:
+  children:
+    - Iterable.MenuListItem:
+      - icon: '/Themes/Chrome/images/add.png'
+      - label: 'Open'
+      - shortcut: 'ctrl-o'
+    - Iterable.MenuListItem:
+      - label: 'Close'
+      - shortcut: 'ctrl-c'
+    - Iterable.MenuListItem:
+      - label: 'Export'
+    - Iterable.MenuListItem:
+      - label: 'Import'
+    - Iterable.MenuListItem:
+      - label: 'Save'
+      - shortcut: 'ctrl-s'
 implements:
   - Interfaces.Children
   - Interfaces.Size

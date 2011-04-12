@@ -2,6 +2,18 @@
 class: Core.Slot
 description: iOs style slot element.
 extends: Core.Abstract
+demo:
+  children:
+    - Iterable.ListItem:
+      - label: 'Open'
+    - Iterable.ListItem:
+      - label: 'Close'
+    - Iterable.ListItem:
+      - label: 'Export'
+    - Iterable.ListItem:
+      - label: 'Import'
+    - Iterable.ListItem:
+      - label: 'Save'
 implements:
   - Interfaces.Enabled
   - Interfaces.Size

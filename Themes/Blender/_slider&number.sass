@@ -1,21 +1,22 @@
-.blender-slider
+.#{$prefix}-slider
   :background-color $dark
   &.horizontal
     @extend .darker-igradient
     :width $width
     :min-width $minWidth
     :height $height2
-    .blender-slider-progress
+    .#{$prefix}-slider-progress
       @extend .light-gradient
   &.vertical
     :width $height2
     :height $width
     :min-height $minWidth
-  .blender-slider-progress
+  .#{$prefix}-slider-progress
     :background-color $light
+    +box_shadow(0,0,14px,rgba(0,0,0,0.5))
     
-.blender-number
-  .blender-slider-progress
+.#{$prefix}-number
+  .#{$prefix}-slider-progress
     :background-color transparent
   :background-color $light
   @extend .light-igradient
@@ -56,13 +57,13 @@
     :height $width
     :min-height $minWidth
   
-.blender-slider, .blender-number
+.#{$prefix}-slider, .#{$prefix}-number
   @extend .basic
   :cursor move
   :overflow hidden
-  .blender-slider-progress
+  .#{$prefix}-slider-progress
     +round_full($borderRadius)
-  .blender-number-text, input
+  .#{$prefix}-number-text, input
     :color $colorDark
     :font-size 12px
     :text-align center
