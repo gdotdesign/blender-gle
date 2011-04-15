@@ -1,3 +1,0 @@
-#!/bin/bash
-packager build Lattice/* > Build/blender-gle-latest.coffee
-coffee --print --bare Build/blender-gle-latest.coffee > Build/blender-gle-latest.js
