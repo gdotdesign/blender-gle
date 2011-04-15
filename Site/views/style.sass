@@ -1,39 +1,101 @@
+@import _reset.sass
 @import _mixins.sass
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
-.left
-  :float left
+
+body
+  :background-color #000
+  :font-family Ubuntu
+  :color #fdfdfd
+
+h1
+  :font-size 24px
+  :color #fdfdfd
+  :border-bottom 1px solid darken(#3E4D5E,16%)
+  :padding-bottom 10px
+  :margin-bottom 5px
+  
+h2
+  :font-size 20px
+  :margin 5px 0 10px 0
+  :color #fdfdfd
+
+h3
+  :font-size 18px
+  :margin-bottom 10px
+
+h4
+  :font-size 16px
+  :margin-bottom 10px
+  
+h1, h2, h3, h4
+  :font-weight normal
+.clear
+  :clear both
+  
+a
+  :color #97B9CF
+  :text-decoration none
+  
+nav
+  +round(0,0,10px,10px)
+  :border-top none
+  :margin 0 auto
+  :margin-bottom 10px
+  :width 960px
+  :background-color #3E4D5E
+  ul
+    :margin-right 10px
+    a:nth-child(odd)
+      li
+        :background-color lighten(#3E4D5E,6%)
+    a:nth-child(even)
+      li
+        :background-color lighten(#3E4D5E,10%)
+    a:first-child
+      li
+        :background-color transparent
+    a.current
+      li
+        :background-color #E38600
+    a
+      :color #fdfdfd
+    li
+      :float left
+      :padding 10px 15px 10px 0px
+      :font-size 14px
+      :width 100px
+      :text-align right
+
+.box
+  +round_full(10px)
+  p
+    :margin-bottom 5px
+    :line-height 18px
+  :font-size 14px
+  :margin 0 auto
+  :margin-bottom 10px
+  :background-color darken(#3E4D5E,18%)
+  :color #fdfdfd
+  :padding 20px
+  :position relative
+  :width 920px
+  &.notice
+    :background-color #B64A00
+    :font-size 18px
+    :text-align center
+  &.docindex
+    :height 175px
+    
+/* DOWNLOAD */
 hr
   :border none
-  :border-bottom 1px dashed #ccc
+  :border-bottom 1px solid darken(#3E4D5E,15%)
   :margin 10px 0
 .required
-  :background-color rgba(255,255,255,0.4)
-  .checkbox
-    :background-color #bacfd6
+  :background-color rgba(0,0,0,0.1)
 .selected
-  :background-color rgba(255,255,255,0.7)
-  .checkbox
-    :background-color #4E9FBF
+  :background-color rgba(0,0,0,0.2)
 
-.demotabs
-  :margin 0 auto
-  :font-size 12px
-  :width 930px
-  :height 40px
-  :margin-top -10px
-  .demotab
-    +box_shadow(0,2px,1px,rgba(0,0,0,0.2))
-    +round(0,0,5px,5px)
-    +linear_gradient(#efefef,#e3e3e3)
-    :cursor pointer
-    :margin-right 5px
-    :line-height 30px
-    :font-weight bold
-    :padding 5px 15px
-    :float left
-    &:hover, &.active
-      +linear_gradient(#444,#212121)
-      :color #eee
 
 #packager
   .wrap
@@ -42,51 +104,32 @@ hr
     :width 160px
     :position relative
     :height 40px
-  .border
-    :width 160px
-    :height 40px
-    :position absolute
-    +round_full(20px)
-    :background-color rgba(255,255,255,1)
-    :z-index 0
   input[type=submit]
-    +transition_duration(250ms)
-    &:hover
-      +linear_gradient(#444,#212121)
-    &:active
-      +linear_gradient(#212121,#444)
-    :cursor pointer
-    :position absolute
     :border none
-    :width 150px
-    :height 30px
-    :top 5px
-    :left 5px
-    +linear_gradient(#4e9fbf,#2d7a96)
-    +round_full(15px)
-    :text-align center
-    :line-height 30px
-    :font-size 18px
-    :color #eee
-    :text-shadow 0 0 4px rgba(0,0,0,0.2)
-    :letter-spacing 1px
-    :z-index 2
-    +box_shadow(0,0,20px,rgba(0,0,0,0.3))
+    :width 200px
+    :height 35px
+    :border 1px solid darken(#3E4D5E,20%)
+    :-webkit-background-clip padding-box
+    :font-size 16px
+    :margin 5px
+    :line-height 35px
+    :color #fdfdfd
+    :background-color #3E4D5E
+    +round_full(3px)
+    +box_shadow(0,1px,2px,rgba(0,0,0,0.15))
 .package
   :font-size 12px
   .check
-    +transition_duration(250ms)
     :cursor pointer
   th
     :text-align left
     :padding-bottom 10px
   tr
     +round_full(5px)
-    :border-bottom 1px dotted #ddd
   td.provides
     :width 300px
     :line-height 18px
-    :color #777
+    :color lighten(#3E4D5E,10%)
     :vertical-align middle
   td.name
     :margin 0
@@ -100,351 +143,168 @@ hr
     :padding-right 15px
     :vertical-align middle
 .checkbox
-  :width 15px
-  :height 15px
-  +box_shadow(0,0,5px,rgba(0,0,0,0.2))
-  +transition_duration(250ms)
-  +round_full(4px)
-  :background-color #eee
-@-webkit-keyframes travel
-  from 
-  to
-    background-position: 0 60px
-body
-  :background-color #D3D3D3
-h1
-  :font-size 20px
-  :font-weight normal
-  :border-bottom 1px dashed #ccc
-  :padding-bottom 5px
-  :margin-bottom 15px
-.dir
-  span
-    :font-size 16px
-    :display block
-    :margin-bottom 5px
-    :border-bottom 1px dotted #ccc
+  :border 1px solid darken(#3E4D5E,20%)
+  :-webkit-background-clip padding-box
+  :font-size 12px
+  :margin 5px
+  :color #666
+  :background-color #3E4D5E
+  +round_full(3px)
+  +box_shadow(0,1px,2px,rgba(0,0,0,0.15))
+  :width 13px
+  :height 13px
+  :margin 2px 5px
   :float left
-  :margin-right 20px
-  a
-    :color #555
-  .file
-    :margin-bottom 5px
-    :margin-top 5px
-.header
-  +box_shadow(0,2px,1px,rgba(0,0,0,0.2))
-  +round(0,0,20px,20px)
-  +linear_gradient(#444,#333)
-  :margin 0 auto
-  :margin-bottom 10px
-  :width 940px
-  :padding 10px
-  :background-color #333
-  :color #eee
-  :height 20px
-  h1
-    :font-size 16px
-    :font-weight normal
-    :color #fff
-  h2
-    :font-size 14px
-    :font-weight normal
-  h1,h2,ul li
-    :float left
-  ul.main
+  :color #fdfdfd
+  &:before
+    :content ''
+    :font-weight bold
+    :font-size 18px
     :position relative
-    :margin-right 10px
-    li.first
-      a
-        :background-position left center
-        :background-repeat no-repeat
-        :padding-left 25px
-      :margin-left 10px
-      :font-size 14px
-      :padding-left 5px
-      :width 100px
-      :text-align center
-      &:hover
-        ul
-          :opacity 1
-      ul
-        :margin-top 10px
-        :position absolute
-        :opacity 0
-        :overflow hidden
-      li
-        :width 100px
-        :background-color #333
-        :margin-left 0
-        :float none
-        :padding 5px
-        :padding-left 0
-        :font-size 12px
-      li:last-child
-        :padding-bottom 15px
-
-.right
-  :float right !important
-        
-body
-  background-image:  -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(255, 255, 255, .1)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .1)), color-stop(.75, rgba(255, 255, 255, .1)), color-stop(.75, transparent), to(transparent))
-  background-image:  -moz-linear-gradient( -45deg,rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,transparent 75%,transparent)
-  z-index: -1
-  -webkit-background-size: 60px 60px
-  -moz-background-size: 60px 60px
-  :background-attachment fixed 
-.box
-  p
-    :margin-bottom 5px
-    :line-height 18px
-  :font-size 14px
-  :margin 0 auto
-  :margin-bottom 10px
-  :background-color #efefef
-  :color #555
-  :border
-    :top 1px solid #fafafa
-  :padding 20px
-  :position relative
-  +box_shadow(0,2px,1px,rgba(0,0,0,0.2))
-  +round_full(15px)
-  +linear_gradient(#efefef,#e3e3e3)
-  :width 920px
-  
+    :top -6px
+    :left -2px
+.required
+  .checkbox
+    :color lighten(#3E4D5E,30%)
+.selected, .required
+  .checkbox
+    &:before
+      :content '\00A0\221A'
+/* HOME */    
 .startup
+  .w
+    :width 720px
   :height 130px
-  .border
-    :width 210px
-    :height 50px
+  .download, .github
+    :width 200px
+    :height 40px
     :position absolute
-    +round_full(25px)
-    :background-color rgba(255,255,255,1)
-  .down
-    :top 25px
-    :right 25px
-  .git
-    :top 95px
-    :right 25px
-  .title
-    :margin-top 5px
-    :margin-left 10px
-    :position relative
-    :color #333
-    :z-index 2
-    :text-shadow 0 2px 2px rgba(0,0,0,0.4)
-    :font-size 50px
-    :height 65px
-  .subsub
-    :margin-left 10px
-    :color #666
-  .subtitle
-    :height 30px
-    :margin-left 10px
-    :font-size 20px
-    :color #444
-    :position relative
+    :right 0
+    :background-color #3E4D5E
+    :text-align center
+    :line-height 40px
+    :font-size 18px
+    :color #eee
+    :letter-spacing 1px
     :z-index 2
   .download
-    :width 200px
-    :height 40px
-    :position absolute
-    :top 30px
-    :right 30px
-    +linear_gradient(#4e9fbf,#2d7a96)
-    +round_full(20px)
-    :text-align center
-    :line-height 40px
-    :font-size 18px
-    :color #eee
-    :text-shadow 0 0 4px rgba(0,0,0,0.2)
-    :letter-spacing 1px
-    :z-index 2
-    +box_shadow(0,0,20px,rgba(0,0,0,0.3))
-  .github
-    +box_shadow(0,0,20px,rgba(0,0,0,0.3))
-    :width 200px
-    :height 40px
-    :position absolute
-    :top 100px
-    :right 30px
-    +linear_gradient(#444,#212121)
-    +round_full(20px)
-    :text-align center
-    :line-height 40px
-    :font-size 18px
-    :color #eee
-    :text-shadow 0 0 4px rgba(0,0,0,0.2)
-    :letter-spacing 1px
-    :z-index 2
-.doc
-  :padding 15px
-  :font-size 14px
-  :color #333
-.class
-  :font-size 22px
-.implements, .function h3
-  :font-size 16px
-  :margin-top 10px
-  :margin-bottom 2px
-.function
-  h4
-    :margin-top 5px
-    :margin-bottom 5px
-.argument
-  :padding-left 20px
-.imp
-  :padding-left 10px
-body
-  :font-family Ubuntu
-.clear
-  :clear both
-a
-  :color #eee
-  :text-decoration none  
-
-.code
-  :width 400px
-  :margin-bottom 10px
-  :float left
-  :color #333
-  :padding-left 15px
-  :border-left 1px dashed #bbb
-  :font-size 14px
-  h1
-    :font-size 16px
-    :margin-top 10px
-    :font-weight normal
-    :margin-bottom 10px
-  h3
-    :border-bottom 1px dotted #bbb
-    :margin-top 5px
-    :padding 10px
-    :padding-left 15px
-    :font-size 12px
-    :cursor pointer
-  h2
-    :margin-top 15px
-    :font-size 14px
-    :font-weight normal
-    :color #666
-  ul
-    :list-style none
-    :padding 5px
-    :padding-left 10px
-    li
-      :padding 5px
-.co
-  :overflow hidden
-
-.demoslot
-  :height 40px
-  :float right
-  .list
-    :position absolute
-    :z-index 1
-  .litem
-    :height 20px
-    :padding 5px
-    :font-size 12px
-    :background-color #282828
-    :line-height 20px
-    :text-align center
-    :background-color #333
-    :font-weight bold
-    &.selected
-      :background-color #eee
-      :color #333
-  .over
-    :position absolute
-    :z-index 2
     :top 0
-    :left 0
-    :height inherit
-    :cursor pointer     
-pre.slush_poppies .Directives
-  font-weight: bold  
-  
-pre.slush_poppies .TypeName 
-  color: #800080  
-  
-pre.slush_poppies .InheritedClass 
-  
-pre.slush_poppies .OcamlInfixFPOperators 
-  text-decoration: underline  
-  
-pre.slush_poppies .Number 
-  color: #00699e 
-  
-pre.slush_poppies .LibraryVariable 
-  
-pre.slush_poppies .Storage 
-  color: #008080  
-  
-pre.slush_poppies .line-numbers 
-  background-color: #333
-  color: #eee
-  
-pre.slush_poppies .OcamlPrefixFPOperators 
-  text-decoration: underline  
-  
-pre.slush_poppies .OcamlFloatingPointConstants 
-  text-decoration: underline  
-  
-pre.slush_poppies .LineNumberDirectives 
-  
-pre.slush_poppies .TagName 
-  color: #333
-pre.slush_poppies .StorageTypes 
-  color: #A08000  
-  
-pre.slush_poppies .Operators 
-  color: #2060A0  
-  
-pre.slush_poppies .LibraryConstant 
-  :font-style italic
-  
-pre.slush_poppies .VariantTypes 
-  color: #C08060  
-  
-pre.slush_poppies .FunctionArgument 
-  
-pre.slush_poppies .BuiltInConstant 
-  
-pre.slush_poppies .ClassTypeName 
-  color: #8000C0  
-  
-pre.slush_poppies .ModuleKeyword 
-  color: #0080FF  
-  
-pre.slush_poppies .Invalid 
-  
-pre.slush_poppies .LibraryClassType 
-  color: #db4500
-pre.slush_poppies .LibraryFunction 
-  
-pre.slush_poppies .TagAttribute 
-  
-pre.slush_poppies .Keyword 
-  color: #00699e  
-  
-pre.slush_poppies .UserDefinedConstant 
-  
-pre.slush_poppies .CharacterConstants 
-  color: #800000  
-  
-pre.slush_poppies .String 
-  color: #C03030  
-  
-pre.slush_poppies 
-  color: #212121
-  :line-height 18px
-  :padding 15px
-  
-pre.slush_poppies .FunctionName 
-  color: #800000  
-  
-pre.slush_poppies .Variable 
-  
-pre.slush_poppies .Comment 
-  color: #406040  
-  
+    +round(0,10px,0,0)
+  .github
+    :top 41px
+    +round(0,0,10px,0)
+/* DOCS */
+#demoleft
+  :float left
+#demoleft, #demoright
+  h3
+    :margin-left 5px
+#demoright
+  :float right
+  h3
+    :text-align center
+    :margin-right 5px  
+.dir
+  span
+    :font-size 14px
+    :margin-bottom 2px
+    :padding-bottom 2px
+  :clear both
+  .file
+    :vertical-align middle
+    :float left
+    :margin 4px 5px
+    
+.function
+  h2 span
+    :color #2FCB00
+.event
+  h2 span
+    :color #FF5BD6
+.attribute
+  h2 span
+    :color #14E6FF
+    
+span.attribute
+  :color #14E6FF
+span.event
+  :color #FF5BD6
+span.function
+  :color #2FCB00
+span.extends
+  :color #E46300
+span.implements
+  :color #DDDC00
+p.inherited
+  :color lighten(#3E4D5E,16%)
+  span.function
+    :color darken(#2FCB00,12%)
+  span.event
+    :color darken(#FF5BD6,42%)
+  span.attribute
+    :color darken(#14E6FF,30%)
+    
+li.inherited
+  :cursor pointer
+  &:hover
+    :color #aaa
+    h2
+      :color #aaa
+  :color #666
+  h2
+    :color #666
+  &.function
+    h2 span
+      :color darken(#2FCB00,20%)
+  &.event
+    h2 span
+      :color darken(#FF5BD6,42%)
+  &.attribute
+    h2 span
+      :color darken(#14E6FF,30%)  
+
+.legend
+  p
+    :padding 0
+    :margin 0
+  :position absolute
+  :top 0
+  :height 195px
+  :right 0
+  :font-size 14px
+  :padding 10px
+  :color #eee
+  :width 210px  
+  :background-color #3E4D5E
+  +round(0,10px,0,10px)  
+
+.classLegend
+  :margin-bottom -20px
+  :margin-left -5px
+  p
+    :padding 0
+    :margin 0
+  :position relative
+  :float right
+  :top -20px
+  :right -20px
+  :font-size 14px
+  :padding 10px
+  :color #eee
+  :width 210px  
+  :background-color #3E4D5E
+  +round(0,10px,10px,0)
+
+li
+  &.event, &.function, &.attribute
+    :overflow hidden
+    :border-top 1px solid darken(#3E4D5E,16%)
+    p, h4
+      :margin-left 17px    
+.arguments
+  li
+    :margin 5px 0
+  :padding-left 30px
+.attribute, .arguments
+  .type
+    :color #666

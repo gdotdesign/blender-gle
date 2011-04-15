@@ -20,11 +20,9 @@ Data.Number = new Class {
   Attributes: {
     class: {
       value: Lattice.buildClass 'number'
-    }
-    text: {
-      value: 'text'
-      setter: (value, old) ->
-        @textLabel.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
+      setter: (value, old, self) ->
+        self::parent.call @, value, old, self::parent
+        @textLabel.replaceClass "#{value}-text", "#{old}-text"
         value
     }
     range: {

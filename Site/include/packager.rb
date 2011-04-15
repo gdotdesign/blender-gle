@@ -81,7 +81,7 @@ class Packager
       puts comp.name
       concated += comp.source+"\n"
     end
-    CoffeeScript.compile concated, :bare=>true
+    concated
   end
 end
 class Unit 

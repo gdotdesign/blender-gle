@@ -1,13 +1,13 @@
 ###
 ---
 
-name: Interfaces.Size
+name: Interfaces.Size 
 
-description: Size minsize from css....
+description: Size minsize from css
 
 license: MIT-style license.
 
-provides: Interfaces.Size
+provides: Interfaces.Size 
 
 ...
 ###

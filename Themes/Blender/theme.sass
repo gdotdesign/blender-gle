@@ -1,14 +1,15 @@
-@import ../Chrome/_mixins.sass
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
+
+@import _mixins.sass
 @import _rules.sass
 @import _buttons.sass
 @import _slider&number.sass
 @import _color.sass
 @import _dialogs.sass
-@import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
+@import _layout.sass
 
 .#{$prefix}-list-group
-  :height $height
-  :width $width
+  @extend .basicSize
   @extend .basic
   .#{$prefix}-list
     @extend .nobasic
@@ -18,14 +19,8 @@
   .#{$prefix}-list:last-child
     +round(0,5px,0,5px)
 
-.#{$prefix}-date-time
-  :width $width
-.#{$prefix}-time
-  :width $width
-.#{$prefix}-date
-  :width $width
-  
 .#{$prefix}-time, .#{$prefix}-date, .#{$prefix}-date-time
+  :width $width
   @extend .basic
   :height 100px
   :cursor pointer
@@ -45,6 +40,7 @@
       :text-align center
     @extend .nobasic
     :-webkit-transition-duration 0.3s
+    
 .#{$prefix}-list-selected
   @extend .blue-gradient
   :background-color $blue
@@ -54,10 +50,7 @@
   :color $colorLight !important
 
 .#{$prefix}-checkbox
-  :width $width
-  :min-width $minWidth
-  :line-height $height
-  :height $height
+  @extend .basicSize
   :font-size 12px
   :cursor pointer
   :-webkit-user-select none
@@ -109,6 +102,7 @@
     :background-color $blue
     @extend .blue-gradient
     :color $colorDark
+    
 .#{$prefix}-menu-list-item  
   .title
     :margin-right 10px
@@ -131,12 +125,14 @@
 .#{$prefix}-textarea
   @extend .basic
   @extend .light-igradient
+  @extend .basicSize
   :background-color $light
   :color $colorDark
   textarea
     :font-size 12px
     :font-family Ubuntu
-    :padding 5px
+    :padding 0 5px
+    :line-height $height
     :border none
     :background-color transparent
     :-webkit-user-select auto
@@ -144,18 +140,13 @@
     :resize none
     :display block
     :margin 0
-  :width $width 
-  :min-width $minWidth
 
 .#{$prefix}-overlay
   :background-color rgba(0,0,0,0.3)
 
 .#{$prefix}-toggle-group
   @extend .basic
-  :width $width
-  :min-width $minWidth
-  :height $height
-  :line-height $height
+  @extend .basicSize
   .#{$prefix}-button-toggle:first-child
     +round($borderRadius,0,$borderRadius,0)
   .#{$prefix}-button-toggle:last-child
@@ -167,22 +158,6 @@
     :float left
     +round_full(0)
   
-.#{$prefix}-toggle-group
-  @extend .basic
-  :width $width
-  :min-width $minWidth
-  :height $height
-  :line-height $height
-  .#{$prefix}-button-push:first-child
-    +round($borderRadius,0,$borderRadius,0)
-  .#{$prefix}-button-push:last-child
-    +round(0,$borderRadius,0,$borderRadius)
-  .#{$prefix}-button-push:last-child
-    :border-right none
-  .#{$prefix}-button-push
-    @extend .nobasic
-    :float left
-    +round_full(0)
 
 .#{$prefix}-picker
   :z-index 99
@@ -215,6 +190,7 @@
 
 .#{$prefix}-select
   @extend .basic
+  @extend .basicSize
   @extend .dark-on-light
   @extend .darker-gradient
   &:hover
@@ -265,6 +241,3 @@
     :height $height
     :border none
     :border-left 1px solid $border
-  :height $height
-  :width $width
-  :min-width $minWidth

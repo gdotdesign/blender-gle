@@ -1,4 +1,4 @@
-.#{$prefix}-button-key, .#{$prefix}-button, .#{$prefix}-button-push, .#{$prefix}-button-toggle
+.#{$prefix}-button-key, .#{$prefix}-button, .#{$prefix}-button-toggle
   @extend .basic
   @extend .basicSize
   :overflow hidden
@@ -30,10 +30,7 @@
 
 .#{$prefix}-toggler
   @extend .basic
-  :width $width
-  :min-width $minWidth
-  :height $height
-  :line-height $height
+  @extend .basicSize
   @extend .darker-gradient
   .#{$prefix}-toggler-on
     +round($borderRadius,0,$borderRadius,0)

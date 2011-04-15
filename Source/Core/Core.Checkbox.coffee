@@ -25,6 +25,10 @@ Core.Checkbox = new Class {
   Attributes: {
     class: {
       value: Lattice.buildClass 'checkbox'
+      setter: (value, old, self) ->
+        self::parent.call @, value, old
+        @sign.replaceClass "#{value}-sign", "#{old}-sign"
+        value
     }
     state: {
       value: on
@@ -46,7 +50,6 @@ Core.Checkbox = new Class {
   }
   create: ->
     @sign = new Element 'div'
-    @sign.addClass "#{@get('class')}-sign"
     @textNode = document.createTextNode ''
     @base.adopt @sign, @textNode
     @base.addEvent 'click', =>

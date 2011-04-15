@@ -1,15 +1,16 @@
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic);
 .disabled {
   opacity: 0.4; }
   .disabled *.disabled {
     opacity: 1; }
 
-.basicSize, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle {
+.basicSize, .blender-button-key, .blender-button, .blender-button-toggle, .blender-toggler, .blender-list-group, .blender-checkbox, .blender-textarea, .blender-toggle-group, .blender-select {
   width: 200px;
   min-width: 85px;
   height: 20px;
   line-height: 20px; }
 
-.basic, .blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle, .blender-toggler, .blender-slider, .blender-number, .blender-list-group, .blender-time, .blender-date, .blender-date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-toggle-group, .blender-unit, .blender-select {
+.basic, .blender-button-key, .blender-button, .blender-button-toggle, .blender-toggler, .blender-slider, .blender-number, .blender-list-group, .blender-time, .blender-date, .blender-date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-toggle-group, .blender-unit, .blender-select {
   border: 1px solid #151b21;
   font-size: 12px;
   margin: 5px;
@@ -25,7 +26,7 @@
   -webkit-user-select: none;
   -webkit-background-clip: padding-box; }
 
-.nobasic, .blender-list-group .blender-list, .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot, .blender-slot .blender-list, .blender-picker > *:first-child, .blender-toggle-group .blender-button-toggle, .blender-toggle-group .blender-button-push, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-select-add, .blender-select .blender-select-remove {
+.nobasic, .blender-list-group .blender-list, .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot, .blender-slot .blender-list, .blender-picker > *:first-child, .blender-toggle-group .blender-button-toggle, .blender-unit .blender-number, .blender-unit .blender-number .blender-number-text, .blender-unit .blender-select, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   margin: 0;
   border: none;
   -moz-border-radius: 0;
@@ -114,7 +115,7 @@
   background-image: -moz-linear-gradient(100% 100% 90deg, #485a6d, #384555);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#384555), to(#485a6d)); }
 
-.blender-button-key, .blender-button, .blender-button-push, .blender-button-toggle {
+.blender-button-key, .blender-button, .blender-button-toggle {
   overflow: hidden;
   white-space: nowrap;
   text-align: center;
@@ -129,32 +130,27 @@
     color: #212121;
     background-color: #5680c2; }
 
-.blender-toggler {
-  width: 200px;
-  min-width: 85px;
-  height: 20px;
-  line-height: 20px; }
-  .blender-toggler .blender-toggler-on {
-    -moz-border-radius: 3px 0 0 3px;
-    -webkit-border-radius: 3px 0 0 3px;
-    -khtml-border-radius: 3px 0 0 3px;
-    border-radius: 3px 0 0 3px; }
-  .blender-toggler .blender-toggler-off {
-    -moz-border-radius: 0 3px 3px 0;
-    -webkit-border-radius: 0 3px 3px 0;
-    -khtml-border-radius: 0 3px 3px 0;
-    border-radius: 0 3px 3px 0; }
-  .blender-toggler .blender-toggler-on, .blender-toggler .blender-toggler-off, .blender-toggler .blender-toggler-sep {
-    font-size: 12px;
-    text-align: center;
-    width: 100px;
-    color: #fdfdfd; }
-  .blender-toggler .blender-toggler-separator {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    border-radius: 3px;
-    background-color: #778ca5; }
+.blender-toggler .blender-toggler-on {
+  -moz-border-radius: 3px 0 0 3px;
+  -webkit-border-radius: 3px 0 0 3px;
+  -khtml-border-radius: 3px 0 0 3px;
+  border-radius: 3px 0 0 3px; }
+.blender-toggler .blender-toggler-off {
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0;
+  -khtml-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0; }
+.blender-toggler .blender-toggler-on, .blender-toggler .blender-toggler-off, .blender-toggler .blender-toggler-sep {
+  font-size: 12px;
+  text-align: center;
+  width: 100px;
+  color: #fdfdfd; }
+.blender-toggler .blender-toggler-separator {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #778ca5; }
 
 .blender-button-key.active {
   background-color: #2e3945;
@@ -239,8 +235,24 @@
 .blender-color {
   width: 200px;
   min-width: 85px; }
+  .blender-color .blender-number:first-child {
+    -moz-border-radius: 3px 3px 0 0;
+    -webkit-border-radius: 3px 3px 0 0;
+    -khtml-border-radius: 3px 3px 0 0;
+    border-radius: 3px 3px 0 0; }
+  .blender-color .blender-toggle-group:last-child {
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-radius: 0 0 3px 3px;
+    -khtml-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px; }
+  .blender-color .blender-number {
+    border-bottom: none; }
   .blender-color .blender-number, .blender-color .blender-toggle-group {
-    margin: 5px 0; }
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -khtml-border-radius: 0;
+    border-radius: 0;
+    margin: 0; }
   .blender-color .blender-color-wrapper {
     position: relative;
     margin: 10px 0; }
@@ -279,32 +291,81 @@
   margin-top: 7px;
   font-size: 12px; }
 
-@import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic);
-.blender-list-group {
-  height: 20px;
-  width: 200px; }
-  .blender-list-group .blender-list:first-child {
-    border: none;
-    -moz-border-radius: 5px 0 0 5px;
-    -webkit-border-radius: 5px 0 0 5px;
-    -khtml-border-radius: 5px 0 0 5px;
-    border-radius: 5px 0 0 5px; }
-  .blender-list-group .blender-list:last-child {
-    -moz-border-radius: 0 5px 5px 0;
-    -webkit-border-radius: 0 5px 5px 0;
-    -khtml-border-radius: 0 5px 5px 0;
-    border-radius: 0 5px 5px 0; }
+.blender-layout {
+  background-color: #555555;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0; }
 
-.blender-date-time {
-  width: 200px; }
+.blender-toolbar {
+  background-color: #888888;
+  z-index: 10; }
 
-.blender-time {
-  width: 200px; }
+.blender-view {
+  position: absolute;
+  min-height: 30px;
+  min-width: 30px;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #727272;
+  border-top: 1px solid #888888;
+  overflow: hidden; }
+  .blender-view .blender-toolbar {
+    position: absolute;
+    height: 30px;
+    right: 0;
+    left: 0;
+    bottom: 0; }
+  .blender-view .content {
+    width: 100%;
+    height: 100%; }
+  .blender-view .slider {
+    position: absolute !important;
+    top: 10px;
+    right: 0;
+    z-index: 11; }
+  .blender-view .topleft {
+    cursor: crosshair;
+    z-index: 99;
+    border-top: 7px solid #666666;
+    border-left: 7px solid transparent;
+    border-right: 7px solid #666666;
+    border-bottom: 7px solid transparent;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0; }
+  .blender-view .bottomleft {
+    z-index: 99;
+    border-top: 7px solid transparent;
+    border-left: 7px solid #666666;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #666666;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0; }
 
-.blender-date {
-  width: 200px; }
+.blender-list-group .blender-list:first-child {
+  border: none;
+  -moz-border-radius: 5px 0 0 5px;
+  -webkit-border-radius: 5px 0 0 5px;
+  -khtml-border-radius: 5px 0 0 5px;
+  border-radius: 5px 0 0 5px; }
+.blender-list-group .blender-list:last-child {
+  -moz-border-radius: 0 5px 5px 0;
+  -webkit-border-radius: 0 5px 5px 0;
+  -khtml-border-radius: 0 5px 5px 0;
+  border-radius: 0 5px 5px 0; }
 
 .blender-time, .blender-date, .blender-date-time {
+  width: 200px;
   height: 100px;
   cursor: pointer; }
   .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot {
@@ -331,10 +392,6 @@
   color: #fdfdfd !important; }
 
 .blender-checkbox {
-  width: 200px;
-  min-width: 85px;
-  line-height: 20px;
-  height: 20px;
   font-size: 12px;
   cursor: pointer;
   -webkit-user-select: none; }
@@ -392,13 +449,12 @@
 
 .blender-textarea {
   background-color: #778ca5;
-  color: #212121;
-  width: 200px;
-  min-width: 85px; }
+  color: #212121; }
   .blender-textarea textarea {
     font-size: 12px;
     font-family: Ubuntu;
-    padding: 5px;
+    padding: 0 5px;
+    line-height: 20px;
     border: none;
     background-color: transparent;
     -webkit-user-select: auto;
@@ -410,53 +466,24 @@
 .blender-overlay {
   background-color: rgba(0, 0, 0, 0.3); }
 
-.blender-toggle-group {
-  width: 200px;
-  min-width: 85px;
-  height: 20px;
-  line-height: 20px; }
-  .blender-toggle-group .blender-button-toggle:first-child {
-    -moz-border-radius: 3px 0 0 3px;
-    -webkit-border-radius: 3px 0 0 3px;
-    -khtml-border-radius: 3px 0 0 3px;
-    border-radius: 3px 0 0 3px; }
-  .blender-toggle-group .blender-button-toggle:last-child {
-    -moz-border-radius: 0 3px 3px 0;
-    -webkit-border-radius: 0 3px 3px 0;
-    -khtml-border-radius: 0 3px 3px 0;
-    border-radius: 0 3px 3px 0; }
-  .blender-toggle-group .blender-button-toggle:last-child {
-    border-right: none; }
-  .blender-toggle-group .blender-button-toggle {
-    float: left;
-    -moz-border-radius: 0;
-    -webkit-border-radius: 0;
-    -khtml-border-radius: 0;
-    border-radius: 0; }
-
-.blender-toggle-group {
-  width: 200px;
-  min-width: 85px;
-  height: 20px;
-  line-height: 20px; }
-  .blender-toggle-group .blender-button-push:first-child {
-    -moz-border-radius: 3px 0 0 3px;
-    -webkit-border-radius: 3px 0 0 3px;
-    -khtml-border-radius: 3px 0 0 3px;
-    border-radius: 3px 0 0 3px; }
-  .blender-toggle-group .blender-button-push:last-child {
-    -moz-border-radius: 0 3px 3px 0;
-    -webkit-border-radius: 0 3px 3px 0;
-    -khtml-border-radius: 0 3px 3px 0;
-    border-radius: 0 3px 3px 0; }
-  .blender-toggle-group .blender-button-push:last-child {
-    border-right: none; }
-  .blender-toggle-group .blender-button-push {
-    float: left;
-    -moz-border-radius: 0;
-    -webkit-border-radius: 0;
-    -khtml-border-radius: 0;
-    border-radius: 0; }
+.blender-toggle-group .blender-button-toggle:first-child {
+  -moz-border-radius: 3px 0 0 3px;
+  -webkit-border-radius: 3px 0 0 3px;
+  -khtml-border-radius: 3px 0 0 3px;
+  border-radius: 3px 0 0 3px; }
+.blender-toggle-group .blender-button-toggle:last-child {
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0;
+  -khtml-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0; }
+.blender-toggle-group .blender-button-toggle:last-child {
+  border-right: none; }
+.blender-toggle-group .blender-button-toggle {
+  float: left;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  -khtml-border-radius: 0;
+  border-radius: 0; }
 
 .blender-picker {
   z-index: 99;
@@ -502,10 +529,7 @@
   min-width: 80px;
   cursor: pointer;
   line-height: 21px;
-  color: #fdfdfd;
-  height: 20px;
-  width: 200px;
-  min-width: 85px; }
+  color: #fdfdfd; }
   .blender-select:active {
     color: #fdfdfd; }
   .blender-select:after {

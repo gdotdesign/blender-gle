@@ -10,7 +10,7 @@ attributes:
   icon:
     type: String
     description: 
-    default: '/Themes/Chrome/images/add.png'
+    default: '/add.png'
   class: 
     show: false
     type: String 

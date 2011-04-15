@@ -180,7 +180,8 @@ class Gdotui < Sinatra::Application
     content_type 'application/octet-stream'
     response['Content-disposition'] = "attachment; filename=gdotui.js;"
     p = Packager.new("../package.yml")
-    p.build params['files']
+    cont = p.build params['files']
+    CoffeeScript.compile cont, :bare=>true
   end
   
   get '/themes' do

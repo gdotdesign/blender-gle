@@ -26,10 +26,14 @@ Iterable.ListItem = new Class {
     }
     class: {
       value: Lattice.buildClass 'list-item'
+      setter: (value,old,self)->
+        self::parent.call @, value, old
+        @title.replaceClass "#{value}-title", "#{old}-title"
+        value
     }
   }
   create: ->
-    @title = new Element('div').addClass(@get('class')+'-title')
+    @title = new Element 'div'
     @base.grab @title
     @base.addEvent 'click', (e) =>
       @fireEvent 'select', [@,e]

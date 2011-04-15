@@ -1,8 +1,15 @@
 .#{$prefix}-color
   :width $width
   :min-width $minWidth
+  .#{$prefix}-number:first-child
+    +round(3px,3px,0,0)
+  .#{$prefix}-toggle-group:last-child
+    +round(0,0,3px,3px)
+  .#{$prefix}-number
+    :border-bottom none
   .#{$prefix}-number, .#{$prefix}-toggle-group
-    :margin 5px 0
+    +round_full(0)
+    :margin 0
   .#{$prefix}-color-wrapper
     :position relative
     :margin 10px 0

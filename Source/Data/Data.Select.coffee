@@ -32,6 +32,13 @@ Data.Select = new Class {
   Attributes: {
     class: {
       value: Lattice.buildClass 'select'
+      setter: (value, old, self) ->
+        self::parent.call @, value, old
+        @text.replaceClass "#{value}-text", "#{old}-text"
+        @removeIcon.set 'class', value+"-remove"
+        @addIcon.set 'class', value+"-add"
+        @list.set 'class', value+"-list"
+        value
     }
     default: {
       value: ''
@@ -61,29 +68,6 @@ Data.Select = new Class {
         li = @list.get('selected')
         if li?
           li.label
-    }
-    textClass: {
-      value: 'text'
-      setter: (value, old) ->
-        @text.replaceClass "#{@class}-#{value}", "#{@class}-#{old}"
-        value 
-    }
-    removeClass: {
-      value: 'remove'
-      setter: (value, old) ->
-        @removeIcon.set 'class', @class+"-"+value
-        value 
-    }
-    addClass: {
-      value: 'add'
-      setter: (value, old) ->
-        @addIcon.set 'class', @class+"-"+value
-        value 
-    }
-    listClass: {
-      value: Lattice.buildClass 'select-list'
-      setter: (value) ->
-        @list.set 'class', value
     }
   }
   ready: ->

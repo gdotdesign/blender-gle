@@ -68,7 +68,7 @@
       });
     });
 .doc.box
-  .extimp
+  .classLegend
     - if @class.extends
       %p
         %span.extends >
@@ -81,17 +81,17 @@
     - if @class.functions
       - @class.functions.each do |imp|
         %p{:class=>if imp[1]["inherited"] then 'inherited' end}
-          %span.func ~
+          %span.function ~
           = imp[0]
     - if @class.events
       - @class.events.each do |imp|
         %p
-          %span.ev ×
+          %span.event ×
           = imp.key(nil)
     - if @class.attributes
       - @class.attributes.each do |imp|
         %p{:class=>if imp[1]["inherited"] then 'inherited' end}
-          %span.at #
+          %span.attribute #
           = imp[0]
   %h1.class
     = @class.name
@@ -167,12 +167,12 @@
   window.addEvent('domready',function(){
     $$('li.inherited').each(function(el){
       el.store('lastHeight', el.getSize().y)
-      el.setStyle('height',40)
+      el.setStyle('height',35)
       el.addEvent('click',function(){
-        if(Number.from(this.getStyle('height')) == 40){
+        if(Number.from(this.getStyle('height')) == 35){
           this.setStyle('height',this.retrieve('lastHeight'))
         }else{
-          el.setStyle('height',40)
+          el.setStyle('height',35)
         }
       });
     });

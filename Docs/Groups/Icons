@@ -6,15 +6,15 @@ extends: Groups.Abstract
 demo:
   children:
     - Core.Icon:
-      - image: '/Themes/Chrome/images/add.png'
+      - image: '/add.png'
     - Core.Icon:
-      - image: '/Themes/Chrome/images/pencil.png'
+      - image: '/pencil.png'
     - Core.Icon:
-      - image: '/Themes/Chrome/images/control_fastforward_blue.png'
+      - image: '/control_fastforward_blue.png'
     - Core.Icon:
-      - image: '/Themes/Chrome/images/delete.png'
+      - image: '/delete.png'
     - Core.Icon:
-      - image: '/Themes/Chrome/images/control_rewind_blue.png'
+      - image: '/control_rewind_blue.png'
 implements:
   - Interfaces.Controls
   - Interfaces.Enabled

@@ -5,7 +5,7 @@ extends: Core.Abstract
 demo:
   children:
     - Iterable.MenuListItem:
-      - icon: '/Themes/Chrome/images/add.png'
+      - icon: '/add.png'
       - label: 'Open'
       - shortcut: 'ctrl-o'
     - Iterable.MenuListItem:

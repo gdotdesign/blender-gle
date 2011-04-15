@@ -25,6 +25,14 @@ Iterable.List = new Class {
   Attributes: {
     class: {
       value: Lattice.buildClass 'list'
+      setter: (value, old, self) ->
+        self::parent.call @, value, old
+        @children.each (item) =>
+          if item.base.hasClass @selectedClass
+            item.base.removeClass @selectedClass
+        @set 'selectedClass', "#{value}-selected"
+        @set 'selected', @selected
+        value
     }
     selectedClass: {
       value: Lattice.buildClass 'list-selected'
