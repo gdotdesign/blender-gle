@@ -172,7 +172,7 @@ Groups.Icons = new Class {
         height: @size.y
       }
       @children.each (item,i) ->
-        item.base.setStyle 'top', icpos[i].y
-        item.base.setStyle 'left', icpos[i].x
-        item.base.setStyle 'position', 'absolute'
+        item.setStyle 'top', icpos[i].y
+        item.setStyle 'left', icpos[i].x
+        item.setStyle 'position', 'absolute'
 }

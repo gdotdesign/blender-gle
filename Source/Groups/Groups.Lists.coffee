@@ -34,9 +34,9 @@ Groups.Lists = new Class {
       cSize = @size/length
       lastSize = Math.floor(@size-(cSize*(length-1)))
       @children.each (child,i) ->
-        child.base.setStyle 'position','absolute'
-        child.base.setStyle 'top', 0
-        child.base.setStyle 'left', cSize*i-1
+        child.setStyle 'position','absolute'
+        child.setStyle 'top', 0
+        child.setStyle 'left', cSize*i-1
         child.set 'size', cSize
       @children.getLast().set 'size', lastSize
     

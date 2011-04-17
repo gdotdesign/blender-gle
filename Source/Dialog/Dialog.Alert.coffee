@@ -37,7 +37,6 @@ Dialog.Alert = new Class {
     }
   }
   update: ->
-    update: ->
     @labelDiv.setStyle 'width', @size
     @button.set 'size', @size
     @base.setStyle 'width', 'auto'

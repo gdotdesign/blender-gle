@@ -369,9 +369,8 @@
     line-height: 20px;
     background-color: #fdfdfd;
     border: 1px solid #151b21; }
-
-.blender-icon-group .blender-icon, .blender-icon-group .blender-table-add, .blender-icon-group .blender-table-remove, .blender-icon-group .blender-select .blender-select-add, .blender-select .blender-icon-group .blender-select-add, .blender-icon-group .blender-select .blender-select-remove, .blender-select .blender-icon-group .blender-select-remove {
-  margin: 0; }
+  .blender-table .blender-icon-group .blender-icon, .blender-table .blender-icon-group .blender-table-add, .blender-table .blender-icon-group .blender-table-remove, .blender-table .blender-icon-group .blender-select .blender-select-add, .blender-select .blender-table .blender-icon-group .blender-select-add, .blender-table .blender-icon-group .blender-select .blender-select-remove, .blender-select .blender-table .blender-icon-group .blender-select-remove {
+    margin: 0; }
 
 .blender-list-group .blender-list:first-child {
   border: none;

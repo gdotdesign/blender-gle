@@ -25,7 +25,7 @@ Core.Icon = new Class {
   Attributes: {
     image: {
       setter: (value) ->
-        @base.setStyle 'background-image', 'url(' + value + ')'
+        @setStyle 'background-image', 'url(' + value + ')'
         value
     }
     class: {

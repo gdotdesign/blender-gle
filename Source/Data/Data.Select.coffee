@@ -74,7 +74,7 @@ Data.Select = new Class {
     @set 'size', @size
   create: ->
     @addEvent 'sizeChange', =>
-      @list.base.setStyle 'width', if @size < @minSize then @minSize else @size
+      @list.setStyle 'width', if @size < @minSize then @minSize else @size
     
     @base.setStyle 'position', 'relative'
     @text = new Element 'div'

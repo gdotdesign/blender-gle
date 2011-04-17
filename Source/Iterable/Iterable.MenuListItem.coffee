@@ -37,7 +37,7 @@ Iterable.MenuListItem = new Class {
     @sc = new Element 'div'
     @sc.setStyle 'float', 'right'
     @title.setStyle 'float', 'left'
-    @iconEl.base.setStyle 'float', 'left'
+    @iconEl.setStyle 'float', 'left'
     @base.grab @iconEl, 'top'
     @base.grab @sc
 }

@@ -103,10 +103,10 @@ Data.Table = new Class {
     pos1 = @base.getPosition()
     size = @icg1.base.getSize()
     size2 = @base.getSize()
-    @icg1.base.setStyle 'left', pos.x
-    @icg1.base.setStyle 'top', pos1.y-size.y
-    @icg2.base.setStyle 'top', pos.y
-    @icg2.base.setStyle 'left', pos1.x+size2.x
+    @icg1.setStyle 'left', pos.x
+    @icg1.setStyle 'top', pos1.y-size.y
+    @icg2.setStyle 'top', pos.y
+    @icg2.setStyle 'left', pos1.x+size2.x
     @loc = @getLocation target
     @target = target
     @vremove.set 'enabled', @base.children.length > 1
@@ -131,8 +131,8 @@ Data.Table = new Class {
     @icg2.addItem @vadd
     @icg2.addItem @vremove
     
-    @icg1.base.setStyle 'position', 'absolute'
-    @icg2.base.setStyle 'position', 'absolute'
+    @icg1.setStyle 'position', 'absolute'
+    @icg2.setStyle 'position', 'absolute'
     
     document.body.adopt @icg1, @icg2
     @hideIcons()

@@ -22,6 +22,9 @@ Core.Abstract = new Class {
     Events
     Interfaces.Mux
   ]
+  Delegates: {
+    base: ['setStyle','getStyle','setStyles','getStyles','dispose']
+  }
   Attributes: {
     class: {
       setter: (value, old) ->

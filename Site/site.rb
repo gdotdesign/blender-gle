@@ -137,36 +137,15 @@ class Gdotui < Sinatra::Application
     send_file "../Build/#{params[:captures].first}"
   end
 
-  get "/docs" do
+  get "/reference" do
     haml :docindex
   end
   
   get "/demos" do
-    haml ''
+    haml :demos
   end
   
-  get "/demos/:package/:class" do
-    lines = IO.readlines "../Demos/#{params[:package]}/#{params[:class]}"
-    @stuff = parse lines
-    haml :demo
-  end
-  get "/blender" do
-    lines = IO.readlines "../Demos/Layout/Blender"
-    @stuff = parse lines
-    haml :blenderdemo
-  end
-  
-  def merge(class1, class2)
-    
-  end
-  def buildForDocs(clas)
-    @stuff = YAML::load(File.new("../Docs/#{clas[0]}/#{clas[1]}"))
-    
-    cls = @stuff["extends"].split '.'
-    @parent = YAML::load(File.new("../Docs/#{cls[0]}/#{cls[1]}"))
-    #@parent.
-  end
-  get "/docs/:package/:class" do
+  get "/reference/:package/:class" do
     @class = Class.new()
     @class.parse YAML::load(File.new("../Docs/#{params[:package]}/#{params[:class]}"))
     @class.mergeAll
@@ -179,6 +158,11 @@ class Gdotui < Sinatra::Application
   get '/roadmap' do
     haml :roadmap
   end
+  
+  get '/docs' do
+    haml :wiki
+  end
+  
   post '/download' do
     content_type 'application/octet-stream'
     response['Content-disposition'] = "attachment; filename=gdotui.js;"
@@ -189,6 +173,9 @@ class Gdotui < Sinatra::Application
   
   get '/themes' do
     haml :themes
+  end
+  get '/' do
+    haml :home
   end
   get '*' do
     haml '%div'

@@ -423,6 +423,9 @@ Core.Abstract = new Class {
     Events
     Interfaces.Mux
   ]
+  Delegates: {
+    base: ['setStyle','getStyle']
+  }
   Attributes: {
     class: {
       setter: (value, old) ->
@@ -636,7 +639,7 @@ Core.Icon = new Class {
   Attributes: {
     image: {
       setter: (value) ->
-        @base.setStyle 'background-image', 'url(' + value + ')'
+        @setStyle 'background-image', 'url(' + value + ')'
         value
     }
     class: {
@@ -1261,8 +1264,8 @@ Core.Slot = new Class {
     @list.addEvent 'selectedChange', (item) =>
       @update()
       @fireEvent 'change', item.newVal
-    @list.base.setStyle 'position', 'relative'
-    @list.base.setStyle 'top', '0'
+    @list.setStyle 'position', 'relative'
+    @list.setStyle 'top', '0'
     
     @drag = new Drag @list.base, {modifiers:{x:'',y:'top'},handle:@overlay}
     @drag.addEvent 'drag', @check
@@ -1306,7 +1309,7 @@ Core.Slot = new Class {
     if not @dragging
       @list.base.addTransition()
       if @list.selected?
-        @list.base.setStyle 'top',-@list.selected.base.getPosition(@list.base).y+@base.getSize().y/2-@list.selected.base.getSize().y/2
+        @list.setStyle 'top',-@list.selected.base.getPosition(@list.base).y+@base.getSize().y/2-@list.selected.base.getSize().y/2
 }
 
 ###
@@ -1791,9 +1794,9 @@ Groups.Icons = new Class {
         height: @size.y
       }
       @children.each (item,i) ->
-        item.base.setStyle 'top', icpos[i].y
-        item.base.setStyle 'left', icpos[i].x
-        item.base.setStyle 'position', 'absolute'
+        item.setStyle 'top', icpos[i].y
+        item.setStyle 'left', icpos[i].x
+        item.setStyle 'position', 'absolute'
 }
 
 ###
@@ -1901,9 +1904,9 @@ Groups.Lists = new Class {
       cSize = @size/length
       lastSize = Math.floor(@size-(cSize*(length-1)))
       @children.each (child,i) ->
-        child.base.setStyle 'position','absolute'
-        child.base.setStyle 'top', 0
-        child.base.setStyle 'left', cSize*i-1
+        child.setStyle 'position','absolute'
+        child.setStyle 'top', 0
+        child.setStyle 'left', cSize*i-1
         child.set 'size', cSize
       @children.getLast().set 'size', lastSize
     
@@ -2078,7 +2081,6 @@ Dialog.Prompt = new Class {
     }
   }
   update: ->
-    update: ->
     @labelDiv.setStyle 'width', @size
     @button.set 'size', @size
     @input.set 'size', @size
@@ -2170,7 +2172,7 @@ Data.Select = new Class {
     @set 'size', @size
   create: ->
     @addEvent 'sizeChange', =>
-      @list.base.setStyle 'width', if @size < @minSize then @minSize else @size
+      @list.setStyle 'width', if @size < @minSize then @minSize else @size
     
     @base.setStyle 'position', 'relative'
     @text = new Element 'div'
@@ -2913,10 +2915,10 @@ Data.Table = new Class {
     pos1 = @base.getPosition()
     size = @icg1.base.getSize()
     size2 = @base.getSize()
-    @icg1.base.setStyle 'left', pos.x
-    @icg1.base.setStyle 'top', pos1.y-size.y
-    @icg2.base.setStyle 'top', pos.y
-    @icg2.base.setStyle 'left', pos1.x+size2.x
+    @icg1.setStyle 'left', pos.x
+    @icg1.setStyle 'top', pos1.y-size.y
+    @icg2.setStyle 'top', pos.y
+    @icg2.setStyle 'left', pos1.x+size2.x
     @loc = @getLocation target
     @target = target
     @vremove.set 'enabled', @base.children.length > 1
@@ -2941,8 +2943,8 @@ Data.Table = new Class {
     @icg2.addItem @vadd
     @icg2.addItem @vremove
     
-    @icg1.base.setStyle 'position', 'absolute'
-    @icg2.base.setStyle 'position', 'absolute'
+    @icg1.setStyle 'position', 'absolute'
+    @icg2.setStyle 'position', 'absolute'
     
     document.body.adopt @icg1, @icg2
     @hideIcons()
@@ -3153,7 +3155,6 @@ Dialog.Alert = new Class {
     }
   }
   update: ->
-    update: ->
     @labelDiv.setStyle 'width', @size
     @button.set 'size', @size
     @base.setStyle 'width', 'auto'
@@ -3271,7 +3272,7 @@ Iterable.MenuListItem = new Class {
     @sc = new Element 'div'
     @sc.setStyle 'float', 'right'
     @title.setStyle 'float', 'left'
-    @iconEl.base.setStyle 'float', 'left'
+    @iconEl.setStyle 'float', 'left'
     @base.grab @iconEl, 'top'
     @base.grab @sc
 }

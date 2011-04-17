@@ -38,7 +38,6 @@ Dialog.Prompt = new Class {
     }
   }
   update: ->
-    update: ->
     @labelDiv.setStyle 'width', @size
     @button.set 'size', @size
     @input.set 'size', @size

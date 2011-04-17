@@ -5,7 +5,7 @@
     %script{:src=>"/mootools-more-1.3.1.1.js", :type=>"text/javascript"}
     - if request.path_info =~ /^\/download/
       %script{:src=>"/Packager.js", :type=>"text/javascript"}
-    - if request.path_info =~ /^\/demos/ or request.path_info =~ /^\/themes/ or request.path_info =~ /^\/docs/
+    - if request.path_info =~ /^\/demos/ or request.path_info =~ /^\/themes/ or request.path_info =~ /^\/reference/
       %link{:href => "../builds/Blender/theme.css", :rel => "stylesheet", :type => "text/css", :media=>"screen"}/
       %script{:src=>"../builds/lattice-latest.js", :type=>"text/javascript"}
     %link{:href => "style.css", :rel => "stylesheet", :type => "text/css", :media=>"screen"}/
@@ -20,7 +20,7 @@
       %ul
         %li
           Lattice
-        - ['home','docs','roadmap','demos','themes', 'download'].each do |item|
+        - ['home','reference','docs','roadmap','demos','themes', 'download'].each do |item|
           %a{:href=>"/#{item}", :class=>if request.path_info =~ Regexp.new("^/#{item}") then "current" end}
             %li
               = item.capitalize

@@ -6,20 +6,61 @@
       Lattice
     %p
       Lattice is a User Interface Library / Framework. 
-      Ispired by the 
-      %a{:href=>"www.blender3d.org"}
+      Mainly ispired by the 
+      %a{:href=>"http://www.blender3d.org", :target=>"_blank"}
         Blender 2.5
       GUI.
-    %p
-      Uses Mootools and makes a heavy use of Class mutators and extensions.
   .download
     Download: 1.0 RC
   .github
     Source at Github
-.box
-  %h1
+.box.text
+  %h2
+    About
+  %p
+    The goal of this project is to create a 
+    %b lightweight, extensible, modular
+    and 
+    %b easy to use 
+    UI 
+    %b framework / library
+    , which uses the MooTools class architecture and has elements that are rearly seen in other libraries, but used in desktop applications or in mobile device UIs. 
+  %hr
+  %h2
     Compability
   %p
-    This project currently doesn't support IE due to an IE specific issue. It will be resolved in the first stable release.
+    This project currently doesn't support IE due to an IE specific issue. It will be resolved in the first release candidate.
   %p
-    Chrome 7, Firefox 3.6, Opera 11
+    Targeted browsers:
+  %ul
+    %li
+      Chrome 7+
+    %li
+      Firefox 3.1+
+    %li
+      Opera 9.6+
+    %li
+      IE6+
+    %li
+      Safari 3.1+
+  %hr
+  %h2
+    Dependencies
+  %p
+    Mootools 1.3, some Canvas implementation for IE (ExplorerCanvas)
+  %hr
+  %h2
+    Languages
+  %p
+    Lattice is built with CoffeeScript, packaged with Ruby. Themes are created with SASS.
+  %hr
+  %h2
+    Side projects
+  %p
+    There are a few new projects that resulted of the development of this project which this site uses. (links will be available when they reach a more or less stable state)
+  %ul
+    %li
+      Packager implementation for Ruby, that supports both JavaScript nad CoffeeScript.
+    %li
+      Mootools class documentation creator in Ruby that supports extends, implements, delegates, attributes, events, properties, using YAML.
+    

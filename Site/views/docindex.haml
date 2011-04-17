@@ -38,7 +38,7 @@
             - Dir.entries("../Docs/#{dir}").sort.each do |file|
               - if not file =~ /^\./
                 %li.file
-                  %a{:href=>"/docs/#{dir}/#{file}"} 
+                  %a{:href=>"/reference/#{dir}/#{file}"} 
                     = file
     .clear
 

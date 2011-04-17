@@ -529,6 +529,9 @@ provides: Core.Abstract
 */
 Core.Abstract = new Class({
   Implements: [Events, Interfaces.Mux],
+  Delegates: {
+    base: ['setStyle', 'getStyle']
+  },
   Attributes: {
     "class": {
       setter: function(value, old) {
@@ -769,7 +772,7 @@ Core.Icon = new Class({
   Attributes: {
     image: {
       setter: function(value) {
-        this.base.setStyle('background-image', 'url(' + value + ')');
+        this.setStyle('background-image', 'url(' + value + ')');
         return value;
       }
     },
@@ -1502,8 +1505,8 @@ Core.Slot = new Class({
       this.update();
       return this.fireEvent('change', item.newVal);
     }, this));
-    this.list.base.setStyle('position', 'relative');
-    this.list.base.setStyle('top', '0');
+    this.list.setStyle('position', 'relative');
+    this.list.setStyle('top', '0');
     this.drag = new Drag(this.list.base, {
       modifiers: {
         x: '',
@@ -1571,7 +1574,7 @@ Core.Slot = new Class({
     if (!this.dragging) {
       this.list.base.addTransition();
       if (this.list.selected != null) {
-        return this.list.base.setStyle('top', -this.list.selected.base.getPosition(this.list.base).y + this.base.getSize().y / 2 - this.list.selected.base.getSize().y / 2);
+        return this.list.setStyle('top', -this.list.selected.base.getPosition(this.list.base).y + this.base.getSize().y / 2 - this.list.selected.base.getSize().y / 2);
       }
     }
   }
@@ -2175,9 +2178,9 @@ Groups.Icons = new Class({
         height: this.size.y
       });
       return this.children.each(function(item, i) {
-        item.base.setStyle('top', icpos[i].y);
-        item.base.setStyle('left', icpos[i].x);
-        return item.base.setStyle('position', 'absolute');
+        item.setStyle('top', icpos[i].y);
+        item.setStyle('left', icpos[i].x);
+        return item.setStyle('position', 'absolute');
       });
     }
   }
@@ -2298,9 +2301,9 @@ Groups.Lists = new Class({
       cSize = this.size / length;
       lastSize = Math.floor(this.size - (cSize * (length - 1)));
       this.children.each(function(child, i) {
-        child.base.setStyle('position', 'absolute');
-        child.base.setStyle('top', 0);
-        child.base.setStyle('left', cSize * i - 1);
+        child.setStyle('position', 'absolute');
+        child.setStyle('top', 0);
+        child.setStyle('left', cSize * i - 1);
         return child.set('size', cSize);
       });
       return this.children.getLast().set('size', lastSize);
@@ -2487,9 +2490,6 @@ Dialog.Prompt = new Class({
     }
   },
   update: function() {
-    ({
-      update: function() {}
-    });
     this.labelDiv.setStyle('width', this.size);
     this.button.set('size', this.size);
     this.input.set('size', this.size);
@@ -2589,7 +2589,7 @@ Data.Select = new Class({
   },
   create: function() {
     this.addEvent('sizeChange', __bind(function() {
-      return this.list.base.setStyle('width', this.size < this.minSize ? this.minSize : this.size);
+      return this.list.setStyle('width', this.size < this.minSize ? this.minSize : this.size);
     }, this));
     this.base.setStyle('position', 'relative');
     this.text = new Element('div');
@@ -3469,10 +3469,10 @@ Data.Table = new Class({
     pos1 = this.base.getPosition();
     size = this.icg1.base.getSize();
     size2 = this.base.getSize();
-    this.icg1.base.setStyle('left', pos.x);
-    this.icg1.base.setStyle('top', pos1.y - size.y);
-    this.icg2.base.setStyle('top', pos.y);
-    this.icg2.base.setStyle('left', pos1.x + size2.x);
+    this.icg1.setStyle('left', pos.x);
+    this.icg1.setStyle('top', pos1.y - size.y);
+    this.icg2.setStyle('top', pos.y);
+    this.icg2.setStyle('left', pos1.x + size2.x);
     this.loc = this.getLocation(target);
     this.target = target;
     this.vremove.set('enabled', this.base.children.length > 1);
@@ -3493,8 +3493,8 @@ Data.Table = new Class({
     this.icg1.addItem(this.hremove);
     this.icg2.addItem(this.vadd);
     this.icg2.addItem(this.vremove);
-    this.icg1.base.setStyle('position', 'absolute');
-    this.icg2.base.setStyle('position', 'absolute');
+    this.icg1.setStyle('position', 'absolute');
+    this.icg2.setStyle('position', 'absolute');
     document.body.adopt(this.icg1, this.icg2);
     return this.hideIcons();
   },
@@ -3750,9 +3750,6 @@ Dialog.Alert = new Class({
     }
   },
   update: function() {
-    ({
-      update: function() {}
-    });
     this.labelDiv.setStyle('width', this.size);
     this.button.set('size', this.size);
     return this.base.setStyle('width', 'auto');
@@ -3886,7 +3883,7 @@ Iterable.MenuListItem = new Class({
     this.sc = new Element('div');
     this.sc.setStyle('float', 'right');
     this.title.setStyle('float', 'left');
-    this.iconEl.base.setStyle('float', 'left');
+    this.iconEl.setStyle('float', 'left');
     this.base.grab(this.iconEl, 'top');
     return this.base.grab(this.sc);
   }

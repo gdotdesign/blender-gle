@@ -10,7 +10,7 @@ body
   :background-image -webkit-gradient(radial, 50% 0, 0, 50% 0, 960, from(darken($darker, 10%)), to(#000))
   :background-repeat no-repeat
   :font-family Ubuntu
-  :color #eee
+  :color #fdfdfd
 
 h1
   :font-size 24px
@@ -72,7 +72,7 @@ nav
       :float left
       :padding 10px 15px 10px 0px
       :font-size 14px
-      :width 100px
+      :width 80px
       :text-align right
 
 .box
@@ -86,7 +86,7 @@ nav
   :margin 0 auto
   :margin-bottom 10px
   :background-color darken(#3E4D5E,18%)
-  :color #fdfdfd
+  :color #eee
   :padding 20px
   :position relative
   :width 920px
@@ -99,12 +99,17 @@ nav
   &.docindex
     :height 175px
 
-.box.text ul
-  :margin-left 20px
-  :list-style-type disc
-  :list-style-position inside
-  li
-    :margin 4px 0
+.box.text
+  b
+    :font-weight normal
+    :color $blue
+    :font-size 16px
+  ul
+    :margin-left 20px
+    :list-style-type disc
+    :list-style-position inside
+    li
+      :margin 4px 0
     
 /* DOWNLOAD */
 hr
@@ -200,7 +205,6 @@ hr
 .startup
   .w
     :width 720px
-  :height 130px
   .download, .github
     :width 200px
     :height 40px

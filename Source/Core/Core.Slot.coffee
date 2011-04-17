@@ -61,8 +61,8 @@ Core.Slot = new Class {
     @list.addEvent 'selectedChange', (item) =>
       @update()
       @fireEvent 'change', item.newVal
-    @list.base.setStyle 'position', 'relative'
-    @list.base.setStyle 'top', '0'
+    @list.setStyle 'position', 'relative'
+    @list.setStyle 'top', '0'
     
     @drag = new Drag @list.base, {modifiers:{x:'',y:'top'},handle:@overlay}
     @drag.addEvent 'drag', @check
@@ -106,5 +106,5 @@ Core.Slot = new Class {
     if not @dragging
       @list.base.addTransition()
       if @list.selected?
-        @list.base.setStyle 'top',-@list.selected.base.getPosition(@list.base).y+@base.getSize().y/2-@list.selected.base.getSize().y/2
+        @list.setStyle 'top',-@list.selected.base.getPosition(@list.base).y+@base.getSize().y/2-@list.selected.base.getSize().y/2
 }
