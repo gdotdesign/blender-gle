@@ -8,6 +8,35 @@
 @import _dialogs.sass
 @import _layout.sass
 
+.#{$prefix}-table-add, .#{$prefix}-table-remove
+  @extend .#{$prefix}-icon
+  :line-height 15px
+  :text-align center
+  :font-size 22px
+  :text-shadow 0 1px 3px rgba(0,0,0,0.4)
+  :color $colorLight
+.#{$prefix}-table
+  @extend .basic
+  :padding 2px
+  input
+    :text-align center
+    :border 0
+    :margin 0
+    :padding 0
+    :line-height $height
+  td
+    :width 85px
+    :overflow hidden
+    :height $height
+    :text-align center
+    :line-height $height
+    :background-color $colorLight
+    :border 1px solid $border
+
+.#{$prefix}-icon-group    
+  .#{$prefix}-icon
+    :margin 0
+    
 .#{$prefix}-list-group
   @extend .basicSize
   @extend .basic

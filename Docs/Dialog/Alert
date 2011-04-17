@@ -1,15 +1,15 @@
 ---
 class: Dialog.Alert
-description: 
+description: Alert dialog with a label and a button.
 extends: Dialog.Abstract
 attributes:
   label: 
     type: String
-    description: 
+    description: Label of the dialog.
     default: Write something!
   buttonLabel: 
     type: String 
-    description: 
+    description: Label of the button on the dialog.
     default: OK
   class: 
     show: false
@@ -17,6 +17,13 @@ attributes:
     description: CSS Class of the element. 
 events:
   - invoked:
-    description:
+    description: Fires when the button is clicked.
+    arguments:
+      - element:
+        description: The element.
+        type: Dialog.Alert
+      - event:
+        description: The event.
+        type: Event
 ...
 

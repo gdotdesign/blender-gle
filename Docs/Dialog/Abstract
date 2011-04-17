@@ -1,6 +1,6 @@
 ---
 class: Dialog.Abstract
-description: 
+description: Abstract base class for dialogs with overlay and size.
 extends: Core.Abstract
 demo: false
 implements:
@@ -8,11 +8,34 @@ implements:
 attributes:
   overlay:
     type: Boolean
-    description: 
+    description: Wether or not display the element with an overlay.
     default: false
   class: 
     show: false
     type: String 
     description: CSS Class of the element. 
+functions:
+  detach:
+    description: Delegated to the @picker detach method.
+  attach:
+    description: Delegated to the @picker attach method.
+    arguments:
+      - element:
+        description: The Element to attach to.
+        type: Element
+      - attach:
+        description: Wether or not attach the show event.
+        type: Boolean
+  show:
+    description: Shows the element.
+  hide:
+    description: Hides the dialog, but only if the force argument is true or the events target isn't the element or any of its children.
+    arguments:
+      - event:
+        description: An Event.
+        type: Event
+      - force:
+        description: Force hide the picker. Usefull when the event target is on the picker.
+        type: Boolean
 ...
 

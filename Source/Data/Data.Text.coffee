@@ -17,7 +17,10 @@ provides: Data.Text
 ###
 Data.Text = new Class {
   Extends: Data.Abstract
-  Implements: Interfaces.Size
+  Implements: [
+    Interfaces.Size
+    Interfaces.Enabled
+  ]
   Binds: ['update']  
   Attributes: {
     class: {
@@ -32,11 +35,18 @@ Data.Text = new Class {
     }
   }
   update: ->
-    @fireEvent 'change', @get 'value'
     @text.setStyle 'width', @size-10
   create: ->
     @text = new Element 'textarea'
+    @addEvent 'enabledChange', (obj) =>
+      console.log obj
+      if obj.newVal
+        @text.set 'disabled', false      
+      else
+        @text.set 'disabled', true
     @base.grab @text
-    @text.addEvent 'keyup', @update
+    @text.addEvent 'keyup', =>
+      @set 'value', @get 'value'
+      @fireEvent 'change', @get 'value'
     
 }

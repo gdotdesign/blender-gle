@@ -3,7 +3,7 @@
 
 name: Interfaces.Draggable
 
-description: Porived dragging for elements that implements it.
+description: Provides dragging for elements that implements it.
 
 license: MIT-style license.
 

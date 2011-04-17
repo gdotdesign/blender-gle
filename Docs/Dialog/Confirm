@@ -1,19 +1,19 @@
 ---
 class: Dialog.Confirm
-description: 
+description: Confirmation dialog with a label, an okButton and a cancelButton.
 extends: Dialog.Abstract
 attributes:
   label: 
     type: String
-    description: 
+    description: Label of the dialog.
     default: Write something!
   okLabel: 
     type: String 
-    description: 
+    description: The label of the okButton.
     default: OK
   cancelLabel: 
     type: String 
-    description: 
+    description: The label of the cancelButton.
     default: CANCEL
   class: 
     show: false
@@ -21,8 +21,22 @@ attributes:
     description: CSS Class of the element. 
 events:
   - invoked:
-    description:
+    description: Fires when the okButton is clicked.
+    arguments:
+      - element:
+        description: The element.
+        type: Dialog.Confrim
+      - event:
+        description: The event.
+        type: Event
   - cancelled:
-    description:
+    description: Fires when the cancelButton is clicked.
+    arguments:
+      - element:
+        description: The element.
+        type: Dialog.Confrim
+      - event:
+        description: The event.
+        type: Event
 ...
 

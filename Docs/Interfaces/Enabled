@@ -1,6 +1,6 @@
 ---
 class: Interfaces.Enabled
-description: Enable-disable
+description: Adds enabled attribute to the element.
 demo: false
 attributes:
   enabled: 

@@ -1,11 +1,16 @@
 @import _reset.sass
 @import _mixins.sass
+@import _magic.sass
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
 
+html, body
+  :height 100%
 body
   :background-color #000
+  :background-image -webkit-gradient(radial, 50% 0, 0, 50% 0, 960, from(darken($darker, 10%)), to(#000))
+  :background-repeat no-repeat
   :font-family Ubuntu
-  :color #fdfdfd
+  :color #eee
 
 h1
   :font-size 24px
@@ -37,6 +42,7 @@ a
   :text-decoration none
   
 nav
+  @extend .darker-gradient
   +round(0,0,10px,10px)
   :border-top none
   :margin 0 auto
@@ -48,15 +54,18 @@ nav
     a:nth-child(odd)
       li
         :background-color lighten(#3E4D5E,6%)
+        @extend .light-gradient
     a:nth-child(even)
       li
         :background-color lighten(#3E4D5E,10%)
+        @extend .lighter-gradient
     a:first-child
       li
         :background-color transparent
     a.current
       li
         :background-color #E38600
+        @extend .orange-gradient
     a
       :color #fdfdfd
     li
@@ -67,6 +76,8 @@ nav
       :text-align right
 
 .box
+  +box_shadow(0,5px,10px,rgba(0,0,0,0.3))
+  :overflow hidden
   +round_full(10px)
   p
     :margin-bottom 5px
@@ -81,10 +92,19 @@ nav
   :width 920px
   &.notice
     :background-color #B64A00
+    :text-shadow 0 1px 2px rgba(0,0,0,0.7)
+    @extend .orange-gradient
     :font-size 18px
     :text-align center
   &.docindex
     :height 175px
+
+.box.text ul
+  :margin-left 20px
+  :list-style-type disc
+  :list-style-position inside
+  li
+    :margin 4px 0
     
 /* DOWNLOAD */
 hr
@@ -105,6 +125,12 @@ hr
     :position relative
     :height 40px
   input[type=submit]
+    @extend .light-gradient
+    &:hover
+      @extend .lighter-gradient
+    &:active
+      @extend .dark-igradient
+    :cursor pointer
     :border none
     :width 200px
     :height 35px
@@ -187,6 +213,10 @@ hr
     :color #eee
     :letter-spacing 1px
     :z-index 2
+    @extend .light-gradient
+    &:hover
+      @extend .orange-gradient
+      :cursor pointer
   .download
     :top 0
     +round(0,10px,0,0)
@@ -236,7 +266,7 @@ span.extends
 span.implements
   :color #DDDC00
 p.inherited
-  :color lighten(#3E4D5E,16%)
+  :color lighten(#3E4D5E,20%)
   span.function
     :color darken(#2FCB00,12%)
   span.event
@@ -247,12 +277,12 @@ p.inherited
 li.inherited
   :cursor pointer
   &:hover
-    :color #aaa
+    :color lighten(#3E4D5E,10%)
     h2
-      :color #aaa
-  :color #666
+      :color lighten(#3E4D5E,10%)
+  :color lighten(#3E4D5E,0%)
   h2
-    :color #666
+    :color lighten(#3E4D5E,0%)
   &.function
     h2 span
       :color darken(#2FCB00,20%)
@@ -277,7 +307,9 @@ li.inherited
   :width 210px  
   :background-color #3E4D5E
   +round(0,10px,0,10px)  
-
+.legend, .classLegend
+  :background-image -webkit-gradient(radial, 100% 0, 0, 100% 0, 400, from($darker), to(darken($darker,3%)))
+  +box_shadow(0,0,20px,rgba(0,0,0,0.3))
 .classLegend
   :margin-bottom -20px
   :margin-left -5px
@@ -304,6 +336,7 @@ li
 .arguments
   li
     :margin 5px 0
+    :line-height 20px
   :padding-left 30px
 .attribute, .arguments
   .type

@@ -1,0 +1,45 @@
+---
+class: Data.Table
+description: A table element with adjustable rows and columns, and editable table cells.
+extends: Data.Abstract
+attributes:
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - change:
+    description: Fires when the value changes.
+    arguments:
+      - data:
+        type: Array
+        description: Array representation of the table ([['value'],['value']]).
+functions:
+  addRow:
+    description:
+    arguments:
+      - where: 
+        description: |
+          The place to append an empty row (i.e: add an empty 3rd row, the old 3rd row becomes the fourth.). 
+        type: Number
+  addColumn:
+    description:
+    arguments:
+      - where: 
+        description: |
+          The place to append an empty column (i.e: add an empty 3rd column, the old 3rd column becomes the fourth.). 
+        type: Number
+  removeRow:
+    description:
+    arguments:
+      - where:
+        description: The number of the row to be removed.
+        type: Number
+  removeColumn:
+    description:
+    arguments:
+      - where:
+        description: The number of the column to be removed.
+        type: Number
+...
+

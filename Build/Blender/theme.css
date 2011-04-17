@@ -10,7 +10,7 @@
   height: 20px;
   line-height: 20px; }
 
-.basic, .blender-button-key, .blender-button, .blender-button-toggle, .blender-toggler, .blender-slider, .blender-number, .blender-list-group, .blender-time, .blender-date, .blender-date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-toggle-group, .blender-unit, .blender-select {
+.basic, .blender-button-key, .blender-button, .blender-button-toggle, .blender-toggler, .blender-slider, .blender-number, .blender-table, .blender-list-group, .blender-time, .blender-date, .blender-date-time, .blender-slot, .blender-checkbox .blender-checkbox-sign, .blender-icon, .blender-table-add, .blender-table-remove, .blender-select .blender-select-add, .blender-select .blender-select-remove, .blender-list, .blender-textarea, .blender-toggle-group, .blender-unit, .blender-select {
   border: 1px solid #151b21;
   font-size: 12px;
   margin: 5px;
@@ -46,12 +46,12 @@
     background-color: #778ca5;
     color: #212121; }
 
-.light-on-dark, .blender-button-key, .blender-button, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
+.light-on-dark, .blender-button-key, .blender-button, .blender-icon, .blender-table-add, .blender-table-remove, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   color: #212121;
   background-color: #778ca5; }
-  .light-on-dark:hover, .blender-button-key:hover, .blender-button:hover, .blender-icon:hover, .blender-select .blender-select-add:hover, .blender-select .blender-select-remove:hover {
+  .light-on-dark:hover, .blender-button-key:hover, .blender-button:hover, .blender-icon:hover, .blender-table-add:hover, .blender-table-remove:hover, .blender-select .blender-select-add:hover, .blender-select .blender-select-remove:hover {
     background-color: #95a6b9; }
-  .light-on-dark:active, .blender-button-key:active, .blender-button:active, .blender-icon:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active {
+  .light-on-dark:active, .blender-button-key:active, .blender-button:active, .blender-icon:active, .blender-table-add:active, .blender-table-remove:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active {
     background-color: #3e4d5e;
     color: #fdfdfd; }
 
@@ -75,11 +75,11 @@
   background-image: -moz-linear-gradient(100% 100% 90deg, #af4113, #943710);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#943710), to(#af4113)); }
 
-.light-gradient, .blender-button, .blender-toggler .blender-toggler-separator, .blender-slider.horizontal .blender-slider-progress, .blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
+.light-gradient, .blender-button, .blender-toggler .blender-toggler-separator, .blender-slider.horizontal .blender-slider-progress, .blender-icon, .blender-table-add, .blender-table-remove, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   background-image: -moz-linear-gradient(100% 100% 90deg, #778ca5, #95a6b9);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#95a6b9), to(#778ca5)); }
 
-.lighter-gradient, .blender-button:hover, .blender-icon:hover, .blender-select .blender-select-add:hover, .blender-select .blender-select-remove:hover {
+.lighter-gradient, .blender-button:hover, .blender-icon:hover, .blender-table-add:hover, .blender-table-remove:hover, .blender-select .blender-select-add:hover, .blender-select .blender-select-remove:hover {
   background-image: -moz-linear-gradient(100% 100% 90deg, #8094ab, #9eaebf);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9eaebf), to(#8094ab)); }
 
@@ -99,7 +99,7 @@
   background-image: -moz-linear-gradient(100% 100% 90deg, #627a95, #566b83);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#566b83), to(#627a95)); }
 
-.darker-gradient, .blender-button-toggle, .blender-toggler, .blender-icon:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active, .blender-select {
+.darker-gradient, .blender-button-toggle, .blender-toggler, .blender-icon:active, .blender-table-add:active, .blender-table-remove:active, .blender-select .blender-select-add:active, .blender-select .blender-select-remove:active, .blender-select {
   background-image: -moz-linear-gradient(100% 100% 90deg, #2e3945, #3e4d5e);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3e4d5e), to(#2e3945)); }
 
@@ -130,27 +130,29 @@
     color: #212121;
     background-color: #5680c2; }
 
-.blender-toggler .blender-toggler-on {
-  -moz-border-radius: 3px 0 0 3px;
-  -webkit-border-radius: 3px 0 0 3px;
-  -khtml-border-radius: 3px 0 0 3px;
-  border-radius: 3px 0 0 3px; }
-.blender-toggler .blender-toggler-off {
-  -moz-border-radius: 0 3px 3px 0;
-  -webkit-border-radius: 0 3px 3px 0;
-  -khtml-border-radius: 0 3px 3px 0;
-  border-radius: 0 3px 3px 0; }
-.blender-toggler .blender-toggler-on, .blender-toggler .blender-toggler-off, .blender-toggler .blender-toggler-sep {
-  font-size: 12px;
-  text-align: center;
-  width: 100px;
-  color: #fdfdfd; }
-.blender-toggler .blender-toggler-separator {
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -khtml-border-radius: 3px;
-  border-radius: 3px;
-  background-color: #778ca5; }
+.blender-toggler {
+  cursor: pointer; }
+  .blender-toggler .blender-toggler-on {
+    -moz-border-radius: 3px 0 0 3px;
+    -webkit-border-radius: 3px 0 0 3px;
+    -khtml-border-radius: 3px 0 0 3px;
+    border-radius: 3px 0 0 3px; }
+  .blender-toggler .blender-toggler-off {
+    -moz-border-radius: 0 3px 3px 0;
+    -webkit-border-radius: 0 3px 3px 0;
+    -khtml-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0; }
+  .blender-toggler .blender-toggler-on, .blender-toggler .blender-toggler-off, .blender-toggler .blender-toggler-sep {
+    font-size: 12px;
+    text-align: center;
+    width: 100px;
+    color: #fdfdfd; }
+  .blender-toggler .blender-toggler-separator {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #778ca5; }
 
 .blender-button-key.active {
   background-color: #2e3945;
@@ -269,22 +271,14 @@
     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4); }
 
-.blender-dialog-alert {
-  width: 200px;
-  min-width: 85px; }
-
-.blender-dialog-confirm {
-  width: 200px;
-  min-width: 85px; }
-
-.blender-dialog-prompt {
+.blender-dialog-alert, .blender-dialog-confirm, .blender-dialog-prompt {
   width: 200px;
   min-width: 85px; }
 
 .blender-dialog-alert .blender-button {
   color: #fdfdfd; }
 
-.blender-dialog-prompt-label, .blender-dialog-alert-label {
+.blender-dialog-prompt-label, .blender-dialog-alert-label, .blender-dialog-confirm-label {
   color: #fdfdfd;
   margin-left: 7px;
   margin-bottom: 2px;
@@ -352,6 +346,33 @@
     width: 0;
     height: 0; }
 
+.blender-table-add, .blender-table-remove {
+  line-height: 15px;
+  text-align: center;
+  font-size: 22px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  color: #fdfdfd; }
+
+.blender-table {
+  padding: 2px; }
+  .blender-table input {
+    text-align: center;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    line-height: 20px; }
+  .blender-table td {
+    width: 85px;
+    overflow: hidden;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    background-color: #fdfdfd;
+    border: 1px solid #151b21; }
+
+.blender-icon-group .blender-icon, .blender-icon-group .blender-table-add, .blender-icon-group .blender-table-remove, .blender-icon-group .blender-select .blender-select-add, .blender-select .blender-icon-group .blender-select-add, .blender-icon-group .blender-select .blender-select-remove, .blender-select .blender-icon-group .blender-select-remove {
+  margin: 0; }
+
 .blender-list-group .blender-list:first-child {
   border: none;
   -moz-border-radius: 5px 0 0 5px;
@@ -413,7 +434,7 @@
       left: -2px;
       color: #fdfdfd; }
 
-.blender-icon, .blender-select .blender-select-add, .blender-select .blender-select-remove {
+.blender-icon, .blender-table-add, .blender-table-remove, .blender-select .blender-select-add, .blender-select .blender-select-remove {
   width: 20px;
   height: 20px;
   background-repeat: no-repeat;

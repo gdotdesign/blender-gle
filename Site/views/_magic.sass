@@ -1,0 +1,38 @@
+$dark: #3E4D5E
+$darker: darken($dark,8%)
+$middle: lighten($dark,15%)
+$light: lighten($dark,0%)
+$lighter: lighten($dark,10%)
+$blue:#E38600
+
+.light-gradient
+  +linear_gradient($lighter, $light)
+.lighter-gradient
+  +linear_gradient(lighten($lighter,10%), lighten($light,10%))
+
+
+.orange-gradient
+  +linear_gradient(lighten($blue,5%), darken($blue,10%))
+.orange-igradient
+  +linear_gradient(darken($blue,10%), lighten($blue,5%))
+
+.lighter-igradient
+  +linear_gradient(lighten($light,3%), lighten($lighter,3%))
+.light-igradient
+  +linear_gradient($light, $lighter)
+
+.middle-gradient
+  +linear_gradient(lighten($middle,3%), darken($middle,3%))
+.middle-igradient
+  +linear_gradient(darken($middle,3%), lighten($middle,3%))
+  
+.darker-gradient
+  +linear_gradient($dark, $darker)
+.dark-gradient
+  +linear_gradient(lighten($dark,5%), lighten($darker,5%))
+    
+.darker-igradient
+  +linear_gradient($darker, $dark)
+.dark-igradient
+  +linear_gradient(lighten($darker,5%), lighten($dark,5%))
+

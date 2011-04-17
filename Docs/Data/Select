@@ -25,13 +25,17 @@ attributes:
     show: false
     type: String
     description: Elements CSS class.
-  size:
-    default: 200
-    type: Number
-    description: Size of the element.
+  selected:
+    type: Iterable.ListItem
+    show: false
+    description: (Read only) Returns the selected list item.
 events:
-  - invoked:
+  - change:
     description: Fires when the selected item changes.
+    arguments: 
+      - item:
+        type: String
+        description: The label of the selected item.
 functions:
   addItem:
     description: Adds a new item to the element.

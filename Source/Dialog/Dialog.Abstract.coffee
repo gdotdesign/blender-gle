@@ -19,7 +19,7 @@ Dialog.Abstract = new Class {
   Extends:Core.Abstract
   Implements: Interfaces.Size
   Delegates: {
-    picker: ['attach']
+    picker: ['attach', 'detach']
   }
   Attributes: {
     class: {

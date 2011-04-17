@@ -1,0 +1,24 @@
+---
+class: Data.Text
+description: Textarea element.
+extends: Data.Abstract
+implements:
+  - Interfaces.Size
+  - Interfaces.Enabled
+attributes:
+  value: 
+    type: String 
+    description: The value (text) of the element.
+  class: 
+    show: false
+    type: String 
+    description: CSS Class of the element. 
+events:
+  - change:
+    description: Fires when the value attribute changes.
+    arguments: 
+      - text:
+        type: String
+        description: The current text.
+...
+

@@ -20,6 +20,10 @@ Dialog.Alert = new Class {
   Attributes: {
     class: {
       value: Lattice.buildClass 'dialog-alert'
+      setter: (value, old, self) ->
+        self::parent.call @, value, old
+        @labelDiv.replaceClass "#{value}-label", "#{old}-label"
+        value
     }
     label: {
       value: ''
@@ -30,14 +34,6 @@ Dialog.Alert = new Class {
       value: 'Ok'
       setter: (value) ->
         @button.set 'label', value
-    }
-    labelClass: {
-      value: Lattice.buildClass 'dialog-alert-label'
-      setter: (value, old) ->
-        value = String.from value
-        @labelDiv.removeClass old
-        @labelDiv.addClass value
-        value
     }
   }
   update: ->

@@ -20,7 +20,7 @@
       %ul
         %li
           Lattice
-        - ['home','docs','demos','themes', 'download'].each do |item|
+        - ['home','docs','roadmap','demos','themes', 'download'].each do |item|
           %a{:href=>"/#{item}", :class=>if request.path_info =~ Regexp.new("^/#{item}") then "current" end}
             %li
               = item.capitalize

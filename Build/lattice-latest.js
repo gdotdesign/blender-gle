@@ -10,7 +10,7 @@ license: MIT-style license.
 provides: Element.Extras
 
 ...
-*/var Blender, Buttons, Core, Data, Dialog, Forms, Groups, Interfaces, Iterable, Lattice, Layout, Pickers, UnitList, checkForKey, mergeOneNew;
+*/var Blender, Buttons, Core, Data, Dialog, Forms, Groups, Interfaces, Iterable, Lattice, Layout, Pickers, UnitList, mergeOneNew;
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 Element.Properties.checked = {
   get: function() {
@@ -569,79 +569,6 @@ Core.Abstract = new Class({
 /*
 ---
 
-name: Data.Abstract
-
-description: Abstract base class for data elements.
-
-license: MIT-style license.
-
-requires:
-  - Core.Abstract
-
-provides: Data.Abstract
-
-...
-*/
-Data.Abstract = new Class({
-  Extends: Core.Abstract,
-  Attributes: {
-    value: {
-      value: null
-    }
-  }
-});
-/*
----
-
-name: Interfaces.Children
-
-description:
-
-license: MIT-style license.
-
-provides: Interfaces.Children
-
-...
-*/
-Interfaces.Children = new Class({
-  _$Children: function() {
-    return this.children = [];
-  },
-  hasChild: function(child) {
-    if (this.children.indexOf(child) >= 0) {
-      return true;
-    } else {
-      return false;
-    }
-  },
-  adoptChildren: function() {
-    var children;
-    children = Array.from(arguments);
-    return children.each(function(child) {
-      return this.addChild(child);
-    }, this);
-  },
-  addChild: function(el, where) {
-    this.children.push(el);
-    return this.base.grab(el, where);
-  },
-  removeChild: function(el) {
-    if (this.children.contains(el)) {
-      this.children.erase(el);
-      document.id(el).dispose();
-      return delete el;
-    }
-  },
-  empty: function() {
-    this.children.each(function(child) {
-      return document.id(child).dispose();
-    });
-    return this.children.empty();
-  }
-});
-/*
----
-
 name: Interfaces.Enabled
 
 description: Provides enable and disable function to elements.
@@ -686,112 +613,6 @@ Interfaces.Enabled = new Class({
 /*
 ---
 
-name: Interfaces.Draggable
-
-description: Porived dragging for elements that implements it.
-
-license: MIT-style license.
-
-provides: [Interfaces.Draggable, Drag.Float, Drag.Ghost]
-
-...
-*/
-Drag.Float = new Class({
-  Extends: Drag.Move,
-  initialize: function(el, options) {
-    return this.parent(el, options);
-  },
-  start: function(event) {
-    if (this.options.target === event.target) {
-      return this.parent(event);
-    }
-  }
-});
-Drag.Ghost = new Class({
-  Extends: Drag.Move,
-  options: {
-    opacity: 0.65,
-    pos: false,
-    remove: ''
-  },
-  start: function(event) {
-    if (!event.rightClick) {
-      this.droppables = $$(this.options.droppables);
-      this.ghost();
-      return this.parent(event);
-    }
-  },
-  cancel: function(event) {
-    if (event) {
-      this.deghost();
-    }
-    return this.parent(event);
-  },
-  stop: function(event) {
-    this.deghost();
-    return this.parent(event);
-  },
-  ghost: function() {
-    this.element = (this.element.clone()).setStyles({
-      'opacity': this.options.opacity,
-      'position': 'absolute',
-      'z-index': 5003,
-      'top': this.element.getCoordinates()['top'],
-      'left': this.element.getCoordinates()['left'],
-      '-webkit-transition-duration': '0s'
-    }).inject(document.body).store('parent', this.element);
-    return this.element.getElements(this.options.remove).dispose();
-  },
-  deghost: function() {
-    var e, newpos;
-    e = this.element.retrieve('parent');
-    newpos = this.element.getPosition(e.getParent());
-    if (this.options.pos && this.overed === null) {
-      e.setStyles({
-        'top': newpos.y,
-        'left': newpos.x
-      });
-    }
-    this.element.destroy();
-    return this.element = e;
-  }
-});
-Interfaces.Draggable = new Class({
-  Implements: Options,
-  options: {
-    draggable: false,
-    ghost: false,
-    removeClasses: ''
-  },
-  _$Draggable: function() {
-    if (this.options.draggable) {
-      if (this.handle === null) {
-        this.handle = this.base;
-      }
-      if (this.options.ghost) {
-        this.drag = new Drag.Ghost(this.base, {
-          target: this.handle,
-          handle: this.handle,
-          remove: this.options.removeClasses,
-          droppables: this.options.droppables,
-          precalculate: true,
-          pos: false
-        });
-      } else {
-        this.drag = new Drag.Float(this.base, {
-          target: this.handle,
-          handle: this.handle
-        });
-      }
-      return this.drag.addEvent('drop', (function() {
-        return this.fireEvent('dropped', arguments);
-      }).bindWithEvent(this));
-    }
-  }
-});
-/*
----
-
 name: Interfaces.Size
 
 description: Size minsize from css
@@ -825,40 +646,6 @@ Interfaces.Size = new Class({
         return size;
       }
     });
-  }
-});
-/*
----
-
-name: Interfaces.Controls
-
-description: Some control functions.
-
-license: MIT-style license.
-
-provides: Interfaces.Controls
-
-requires:
-  - Interfaces.Enabled
-
-...
-*/
-Interfaces.Controls = new Class({
-  Implements: Interfaces.Enabled,
-  show: function() {
-    if (this.enabled) {
-      return this.base.show();
-    }
-  },
-  hide: function() {
-    if (this.enabled) {
-      return this.base.hide();
-    }
-  },
-  toggle: function() {
-    if (this.enabled) {
-      return this.base.toggle();
-    }
   }
 });
 /*
@@ -922,6 +709,40 @@ Core.Checkbox = new Class({
         return this.set('state', this.state ? false : true);
       }
     }, this));
+  }
+});
+/*
+---
+
+name: Interfaces.Controls
+
+description: Some control functions.
+
+license: MIT-style license.
+
+provides: Interfaces.Controls
+
+requires:
+  - Interfaces.Enabled
+
+...
+*/
+Interfaces.Controls = new Class({
+  Implements: Interfaces.Enabled,
+  show: function() {
+    if (this.enabled) {
+      return this.base.show();
+    }
+  },
+  hide: function() {
+    if (this.enabled) {
+      return this.base.hide();
+    }
+  },
+  toggle: function() {
+    if (this.enabled) {
+      return this.base.toggle();
+    }
   }
 });
 /*
@@ -1370,182 +1191,50 @@ Core.Scrollbar = new Class({
 /*
 ---
 
-name: Buttons.Abstract
+name: Interfaces.Children
 
-description: Button element.
-
-license: MIT-style license.
-
-requires:
-  - Core.Abstract
-  - Interfaces.Controls
-  - Interfaces.Enabled
-  - Interfaces.Size
-
-provides: Buttons.Abstract
-
-...
-*/
-Buttons.Abstract = new Class({
-  Extends: Core.Abstract,
-  Implements: [Interfaces.Controls, Interfaces.Enabled, Interfaces.Size],
-  Attributes: {
-    label: {
-      value: '',
-      setter: function(value) {
-        this.base.set('text', value);
-        return value;
-      }
-    },
-    "class": {
-      value: Lattice.buildClass('button')
-    }
-  },
-  create: function() {
-    return this.base.addEvent('click', __bind(function(e) {
-      if (this.enabled) {
-        return this.fireEvent('invoked', [this, e]);
-      }
-    }, this));
-  }
-});
-/*
----
-
-name: Buttons.Key
-
-description: Button for shortcut editing.
+description:
 
 license: MIT-style license.
 
-requires:
-  - Buttons.Abstract
-
-provides: Buttons.Key
+provides: Interfaces.Children
 
 ...
 */
-Buttons.Key = new Class({
-  Extends: Buttons.Abstract,
-  Attributes: {
-    "class": {
-      value: Lattice.buildClass('button-key')
+Interfaces.Children = new Class({
+  _$Children: function() {
+    return this.children = [];
+  },
+  hasChild: function(child) {
+    if (this.children.indexOf(child) >= 0) {
+      return true;
+    } else {
+      return false;
     }
   },
-  getShortcut: function(e) {
-    var modifiers, specialKey;
-    this.specialMap = {
-      '~': '`',
-      '!': '1',
-      '@': '2',
-      '#': '3',
-      '$': '4',
-      '%': '5',
-      '^': '6',
-      '&': '7',
-      '*': '8',
-      '(': '9',
-      ')': '0',
-      '_': '-',
-      '+': '=',
-      '{': '[',
-      '}': ']',
-      '\\': '|',
-      ':': ';',
-      '"': '\'',
-      '<': ',',
-      '>': '.',
-      '?': '/'
-    };
-    modifiers = '';
-    if (e.control) {
-      modifiers += 'ctrl ';
-    }
-    if (event.meta) {
-      modifiers += 'meta ';
-    }
-    if (e.shift) {
-      specialKey = this.specialMap[String.fromCharCode(e.code)];
-      if (specialKey != null) {
-        e.key = specialKey;
-      }
-      modifiers += 'shift ';
-    }
-    if (e.alt) {
-      modifiers += 'alt ';
-    }
-    return modifiers + e.key;
+  adoptChildren: function() {
+    var children;
+    children = Array.from(arguments);
+    return children.each(function(child) {
+      return this.addChild(child);
+    }, this);
   },
-  create: function() {
-    var stop;
-    stop = function(e) {
-      return e.stop();
-    };
-    return this.base.addEvent('click', __bind(function(e) {
-      if (this.enabled) {
-        this.set('label', 'Press any key!');
-        this.base.addClass('active');
-        window.addEvent('keydown', stop);
-        return window.addEvent('keyup:once', __bind(function(e) {
-          var shortcut;
-          this.base.removeClass('active');
-          shortcut = this.getShortcut(e).toUpperCase();
-          if (shortcut !== "ESC") {
-            this.set('label', shortcut);
-            this.fireEvent('invoked', [this, shortcut]);
-          }
-          return window.removeEvent('keydown', stop);
-        }, this));
-      }
-    }, this));
-  }
-});
-/*
----
-
-name: Buttons.Toggle
-
-description: Toggle button element.
-
-license: MIT-style license.
-
-requires:
-  - Buttons.Abstract
-
-provides: Buttons.Toggle
-
-...
-*/
-Buttons.Toggle = new Class({
-  Extends: Buttons.Abstract,
-  Attributes: {
-    state: {
-      value: false,
-      setter: function(value, old) {
-        if (value) {
-          this.base.addClass('pushed');
-        } else {
-          this.base.removeClass('pushed');
-        }
-        return value;
-      },
-      getter: function() {
-        return this.base.hasClass('pushed');
-      }
-    },
-    "class": {
-      value: Lattice.buildClass('button-toggle')
+  addChild: function(el, where) {
+    this.children.push(el);
+    return this.base.grab(el, where);
+  },
+  removeChild: function(el) {
+    if (this.children.contains(el)) {
+      this.children.erase(el);
+      document.id(el).dispose();
+      return delete el;
     }
   },
-  create: function() {
-    this.addEvent('stateChange', function() {
-      return this.fireEvent('invoked', [this, this.state]);
+  empty: function() {
+    this.children.each(function(child) {
+      return document.id(child).dispose();
     });
-    return this.base.addEvent('click', __bind(function() {
-      if (this.enabled) {
-        return this.set('state', this.state ? false : true);
-      }
-    }, this));
+    return this.children.empty();
   }
 });
 /*
@@ -2028,25 +1717,26 @@ Core.Overlay = new Class({
 /*
 ---
 
-name: Core.Tab
+name: Buttons.Abstract
 
-description: Tab element for Core.Tabs.
+description: Button element.
 
 license: MIT-style license.
 
 requires:
   - Core.Abstract
+  - Interfaces.Controls
+  - Interfaces.Enabled
+  - Interfaces.Size
 
-provides: Core.Tab
+provides: Buttons.Abstract
 
 ...
 */
-Core.Tab = new Class({
+Buttons.Abstract = new Class({
   Extends: Core.Abstract,
+  Implements: [Interfaces.Controls, Interfaces.Enabled, Interfaces.Size],
   Attributes: {
-    "class": {
-      value: Lattice.buildClass('tab')
-    },
     label: {
       value: '',
       setter: function(value) {
@@ -2054,27 +1744,155 @@ Core.Tab = new Class({
         return value;
       }
     },
-    activeClass: {
-      value: 'active'
+    "class": {
+      value: Lattice.buildClass('button')
     }
   },
   create: function() {
-    this.base.addEvent('click', __bind(function() {
-      return this.fireEvent('activate', this);
+    return this.base.addEvent('click', __bind(function(e) {
+      if (this.enabled) {
+        return this.fireEvent('invoked', [this, e]);
+      }
     }, this));
-    return this.base.adopt(this.label);
-  },
-  activate: function(event) {
-    if (event) {
-      this.fireEvent('activated', this);
+  }
+});
+/*
+---
+
+name: Buttons.Key
+
+description: Button for shortcut editing.
+
+license: MIT-style license.
+
+requires:
+  - Buttons.Abstract
+
+provides: Buttons.Key
+
+...
+*/
+Buttons.Key = new Class({
+  Extends: Buttons.Abstract,
+  Attributes: {
+    "class": {
+      value: Lattice.buildClass('button-key')
     }
-    return this.base.addClass(this.activeClass);
   },
-  deactivate: function(event) {
-    if (event) {
-      this.fireEvent('deactivated', this);
+  getShortcut: function(e) {
+    var modifiers, specialKey;
+    this.specialMap = {
+      '~': '`',
+      '!': '1',
+      '@': '2',
+      '#': '3',
+      '$': '4',
+      '%': '5',
+      '^': '6',
+      '&': '7',
+      '*': '8',
+      '(': '9',
+      ')': '0',
+      '_': '-',
+      '+': '=',
+      '{': '[',
+      '}': ']',
+      '\\': '|',
+      ':': ';',
+      '"': '\'',
+      '<': ',',
+      '>': '.',
+      '?': '/'
+    };
+    modifiers = '';
+    if (e.control) {
+      modifiers += 'ctrl ';
     }
-    return this.base.removeClass(this.activeClass);
+    if (event.meta) {
+      modifiers += 'meta ';
+    }
+    if (e.shift) {
+      specialKey = this.specialMap[String.fromCharCode(e.code)];
+      if (specialKey != null) {
+        e.key = specialKey;
+      }
+      modifiers += 'shift ';
+    }
+    if (e.alt) {
+      modifiers += 'alt ';
+    }
+    return modifiers + e.key;
+  },
+  create: function() {
+    var stop;
+    stop = function(e) {
+      return e.stop();
+    };
+    return this.base.addEvent('click', __bind(function(e) {
+      if (this.enabled) {
+        this.set('label', 'Press any key!');
+        this.base.addClass('active');
+        window.addEvent('keydown', stop);
+        return window.addEvent('keyup:once', __bind(function(e) {
+          var shortcut;
+          this.base.removeClass('active');
+          shortcut = this.getShortcut(e).toUpperCase();
+          if (shortcut !== "ESC") {
+            this.set('label', shortcut);
+            this.fireEvent('invoked', [this, shortcut]);
+          }
+          return window.removeEvent('keydown', stop);
+        }, this));
+      }
+    }, this));
+  }
+});
+/*
+---
+
+name: Buttons.Toggle
+
+description: Toggle button element.
+
+license: MIT-style license.
+
+requires:
+  - Buttons.Abstract
+
+provides: Buttons.Toggle
+
+...
+*/
+Buttons.Toggle = new Class({
+  Extends: Buttons.Abstract,
+  Attributes: {
+    state: {
+      value: false,
+      setter: function(value, old) {
+        if (value) {
+          this.base.addClass('pushed');
+        } else {
+          this.base.removeClass('pushed');
+        }
+        return value;
+      },
+      getter: function() {
+        return this.base.hasClass('pushed');
+      }
+    },
+    "class": {
+      value: Lattice.buildClass('button-toggle')
+    }
+  },
+  create: function() {
+    this.addEvent('stateChange', function() {
+      return this.fireEvent('invoked', [this, this.state]);
+    });
+    return this.base.addEvent('click', __bind(function() {
+      if (this.enabled) {
+        return this.set('state', this.state ? false : true);
+      }
+    }, this));
   }
 });
 /*
@@ -2102,70 +1920,6 @@ Groups.Abstract = new Class({
   },
   removeItem: function(el) {
     return this.removeChild(el);
-  }
-});
-/*
----
-
-name: Groups.Tabs
-
-description: Tab navigation element.
-
-license: MIT-style license.
-
-requires:
-  - Groups.Abstract
-
-provides: Groups.Tabs
-
-...
-*/
-Groups.Tabs = new Class({
-  Extends: Groups.Abstract,
-  Binds: ['change'],
-  Attributes: {
-    "class": {
-      value: Lattice.buildClass('group-tab')
-    },
-    active: {
-      setter: function(value, old) {
-        if (!(old != null)) {
-          value.activate(false);
-        } else {
-          if (old !== value) {
-            old.deactivate(false);
-          }
-          value.activate(false);
-        }
-        return value;
-      }
-    }
-  },
-  add: function(tab) {
-    if (!this.hasChild(tab)) {
-      this.addChild(tab);
-      return tab.addEvent('activate', this.change);
-    }
-  },
-  remove: function(tab) {
-    if (this.hasChild(tab)) {
-      return this.removeChild(tab);
-    }
-  },
-  change: function(tab) {
-    if (tab !== this.active) {
-      this.set('active', tab);
-      return this.fireEvent('change', tab);
-    }
-  },
-  getByLabel: function(label) {
-    return (this.children.filter(function(item, i) {
-      if (item.label === label) {
-        return true;
-      } else {
-        return false;
-      }
-    }))[0];
   }
 });
 /*
@@ -2556,6 +2310,30 @@ Groups.Lists = new Class({
 /*
 ---
 
+name: Data.Abstract
+
+description: Abstract base class for data elements.
+
+license: MIT-style license.
+
+requires:
+  - Core.Abstract
+
+provides: Data.Abstract
+
+...
+*/
+Data.Abstract = new Class({
+  Extends: Core.Abstract,
+  Attributes: {
+    value: {
+      value: null
+    }
+  }
+});
+/*
+---
+
 name: Dialog.Abstract
 
 description: Dialog abstract base class.
@@ -2574,7 +2352,7 @@ Dialog.Abstract = new Class({
   Extends: Core.Abstract,
   Implements: Interfaces.Size,
   Delegates: {
-    picker: ['attach']
+    picker: ['attach', 'detach']
   },
   Attributes: {
     "class": {
@@ -2630,7 +2408,7 @@ provides: Data.Text
 */
 Data.Text = new Class({
   Extends: Data.Abstract,
-  Implements: Interfaces.Size,
+  Implements: [Interfaces.Size, Interfaces.Enabled],
   Binds: ['update'],
   Attributes: {
     "class": {
@@ -2647,13 +2425,23 @@ Data.Text = new Class({
     }
   },
   update: function() {
-    this.fireEvent('change', this.get('value'));
     return this.text.setStyle('width', this.size - 10);
   },
   create: function() {
     this.text = new Element('textarea');
+    this.addEvent('enabledChange', __bind(function(obj) {
+      console.log(obj);
+      if (obj.newVal) {
+        return this.text.set('disabled', false);
+      } else {
+        return this.text.set('disabled', true);
+      }
+    }, this));
     this.base.grab(this.text);
-    return this.text.addEvent('keyup', this.update);
+    return this.text.addEvent('keyup', __bind(function() {
+      this.set('value', this.get('value'));
+      return this.fireEvent('change', this.get('value'));
+    }, this));
   }
 });
 /*
@@ -2678,7 +2466,12 @@ Dialog.Prompt = new Class({
   Extends: Dialog.Abstract,
   Attributes: {
     "class": {
-      value: Lattice.buildClass('dialog-prompt')
+      value: Lattice.buildClass('dialog-prompt'),
+      setter: function(value, old, self) {
+        self.prototype.parent.call(this, value, old);
+        this.labelDiv.replaceClass("" + value + "-label", "" + old + "-label");
+        return value;
+      }
     },
     label: {
       value: '',
@@ -2690,15 +2483,6 @@ Dialog.Prompt = new Class({
       value: 'Ok',
       setter: function(value) {
         return this.button.set('label', value);
-      }
-    },
-    labelClass: {
-      value: Lattice.buildClass('dialog-prompt-label'),
-      setter: function(value, old) {
-        value = String.from(value);
-        this.labelDiv.removeClass(old);
-        this.labelDiv.addClass(value);
-        return value;
       }
     }
   },
@@ -3572,347 +3356,255 @@ provides: Data.Table
 
 ...
 */
-checkForKey = function(key, hash, i) {
-  if (!(i != null)) {
-    i = 0;
-  }
-  if (!(hash[key] != null)) {
-    return key;
-  } else {
-    if (!(hash[key + i] != null)) {
-      return key + i;
-    } else {
-      return checkForKey(key, hash, i + 1);
-    }
-  }
-};
 Data.Table = new Class({
   Extends: Data.Abstract,
   Binds: ['update'],
-  options: {
-    columns: 1,
-    "class": 'table'
-  },
-  initialize: function(options) {
-    return this.parent(options);
+  Attributes: {
+    "class": {
+      value: Lattice.buildClass('table'),
+      setter: function(value, old, self) {
+        self.prototype.parent.call(this, value, old);
+        this.hremove.set('class', value + "-remove");
+        this.hadd.set('class', value + "-add");
+        this.vremove.set('class', value + "-remove");
+        this.vadd.set('class', value + "-add");
+        return value;
+      }
+    },
+    value: {
+      setter: function(value) {
+        this.base.empty();
+        value.each(function(it) {
+          var tr;
+          tr = new Element('tr');
+          this.base.grab(tr);
+          return it.each(function(v) {
+            return tr.grab(new Element('td', {
+              text: v
+            }));
+          }, this);
+        }, this);
+        this.fireEvent('change', this.get('value'));
+        return value;
+      },
+      getter: function() {
+        var ret, td, tr, tra, _i, _j, _len, _len2, _ref, _ref2;
+        ret = [];
+        _ref = this.base.children;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          tr = _ref[_i];
+          tra = [];
+          _ref2 = tr.children;
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            td = _ref2[_j];
+            tra.push(td.get('text'));
+          }
+          ret.push(tra);
+        }
+        return ret;
+      }
+    }
   },
   create: function() {
-    this.base.addClass(this.options["class"]);
-    this.table = new Element('table', {
-      cellspacing: 0,
-      cellpadding: 0
-    });
-    this.base.grab(this.table);
-    this.rows = [];
-    this.columns = this.options.columns;
-    this.header = new Data.TableRow({
-      columns: this.columns
-    });
-    this.header.addEvent('next', (function() {
-      this.addCloumn('');
-      return this.header.cells.getLast().editStart();
-    }).bind(this));
-    this.header.addEvent('editEnd', (function() {
-      this.fireEvent('change', this.getData());
-      if (!this.header.cells.getLast().editing) {
-        if (this.header.cells.getLast().getValue() === '') {
-          return this.removeLast();
-        }
+    this.loc = {
+      h: 0,
+      v: 0
+    };
+    delete this.base;
+    this.base = new Element('table');
+    this.base.grab(new Element('tr').grab(new Element('td')));
+    this.columns = 5;
+    this.rows = 1;
+    this.input = new Element('input');
+    this.setupIcons();
+    return this.setupEvents();
+  },
+  setupEvents: function() {
+    this.hadd.addEvent('invoked', this.addColumn.bind(this));
+    this.hremove.addEvent('invoked', this.removeColumn.bind(this));
+    this.vadd.addEvent('invoked', this.addRow.bind(this));
+    this.vremove.addEvent('invoked', this.removeRow.bind(this));
+    this.icg1.base.addEvent('mouseenter', this.suspendIcons.bind(this));
+    this.icg1.base.addEvent('mouseleave', this.hideIcons.bind(this));
+    this.icg2.base.addEvent('mouseenter', this.suspendIcons.bind(this));
+    this.icg2.base.addEvent('mouseleave', this.hideIcons.bind(this));
+    this.base.addEvent('mouseleave', __bind(function(e) {
+      this.id1 = this.icg1.hide.delay(400, this.icg1);
+      return this.id2 = this.icg2.hide.delay(400, this.icg2);
+    }, this));
+    this.base.addEvent('mouseenter', __bind(function(e) {
+      this.suspendIcons();
+      this.icg1.show();
+      return this.icg2.show();
+    }, this));
+    this.base.addEvent('mouseenter:relay(td)', __bind(function(e) {
+      return this.positionIcons(e.target);
+    }, this));
+    this.input.addEvent('blur', __bind(function() {
+      this.input.dispose();
+      this.editTarget.set('text', this.input.get('value'));
+      return this.fireEvent('change', this.get('value'));
+    }, this));
+    return this.base.addEvent('click:relay(td)', __bind(function(e) {
+      var size;
+      if (this.input.isVisible()) {
+        this.input.dispose();
+        this.editTarget.set('text', this.input.get('value'));
       }
-    }).bind(this));
-    this.table.grab(this.header);
-    this.addRow(this.columns);
-    return this;
+      this.input.set('value', e.target.get('text'));
+      size = e.target.getSize();
+      this.input.setStyles({
+        width: size.x,
+        height: size.y
+      });
+      this.editTarget = e.target;
+      e.target.set('text', '');
+      e.target.grab(this.input);
+      return this.input.focus();
+    }, this));
   },
-  ready: function() {},
-  addCloumn: function(name) {
-    this.columns++;
-    this.header.add(name);
-    return this.rows.each(function(item) {
-      return item.add('');
-    });
+  positionIcons: function(target) {
+    var pos, pos1, size, size2;
+    pos = target.getPosition();
+    pos1 = this.base.getPosition();
+    size = this.icg1.base.getSize();
+    size2 = this.base.getSize();
+    this.icg1.base.setStyle('left', pos.x);
+    this.icg1.base.setStyle('top', pos1.y - size.y);
+    this.icg2.base.setStyle('top', pos.y);
+    this.icg2.base.setStyle('left', pos1.x + size2.x);
+    this.loc = this.getLocation(target);
+    this.target = target;
+    this.vremove.set('enabled', this.base.children.length > 1);
+    return this.hremove.set('enabled', this.base.children[0].children.length > 1);
   },
-  removeLast: function() {
-    this.header.removeLast();
-    this.columns--;
-    return this.rows.each(function(item) {
-      return item.removeLast();
-    });
+  setupIcons: function() {
+    this.icg1 = new Groups.Icons();
+    this.icg2 = new Groups.Icons();
+    this.hadd = new Core.Icon();
+    this.hremove = new Core.Icon();
+    this.vadd = new Core.Icon();
+    this.vremove = new Core.Icon();
+    this.hadd.base.set('text', '+');
+    this.hremove.base.set('text', '-');
+    this.vadd.base.set('text', '+');
+    this.vremove.base.set('text', '-');
+    this.icg1.addItem(this.hadd);
+    this.icg1.addItem(this.hremove);
+    this.icg2.addItem(this.vadd);
+    this.icg2.addItem(this.vremove);
+    this.icg1.base.setStyle('position', 'absolute');
+    this.icg2.base.setStyle('position', 'absolute');
+    document.body.adopt(this.icg1, this.icg2);
+    return this.hideIcons();
   },
-  addRow: function(columns) {
-    var row;
-    row = new Data.TableRow({
-      columns: columns
-    });
-    row.addEvent('editEnd', this.update);
-    row.addEvent('next', (function(row) {
-      var index;
-      index = this.rows.indexOf(row);
-      if (index !== this.rows.length - 1) {
-        return this.rows[index + 1].cells[0].editStart();
+  suspendIcons: function() {
+    if (this.id1 != null) {
+      clearTimeout(this.id1);
+      this.id1 = null;
+    }
+    if (this.id2 != null) {
+      clearTimeout(this.id2);
+      return this.id2 = null;
+    }
+  },
+  hideIcons: function() {
+    this.icg1.hide();
+    return this.icg2.hide();
+  },
+  getLocation: function(td) {
+    var children, i, ret, tr, _ref, _ref2;
+    ret = {
+      h: 0,
+      v: 0
+    };
+    tr = td.getParent('tr');
+    children = tr.getChildren();
+    for (i = 0, _ref = children.length; (0 <= _ref ? i <= _ref : i >= _ref); (0 <= _ref ? i += 1 : i -= 1)) {
+      if (td === children[i]) {
+        ret.h = i;
       }
-    }).bind(this));
-    this.rows.push(row);
-    return this.table.grab(row);
-  },
-  removeRow: function(row, erase) {
-    if (!(erase != null)) {
-      erase = true;
     }
-    row.removeEvents('editEnd');
-    row.removeEvents('next');
-    row.removeAll();
-    if (erase) {
-      this.rows.erase(row);
-    }
-    row.base.destroy();
-    return delete row;
-  },
-  removeAll: function(addColumn) {
-    if (!(addColumn != null)) {
-      addColumn = true;
-    }
-    this.header.removeAll();
-    this.rows.each((function(row) {
-      return this.removeRow(row, false);
-    }).bind(this));
-    this.rows.empty();
-    this.columns = 0;
-    if (addColumn) {
-      this.addCloumn();
-      return this.addRow(this.columns);
-    }
-  },
-  update: function() {
-    var length, longest, rowsToRemove;
-    length = this.rows.length;
-    longest = 0;
-    rowsToRemove = [];
-    this.rows.each((function(row, i) {
-      var empty;
-      empty = row.empty();
-      if (empty) {
-        return rowsToRemove.push(row);
+    children = this.base.getChildren();
+    for (i = 0, _ref2 = children.length; (0 <= _ref2 ? i <= _ref2 : i >= _ref2); (0 <= _ref2 ? i += 1 : i -= 1)) {
+      if (tr === children[i]) {
+        ret.v = i;
       }
-    }).bind(this));
-    rowsToRemove.each((function(item) {
-      return this.removeRow(item);
-    }).bind(this));
-    if (this.rows.length === 0 || !this.rows.getLast().empty()) {
-      this.addRow(this.columns);
     }
-    return this.fireEvent('change', this.getData());
-  },
-  getData: function() {
-    var headers, ret;
-    ret = {};
-    headers = [];
-    this.header.cells.each(function(item) {
-      var value;
-      value = item.getValue();
-      ret[checkForKey(value, ret)] = [];
-      return headers.push(ret[value]);
-    });
-    this.rows.each((function(row) {
-      if (!row.empty()) {
-        return row.getValue().each(function(item, i) {
-          return headers[i].push(item);
-        });
-      }
-    }).bind(this));
     return ret;
   },
-  getValue: function() {
-    return this.getData();
-  },
-  setValue: function(obj) {
-    var j, rowa, self;
-    this.removeAll(false);
-    rowa = [];
-    j = 0;
-    self = this;
-    new Hash(obj).each(function(value, key) {
-      self.addCloumn(key);
-      value.each(function(item, i) {
-        if (!(rowa[i] != null)) {
-          rowa[i] = [];
-        }
-        return rowa[i][j] = item;
-      });
-      return j++;
-    });
-    rowa.each(function(item, i) {
-      self.addRow(self.columns);
-      return self.rows[i].setValue(item);
-    });
-    this.update();
-    return this;
-  }
-});
-Data.TableRow = new Class({
-  Extends: Data.Abstract,
-  Delegates: {
-    base: ['getChildren']
-  },
-  options: {
-    columns: 1,
-    "class": ''
-  },
-  initialize: function(options) {
-    return this.parent(options);
-  },
-  create: function() {
-    var i, _results;
-    delete this.base;
-    this.base = new Element('tr');
-    this.base.addClass(this.options["class"]);
-    this.cells = [];
-    i = 0;
-    _results = [];
-    while (i < this.options.columns) {
-      this.add('');
-      _results.push(i++);
-    }
-    return _results;
-  },
-  add: function(value) {
-    var cell;
-    cell = new Data.TableCell({
-      value: value
-    });
-    cell.addEvent('editEnd', (function() {
-      return this.fireEvent('editEnd');
-    }).bind(this));
-    cell.addEvent('next', (function(cell) {
-      var index;
-      index = this.cells.indexOf(cell);
-      if (index === this.cells.length - 1) {
-        return this.fireEvent('next', this);
-      } else {
-        return this.cells[index + 1].editStart();
+  testHorizontal: function(where) {
+    var w;
+    if ((w = Number.from(where)) != null) {
+      if (w < this.base.children[0].children.length && w > 0) {
+        return this.loc.h = w - 1;
       }
-    }).bind(this));
-    this.cells.push(cell);
-    return this.base.grab(cell);
+    }
   },
-  empty: function() {
-    var filtered;
-    filtered = this.cells.filter(function(item) {
-      if (item.getValue() !== '') {
-        return true;
-      } else {
-        return false;
+  testVertical: function(where) {
+    var w;
+    if ((w = Number.from(where)) != null) {
+      if (w < this.base.children.length && w > 0) {
+        return this.loc.v = w - 1;
       }
-    });
-    if (filtered.length > 0) {
-      return false;
+    }
+  },
+  addRow: function(where) {
+    var baseChildren, i, tr, trchildren, _ref;
+    this.testVertical(where);
+    tr = new Element('tr');
+    baseChildren = this.base.children;
+    trchildren = baseChildren[0].children;
+    if (baseChildren.length > 0) {
+      baseChildren[this.loc.v].grab(tr, 'before');
     } else {
-      return true;
+      this.base.grab(tr);
     }
-  },
-  removeLast: function() {
-    return this.remove(this.cells.getLast());
-  },
-  remove: function(cell, remove) {
-    cell.removeEvents('editEnd');
-    cell.removeEvents('next');
-    this.cells.erase(cell);
-    cell.base.destroy();
-    return delete cell;
-  },
-  removeAll: function() {
-    return (this.cells.filter(function() {
-      return true;
-    })).each((function(cell) {
-      return this.remove(cell);
-    }).bind(this));
-  },
-  getValue: function() {
-    return this.cells.map(function(cell) {
-      return cell.getValue();
-    });
-  },
-  setValue: function(value) {
-    return this.cells.each(function(item, i) {
-      return item.setValue(value[i]);
-    });
-  }
-});
-Data.TableCell = new Class({
-  Extends: Data.Abstract,
-  Binds: ['editStart', 'editEnd'],
-  options: {
-    editable: true,
-    value: ''
-  },
-  initialize: function(options) {
-    return this.parent(options);
-  },
-  create: function() {
-    delete this.base;
-    this.base = new Element('td', {
-      text: this.options.value
-    });
-    this.value = this.options.value;
-    if (this.options.editable) {
-      return this.base.addEvent('click', this.editStart);
+    for (i = 1, _ref = trchildren.length; (1 <= _ref ? i <= _ref : i >= _ref); (1 <= _ref ? i += 1 : i -= 1)) {
+      tr.grab(new Element('td'));
     }
+    this.positionIcons(this.base.children[this.loc.v].children[this.loc.h]);
+    return this.fireEvent('change', this.get('value'));
   },
-  editStart: function() {
-    var size;
-    if (!this.editing) {
-      this.editing = true;
-      this.input = new Element('input', {
-        type: 'text',
-        value: this.value
-      });
-      this.base.set('html', '');
-      this.base.grab(this.input);
-      this.input.addEvent('change', (function() {
-        return this.setValue(this.input.get('value'));
-      }).bindWithEvent(this));
-      this.input.addEvent('keydown', (function(e) {
-        if (e.key === 'enter') {
-          this.input.blur();
-        }
-        if (e.key === 'tab') {
-          e.stop();
-          return this.fireEvent('next', this);
-        }
-      }).bind(this));
-      size = this.base.getSize();
-      this.input.setStyles({
-        width: size.x + "px !important",
-        height: size.y + "px !important"
-      });
-      this.input.focus();
-      return this.input.addEvent('blur', this.editEnd);
+  addColumn: function(where) {
+    var tr, _i, _len, _ref;
+    this.testHorizontal(where);
+    _ref = this.base.children;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      tr = _ref[_i];
+      tr.children[this.loc.h].grab(new Element('td'), 'before');
     }
+    this.positionIcons(this.base.children[this.loc.v].children[this.loc.h]);
+    return this.fireEvent('change', this.get('value'));
   },
-  editEnd: function(e) {
-    if (this.editing) {
-      this.editing = false;
+  removeRow: function(where) {
+    this.testVertical(where);
+    if (this.base.children.length !== 1) {
+      this.base.children[this.loc.v].destroy();
+      if (this.base.children[this.loc.v] != null) {
+        this.positionIcons(this.base.children[this.loc.v].children[this.loc.h]);
+      } else {
+        this.positionIcons(this.base.children[this.loc.v - 1].children[this.loc.h]);
+      }
     }
-    this.setValue(this.input.get('value'));
-    if (this.input != null) {
-      this.input.removeEvents(['change', 'keydown']);
-      this.input.destroy();
-      delete this.input;
-    }
-    return this.fireEvent('editEnd');
+    return this.fireEvent('change', this.get('value'));
   },
-  setValue: function(value) {
-    this.value = value;
-    if (!this.editing) {
-      return this.base.set('text', this.value);
+  removeColumn: function(where) {
+    var tr, _i, _len, _ref;
+    this.testHorizontal(where);
+    if (this.base.children[0].children.length !== 1) {
+      _ref = this.base.children;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tr = _ref[_i];
+        tr.children[this.loc.h].destroy();
+      }
+      if (this.base.children[this.loc.v].children[this.loc.h] != null) {
+        this.positionIcons(this.base.children[this.loc.v].children[this.loc.h]);
+      } else {
+        this.positionIcons(this.base.children[this.loc.v].children[this.loc.h - 1]);
+      }
     }
-  },
-  getValue: function() {
-    if (!this.editing) {
-      return this.base.get('text');
-    } else {
-      return this.input.get('value');
-    }
+    return this.fireEvent('change', this.get('value'));
   }
 });
 /*
@@ -4019,99 +3711,6 @@ Data.Unit = new Class({
 /*
 ---
 
-name: Data.List
-
-description: Text data element.
-
-requires:
-  - Data.Abstract
-
-provides: Data.List
-
-...
-*/
-Data.List = new Class({
-  Extends: Data.Abstract,
-  Binds: ['update'],
-  Attributes: {
-    "class": {
-      value: 'list'
-    }
-  },
-  create: function() {
-    this.table = new Element('table', {
-      cellspacing: 0,
-      cellpadding: 0
-    });
-    this.base.grab(this.table);
-    this.cells = [];
-    return this.add('');
-  },
-  update: function() {
-    this.cells.each((function(item) {
-      if (item.getValue() === '') {
-        return this.remove(item);
-      }
-    }).bind(this));
-    if (this.cells.length === 0) {
-      this.add('');
-    }
-    if (this.cells.getLast().getValue() !== '') {
-      this.add('');
-    }
-    return this.fireEvent('change', {
-      value: this.getValue()
-    });
-  },
-  add: function(value) {
-    var cell, tr;
-    cell = new Data.TableCell({
-      value: value
-    });
-    cell.addEvent('editEnd', this.update);
-    cell.addEvent('next', function() {
-      return cell.input.blur();
-    });
-    this.cells.push(cell);
-    tr = new Element('tr');
-    this.table.grab(tr);
-    return tr.grab(cell);
-  },
-  remove: function(cell, remove) {
-    cell.removeEvents('editEnd');
-    cell.removeEvents('next');
-    this.cells.erase(cell);
-    cell.base.getParent('tr').destroy();
-    cell.base.destroy();
-    return delete cell;
-  },
-  removeAll: function() {
-    return (this.cells.filter(function() {
-      return true;
-    })).each((function(cell) {
-      return this.remove(cell);
-    }).bind(this));
-  },
-  getValue: function() {
-    var map;
-    map = this.cells.map(function(cell) {
-      return cell.getValue();
-    });
-    map.splice(this.cells.length - 1, 1);
-    return map;
-  },
-  setValue: function(value) {
-    var self;
-    this.removeAll();
-    self = this;
-    return value.each(function(item) {
-      return self.add(item);
-    });
-  }
-});
-/*
----
-
 name: Dialog.Alert
 
 description: Select Element
@@ -4130,7 +3729,12 @@ Dialog.Alert = new Class({
   Extends: Dialog.Abstract,
   Attributes: {
     "class": {
-      value: Lattice.buildClass('dialog-alert')
+      value: Lattice.buildClass('dialog-alert'),
+      setter: function(value, old, self) {
+        self.prototype.parent.call(this, value, old);
+        this.labelDiv.replaceClass("" + value + "-label", "" + old + "-label");
+        return value;
+      }
     },
     label: {
       value: '',
@@ -4142,15 +3746,6 @@ Dialog.Alert = new Class({
       value: 'Ok',
       setter: function(value) {
         return this.button.set('label', value);
-      }
-    },
-    labelClass: {
-      value: Lattice.buildClass('dialog-alert-label'),
-      setter: function(value, old) {
-        value = String.from(value);
-        this.labelDiv.removeClass(old);
-        this.labelDiv.addClass(value);
-        return value;
       }
     }
   },
@@ -4194,7 +3789,12 @@ Dialog.Confirm = new Class({
   Extends: Dialog.Abstract,
   Attributes: {
     "class": {
-      value: Lattice.buildClass('dialog-confirm')
+      value: Lattice.buildClass('dialog-confirm'),
+      setter: function(value, old, self) {
+        self.prototype.parent.call(this, value, old);
+        this.labelDiv.replaceClass("" + value + "-label", "" + old + "-label");
+        return value;
+      }
     },
     label: {
       value: '',
@@ -4212,15 +3812,6 @@ Dialog.Confirm = new Class({
       value: 'Cancel',
       setter: function(value) {
         return this.cancelButton.set('label', value);
-      }
-    },
-    labelClass: {
-      value: Lattice.buildClass('dialog-alert-label'),
-      setter: function(value, old) {
-        value = String.from(value);
-        this.labelDiv.removeClass(old);
-        this.labelDiv.addClass(value);
-        return value;
       }
     }
   },

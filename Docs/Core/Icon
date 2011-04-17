@@ -12,6 +12,7 @@ attributes:
     description: CSS Class of the element. 
   image: 
     type: String
+    default: /add.png
     description: The path of the background-image of the element. (relative to page location that runs the script, whithout the url())
 events:
   - invoked:

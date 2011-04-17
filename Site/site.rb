@@ -176,6 +176,9 @@ class Gdotui < Sinatra::Application
     haml :build
   end
   
+  get '/roadmap' do
+    haml :roadmap
+  end
   post '/download' do
     content_type 'application/octet-stream'
     response['Content-disposition'] = "attachment; filename=gdotui.js;"

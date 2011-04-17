@@ -12,241 +12,205 @@ provides: Data.Table
 
 ...
 ###
-checkForKey = (key,hash,i) ->
-  if not i?
-    i = 0
-  if not hash[key]?
-    key
-  else
-    if not hash[key+i]?
-      key+i
-    else
-      checkForKey key,hash,i+1
 Data.Table = new Class {
   Extends: Data.Abstract
   Binds: ['update']
-  options: {
-    columns: 1
-    class: 'table'
+  Attributes: {
+    class: {
+      value: Lattice.buildClass 'table'
+      setter: (value, old, self) ->
+        self::parent.call @, value, old
+        @hremove.set 'class', value+"-remove"
+        @hadd.set 'class', value+"-add"
+        @vremove.set 'class', value+"-remove"
+        @vadd.set 'class', value+"-add"
+        value
+    }
+    value: {
+      setter: (value) ->
+        @base.empty()
+        value.each (it) -> 
+          tr = new Element('tr')
+          @base.grab tr
+          it.each (v) ->
+            tr.grab new Element('td',{text:v})
+          , @
+        , @
+        @fireEvent 'change', @get 'value'
+        value
+      getter: ->
+        ret = []
+        for tr in @base.children
+          tra = []
+          for td in tr.children
+            tra.push td.get 'text'
+          ret.push tra
+        ret
+    }
   }
-  initialize: (options) ->
-    @parent options
   create: ->
-    @base.addClass @options.class
-    @table = new Element 'table', {cellspacing:0, cellpadding:0}
-    @base.grab @table
-    @rows = []
-    @columns = @options.columns
-    @header = new Data.TableRow {columns:@columns}
-    @header.addEvent 'next', ( ->
-      @addCloumn ''
-      @header.cells.getLast().editStart()
-    ).bind @
-    @header.addEvent 'editEnd', ( ->
-      @fireEvent 'change', @getData()
-      if not @header.cells.getLast().editing
-        if @header.cells.getLast().getValue() is ''
-          @removeLast()
-    ).bind @
-    @table.grab @header
-    @addRow @columns
-    @
-  ready: ->
-  addCloumn: (name) ->
-    @columns++
-    @header.add name
-    @rows.each (item) ->
-      item.add ''
-  removeLast: () ->
-    @header.removeLast()
-    @columns--
-    @rows.each (item) ->
-      item.removeLast()
-  addRow: (columns) ->
-    row = new Data.TableRow({columns:columns})
-    row.addEvent 'editEnd', @update
-    row.addEvent 'next', ((row) ->
-      index = @rows.indexOf row
-      if index isnt @rows.length-1
-        @rows[index+1].cells[0].editStart()
-    ).bind @
-    @rows.push row
-    @table.grab row
-  removeRow: (row,erase) ->
-    if not erase?
-      erase = yes
-    row.removeEvents 'editEnd'
-    row.removeEvents 'next'
-    row.removeAll()
-    if erase
-      @rows.erase row
-    row.base.destroy()
-    delete row
-  removeAll: (addColumn) ->
-    if not addColumn?
-      addColumn = yes
-    @header.removeAll()
-    @rows.each ( (row) ->
-      @removeRow row, no
-    ).bind @
-    @rows.empty()
-    @columns = 0
-    if addColumn
-      @addCloumn()
-      @addRow @columns
-  update: ->
-    length = @rows.length
-    longest = 0
-    rowsToRemove = []
-    @rows.each ( (row, i) ->
-      empty = row.empty() # check is the row is empty
-      if empty
-        rowsToRemove.push row
-    ).bind @
-    rowsToRemove.each ( (item) ->
-      @removeRow item
-    ).bind @
-    if @rows.length is 0 or not @rows.getLast().empty()
-      @addRow @columns
-    @fireEvent 'change', @getData()
-  getData: ->
-    ret = {}
-    headers = []
-    @header.cells.each (item) ->
-      value = item.getValue()        
-      ret[checkForKey(value,ret)] =[]
-      headers.push ret[value]
-    @rows.each ( (row) ->
-      if not row.empty()
-        row.getValue().each (item,i) ->
-          headers[i].push item
-    ).bind @
-    ret
-  getValue: ->
-    @getData()
-  setValue: (obj) ->
-    @removeAll( no )
-    rowa = []
-    j = 0
-    self = @
-    new Hash(obj).each (value,key) ->
-      self.addCloumn key
-      value.each (item,i) ->
-        if not rowa[i]?
-          rowa[i] = []
-        rowa[i][j] = item
-      j++
-    rowa.each (item,i) ->
-      self.addRow self.columns
-      self.rows[i].setValue item
-    @update()
-    @
-}
-Data.TableRow = new Class {
-  Extends: Data.Abstract
-  Delegates: {base: ['getChildren']}
-  options: {
-    columns: 1
-    class: ''
-  }
-  initialize: (options) ->
-    @parent options
-  create: ->
+    @loc = {h:0,v:0}
     delete @base
-    @base = new Element 'tr'
-    @base.addClass @options.class
-    @cells = []
-    i = 0
-    while i < @options.columns
-      @add('')
-      i++
-  add: (value) ->
-    cell = new Data.TableCell({value:value})
-    cell.addEvent 'editEnd', ( ->
-      @fireEvent 'editEnd'
-    ).bind @
-    cell.addEvent 'next', ((cell) ->
-      index = @cells.indexOf cell
-      if index is @cells.length-1
-        @fireEvent 'next', @
-      else
-        @cells[index+1].editStart()
-    ).bind @
-    @cells.push cell
-    @base.grab cell
-  empty: ->
-    filtered = @cells.filter (item) ->
-      if item.getValue() isnt '' then yes else no
-    if filtered.length > 0 then no else yes
-  removeLast: ->
-    @remove @cells.getLast()
-  remove: (cell,remove)->
-    cell.removeEvents 'editEnd'
-    cell.removeEvents 'next'
-    @cells.erase cell
-    cell.base.destroy()
-    delete cell
-  removeAll: ->
-    (@cells.filter -> true).each ( (cell) ->
-      @remove cell
-    ).bind @
-  getValue: ->
-    @cells.map (cell) ->
-      cell.getValue()
-  setValue: (value) ->
-    @cells.each (item,i) ->
-      item.setValue value[i]
-}
-Data.TableCell = new Class {
-  Extends: Data.Abstract
-  Binds: ['editStart','editEnd']
-  options:{
-    editable: on
-    value: ''
-  }
-  initialize: (options) ->
-    @parent options
-  create: ->
-    delete @base
-    @base = new Element 'td', {text: @options.value}
-    @value = @options.value
-    if @options.editable
-      @base.addEvent 'click', @editStart
-  editStart: ->
-    if not @editing
-      @editing = on
-      @input = new Element 'input', {type:'text',value:@value}
-      @base.set 'html', ''
-      @base.grab @input
-      @input.addEvent 'change', ( ->
-        @setValue @input.get 'value'
-      ).bindWithEvent @
-      @input.addEvent 'keydown', ( (e) ->
-        if e.key is 'enter'
-          @input.blur()
-        if e.key is 'tab'
-          e.stop()
-          @fireEvent 'next', @
-      ).bind @
-      size = @base.getSize()
-      @input.setStyles {width: size.x+"px !important",height:size.y+"px !important"}
+    @base = new Element 'table'
+    @base.grab new Element('tr').grab(new Element 'td')
+    @columns = 5
+    @rows = 1
+    @input = new Element 'input'
+    @setupIcons()
+    @setupEvents()
+    
+  setupEvents: ->
+    @hadd.addEvent 'invoked', @addColumn.bind @
+    @hremove.addEvent 'invoked', @removeColumn.bind @
+    @vadd.addEvent 'invoked', @addRow.bind @
+    @vremove.addEvent 'invoked', @removeRow.bind @
+    
+    @icg1.base.addEvent 'mouseenter', @suspendIcons.bind @
+    @icg1.base.addEvent 'mouseleave', @hideIcons.bind @
+    @icg2.base.addEvent 'mouseenter', @suspendIcons.bind @
+    @icg2.base.addEvent 'mouseleave', @hideIcons.bind @ 
+    
+    @base.addEvent 'mouseleave', (e) => 
+      @id1 = @icg1.hide.delay(400,@icg1)
+      @id2 = @icg2.hide.delay(400,@icg2)
+    @base.addEvent 'mouseenter', (e) =>
+      @suspendIcons()
+      @icg1.show()
+      @icg2.show()
+    @base.addEvent 'mouseenter:relay(td)', (e) => 
+      @positionIcons e.target
+    @input.addEvent 'blur', =>
+      @input.dispose()
+      @editTarget.set 'text', @input.get 'value'
+      @fireEvent 'change', @get 'value'
+    @base.addEvent 'click:relay(td)', (e) =>
+      if @input.isVisible()
+        @input.dispose()
+        @editTarget.set 'text', @input.get 'value'
+      @input.set 'value', e.target.get 'text'
+      size = e.target.getSize()
+      @input.setStyles {
+        width: size.x
+        height: size.y
+      }
+      @editTarget = e.target
+      e.target.set 'text', ''
+      e.target.grab @input
       @input.focus()
-      @input.addEvent 'blur', @editEnd
-  editEnd: (e) ->
-    if @editing
-      @editing = off
-    @setValue @input.get 'value'
-    if @input?
-      @input.removeEvents ['change','keydown']
-      @input.destroy()
-      delete @input
-    @fireEvent 'editEnd'
-  setValue: (value) ->
-    @value = value
-    if not @editing
-      @base.set 'text', @value
-  getValue: ->
-    if not @editing
-      @base.get 'text'
-    else @input.get 'value'
+      
+  positionIcons: (target) ->
+    pos = target.getPosition()
+    pos1 = @base.getPosition()
+    size = @icg1.base.getSize()
+    size2 = @base.getSize()
+    @icg1.base.setStyle 'left', pos.x
+    @icg1.base.setStyle 'top', pos1.y-size.y
+    @icg2.base.setStyle 'top', pos.y
+    @icg2.base.setStyle 'left', pos1.x+size2.x
+    @loc = @getLocation target
+    @target = target
+    @vremove.set 'enabled', @base.children.length > 1
+    @hremove.set 'enabled', @base.children[0].children.length > 1
+    
+  setupIcons: ->
+    @icg1 = new Groups.Icons()
+    @icg2 = new Groups.Icons()
+    
+    @hadd = new Core.Icon()
+    @hremove = new Core.Icon()
+    @vadd = new Core.Icon()
+    @vremove = new Core.Icon()
+    
+    @hadd.base.set 'text', '+'
+    @hremove.base.set 'text', '-'
+    @vadd.base.set 'text', '+'
+    @vremove.base.set 'text', '-'
+    
+    @icg1.addItem @hadd
+    @icg1.addItem @hremove
+    @icg2.addItem @vadd
+    @icg2.addItem @vremove
+    
+    @icg1.base.setStyle 'position', 'absolute'
+    @icg2.base.setStyle 'position', 'absolute'
+    
+    document.body.adopt @icg1, @icg2
+    @hideIcons()
+    
+  suspendIcons: ->
+    if @id1?
+      clearTimeout @id1
+      @id1 = null
+    if @id2?
+      clearTimeout @id2
+      @id2 = null
+  hideIcons: ->
+    @icg1.hide()
+    @icg2.hide()
+    
+  getLocation: (td) ->
+    ret = {h:0,v:0}
+    tr = td.getParent('tr')
+    children = tr.getChildren()
+    for i in [0..children.length]
+      if td is children[i]
+        ret.h = i
+    children = @base.getChildren()
+    for i in [0..children.length]
+      if tr is children[i]
+        ret.v = i
+    ret
+      
+  testHorizontal: (where) ->
+    if (w = Number.from(where))?
+      if w < @base.children[0].children.length and w > 0
+        @loc.h = w-1    
+
+  testVertical: (where) ->
+    if (w = Number.from(where))?
+      if w < @base.children.length and w > 0
+        @loc.v = w-1
+
+  addRow: (where) ->
+    @testVertical where
+    tr = new Element 'tr'
+    baseChildren = @base.children
+    trchildren = baseChildren[0].children
+    if baseChildren.length > 0
+      baseChildren[@loc.v].grab tr, 'before'
+    else
+      @base.grab tr
+    for i in [1..trchildren.length]
+      tr.grab new Element 'td'
+    @positionIcons @base.children[@loc.v].children[@loc.h]
+    @fireEvent 'change', @get 'value'
+    
+  addColumn: (where) ->
+    @testHorizontal where
+    for tr in @base.children
+      tr.children[@loc.h].grab new Element('td'), 'before'
+    @positionIcons @base.children[@loc.v].children[@loc.h]
+    @fireEvent 'change', @get 'value'
+    
+  removeRow: (where) ->
+    @testVertical where
+    if @base.children.length isnt 1
+      @base.children[@loc.v].destroy()
+      if @base.children[@loc.v]?
+        @positionIcons @base.children[@loc.v].children[@loc.h]
+      else
+        @positionIcons @base.children[@loc.v-1].children[@loc.h]
+    @fireEvent 'change', @get 'value'
+  
+  removeColumn: (where) ->
+    @testHorizontal where
+    if @base.children[0].children.length isnt 1
+      for tr in @base.children
+        tr.children[@loc.h].destroy()
+      if @base.children[@loc.v].children[@loc.h]?
+        @positionIcons @base.children[@loc.v].children[@loc.h]
+      else
+        @positionIcons @base.children[@loc.v].children[@loc.h-1]
+    @fireEvent 'change', @get 'value'
+      
 }

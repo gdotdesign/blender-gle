@@ -1,12 +1,12 @@
 ---
 class: Data.Number
-description: 
+description: Number picker blender style.
 extends: Core.Slider
 attributes:
   label: 
     type: String
     default: Label
-    description: asd
+    description: Label of the element.
   class:
     show: false 
     type: String 
@@ -14,5 +14,9 @@ attributes:
 events:
   - change:
     description:
+    arguments: 
+      - number:
+        type: Number
+        description: The current number.
 ...
 
