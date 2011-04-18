@@ -2,6 +2,7 @@ source :gemcutter
 gem 'sinatra'
 gem 'haml'
 gem 'sass'
+gem 'json'
 gem 'coffee-script'
 
 group :v8 do

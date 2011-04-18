@@ -7,6 +7,7 @@ GEM
     coffee-script-source (1.0.1)
     execjs (0.1.1)
     haml (3.0.25)
+    json (1.5.1)
     rack (1.2.2)
     sass (3.1.0.alpha.252)
     sinatra (1.2.1)
@@ -21,6 +22,7 @@ PLATFORMS
 DEPENDENCIES
   coffee-script
   haml
+  json
   sass
   sinatra
   therubyracer-heroku (= 0.8.1.pre3)
