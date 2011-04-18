@@ -1,3 +1,4 @@
 .sass-cache
 .sass-cache/*
+.bundle
 /Source/Interfaces/Interfaces.Draggable.coffee
