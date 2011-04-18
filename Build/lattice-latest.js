@@ -530,7 +530,7 @@ provides: Core.Abstract
 Core.Abstract = new Class({
   Implements: [Events, Interfaces.Mux],
   Delegates: {
-    base: ['setStyle', 'getStyle']
+    base: ['setStyle', 'getStyle', 'setStyles', 'getStyles', 'dispose']
   },
   Attributes: {
     "class": {
@@ -3237,7 +3237,7 @@ Data.DateTime = new Class({
       i = 0;
       while (i < 30) {
         item = new Iterable.ListItem({
-          label: i + 1,
+          label: (i < 10 ? '0' + i : i),
           removeable: false
         });
         item.value = i + 1;
@@ -3247,7 +3247,7 @@ Data.DateTime = new Class({
       i = 0;
       while (i < 12) {
         item = new Iterable.ListItem({
-          label: i + 1,
+          label: (i < 10 ? '0' + i : i),
           removeable: false
         });
         item.value = i;
@@ -3276,8 +3276,9 @@ Data.DateTime = new Class({
       return btn.set('size', buttonwidth);
     });
     if (last = this.children.getLast()) {
-      return last.set('size', this.size - buttonwidth * (this.children.length - 1));
+      last.set('size', this.size - buttonwidth * (this.children.length - 1));
     }
+    return this.updateSlots();
   },
   ready: function() {
     if (this.get('date')) {
@@ -3290,7 +3291,7 @@ Data.DateTime = new Class({
   },
   updateSlots: function() {
     var cdays, i, item, listlength;
-    if (this.get('date')) {
+    if (this.get('date') && this.value) {
       cdays = this.value.get('lastdayofmonth');
       listlength = this.days.list.children.length;
       if (cdays > listlength) {
@@ -3314,7 +3315,7 @@ Data.DateTime = new Class({
       this.month.list.set('selected', this.month.list.children[this.value.get('month')]);
       this.years.list.set('selected', this.years.list.getItemFromLabel(this.value.get('year')));
     }
-    if (this.get('time')) {
+    if (this.get('time') && this.value) {
       this.hours.list.set('selected', this.hours.list.children[this.value.get('hours')]);
       return this.minutes.list.set('selected', this.minutes.list.children[this.value.get('minutes')]);
     }

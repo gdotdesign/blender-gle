@@ -19,6 +19,7 @@
 .#{$prefix}-table
   @extend .basic
   :padding 2px
+  :border-spacing 1px
   input
     :text-align center
     :border 0
@@ -32,10 +33,14 @@
     :text-align center
     :line-height $height
     :background-color $colorLight
-    :border 1px solid $border
-  .#{$prefix}-icon-group    
-    .#{$prefix}-icon
-      :margin 0
+    :overflow hidden
+    input
+      :font-family Ubuntu
+      :font-size 12px
+    
+.#{$prefix}-icon-group    
+  .#{$prefix}-icon
+    :margin 0
     
 .#{$prefix}-list-group
   @extend .basicSize
@@ -55,6 +60,9 @@
   :cursor pointer
   .#{$prefix}-slot
     @extend .nobasic
+    :background-color transparent
+    .#{$prefix}-list
+      :background-color transparent
     +round_full($borderRadius)
     :float left
 
@@ -133,14 +141,14 @@
     :color $colorDark
     
 .#{$prefix}-menu-list-item  
-  .title
+  .#{$prefix}-menu-list-item-title
     :margin-right 10px
-  .shortcut
+  > div:last-child
     :margin-right 5px
 
 .#{$prefix}-menu-list-item-icon
-  :width 18px
-  :height 22px
+  :width 20px
+  :height 20px
   :background-repeat no-repeat
   :background-position center center
     

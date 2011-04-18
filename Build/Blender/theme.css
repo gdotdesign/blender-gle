@@ -354,7 +354,8 @@
   color: #fdfdfd; }
 
 .blender-table {
-  padding: 2px; }
+  padding: 2px;
+  border-spacing: 1px; }
   .blender-table input {
     text-align: center;
     border: 0;
@@ -368,9 +369,13 @@
     text-align: center;
     line-height: 20px;
     background-color: #fdfdfd;
-    border: 1px solid #151b21; }
-  .blender-table .blender-icon-group .blender-icon, .blender-table .blender-icon-group .blender-table-add, .blender-table .blender-icon-group .blender-table-remove, .blender-table .blender-icon-group .blender-select .blender-select-add, .blender-select .blender-table .blender-icon-group .blender-select-add, .blender-table .blender-icon-group .blender-select .blender-select-remove, .blender-select .blender-table .blender-icon-group .blender-select-remove {
-    margin: 0; }
+    overflow: hidden; }
+    .blender-table td input {
+      font-family: Ubuntu;
+      font-size: 12px; }
+
+.blender-icon-group .blender-icon, .blender-icon-group .blender-table-add, .blender-icon-group .blender-table-remove, .blender-icon-group .blender-select .blender-select-add, .blender-select .blender-icon-group .blender-select-add, .blender-icon-group .blender-select .blender-select-remove, .blender-select .blender-icon-group .blender-select-remove {
+  margin: 0; }
 
 .blender-list-group .blender-list:first-child {
   border: none;
@@ -389,11 +394,14 @@
   height: 100px;
   cursor: pointer; }
   .blender-time .blender-slot, .blender-date .blender-slot, .blender-date-time .blender-slot {
+    background-color: transparent;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     -khtml-border-radius: 3px;
     border-radius: 3px;
     float: left; }
+    .blender-time .blender-slot .blender-list, .blender-date .blender-slot .blender-list, .blender-date-time .blender-slot .blender-list {
+      background-color: transparent; }
 
 .blender-slot {
   height: 100px;
@@ -453,14 +461,14 @@
     background-color: #5680c2;
     color: #212121; }
 
-.blender-menu-list-item .title {
+.blender-menu-list-item .blender-menu-list-item-title {
   margin-right: 10px; }
-.blender-menu-list-item .shortcut {
+.blender-menu-list-item > div:last-child {
   margin-right: 5px; }
 
 .blender-menu-list-item-icon {
-  width: 18px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   background-repeat: no-repeat;
   background-position: center center; }
 

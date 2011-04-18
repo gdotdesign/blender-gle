@@ -3,14 +3,12 @@ require "bundler/setup"
 
 require 'sinatra'
 require 'haml'
-require 'syntax'
 require 'sass'
-require 'uv'
 require 'json'
 require 'yaml'
 require 'coffee-script'
 
-load 'include/packager.rb'
+load 'Site/include/packager.rb'
 
 
 class Gdotui < Sinatra::Application
@@ -62,9 +60,9 @@ class Gdotui < Sinatra::Application
     end
     def mergeString(str)
       cls = str.split '.'
-       if File.exists?("../Docs/#{cls[0]}/#{cls[1]}")
+       if File.exists?("Docs/#{cls[0]}/#{cls[1]}")
          class2 = Class.new()
-         class2.parse YAML::load(File.new("../Docs/#{cls[0]}/#{cls[1]}"))
+         class2.parse YAML::load(File.new("Docs/#{cls[0]}/#{cls[1]}"))
          class2.mergeAll()
          merge class2
        end
@@ -126,15 +124,11 @@ class Gdotui < Sinatra::Application
   end
 
   get /\/Themes\/(.*)/ do
-    send_file "../Themes/#{params[:captures].first}"
+    send_file "Themes/#{params[:captures].first}"
   end
   
-  get /\/mootools\/(.*)/ do
-    send_file "../mootools/#{params[:captures].first}"
-  end
-
   get /\/builds\/(.*)/ do
-    send_file "../Build/#{params[:captures].first}"
+    send_file "Build/#{params[:captures].first}"
   end
 
   get "/reference" do
@@ -147,7 +141,7 @@ class Gdotui < Sinatra::Application
   
   get "/reference/:package/:class" do
     @class = Class.new()
-    @class.parse YAML::load(File.new("../Docs/#{params[:package]}/#{params[:class]}"))
+    @class.parse YAML::load(File.new("Docs/#{params[:package]}/#{params[:class]}"))
     @class.mergeAll
     haml :docs
   end
@@ -166,7 +160,7 @@ class Gdotui < Sinatra::Application
   post '/download' do
     content_type 'application/octet-stream'
     response['Content-disposition'] = "attachment; filename=gdotui.js;"
-    p = Packager.new("../package.yml")
+    p = Packager.new("package.yml")
     cont = p.build params['files']
     CoffeeScript.compile cont, :bare=>true
   end

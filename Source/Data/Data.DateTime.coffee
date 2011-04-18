@@ -93,13 +93,13 @@ Data.DateTime = new Class {
     if @get('date')
       i = 0
       while i < 30
-        item = new Iterable.ListItem {label:i+1,removeable:false}
+        item = new Iterable.ListItem {label:(if i<10 then '0'+i else i),removeable:false}
         item.value = i+1
         @days.addItem item
         i++
       i = 0
       while i < 12
-        item = new Iterable.ListItem {label:i+1,removeable:false}
+        item = new Iterable.ListItem {label:(if i<10 then '0'+i else i),removeable:false}
         item.value = i
         @month.addItem item
         i++
@@ -116,6 +116,7 @@ Data.DateTime = new Class {
       btn.set 'size', buttonwidth
     if last = @children.getLast()
       last.set 'size', @size-buttonwidth*(@children.length-1)
+    @updateSlots()
   ready: ->
     if @get('date')
       @adoptChildren @years, @month, @days
@@ -123,7 +124,7 @@ Data.DateTime = new Class {
       @adoptChildren @hours, @minutes
     @update()
   updateSlots: ->
-    if @get('date')
+    if @get('date') and @value
       cdays = @value.get 'lastdayofmonth'
       listlength = @days.list.children.length
       if cdays > listlength
@@ -141,7 +142,7 @@ Data.DateTime = new Class {
       @days.list.set 'selected', @days.list.children[@value.get('date')-1]
       @month.list.set 'selected', @month.list.children[@value.get('month')]
       @years.list.set 'selected', @years.list.getItemFromLabel(@value.get('year'))
-    if @get('time')
+    if @get('time') and @value
       @hours.list.set 'selected', @hours.list.children[@value.get('hours')]
       @minutes.list.set 'selected', @minutes.list.children[@value.get('minutes')]
 }

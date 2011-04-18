@@ -4,6 +4,8 @@
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,bold,italic)
 
 html, body
+  :margin 0
+  :padding 0
   :height 100%
 body
   :background-color #000
@@ -41,7 +43,7 @@ a
   :color #97B9CF
   :text-decoration none
   
-nav
+.nav
   @extend .darker-gradient
   +round(0,0,10px,10px)
   :border-top none
@@ -81,7 +83,7 @@ nav
   +round_full(10px)
   p
     :margin-bottom 5px
-    :line-height 18px
+    :line-height 22px
   :font-size 14px
   :margin 0 auto
   :margin-bottom 10px
@@ -106,7 +108,7 @@ nav
     :font-size 16px
   ul
     :margin-left 20px
-    :list-style-type disc
+    :list-style-type circle
     :list-style-position inside
     li
       :margin 4px 0
