@@ -1,2 +1,0 @@
-require "./site"
-run Gdotui
